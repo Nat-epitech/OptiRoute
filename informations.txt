@@ -1,0 +1,7 @@
+Backend
+mvn spring-boot:run
+http://localhost:8080
+
+Frontend
+npm run dev
+http://localhost:5173
