@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
-import { getUsers } from '@/api/userApi'
+import { getDrivers } from '@/api/driverApi'
 
-import type { User } from '@/models/User'
+import type { Driver } from '@/models/Driver'
 
-import CreateUserModal from '@/components/users/CreateUserModal.vue'
+import CreateDriverModal
+    from '@/components/drivers/CreateDriverModal.vue'
 
-const users = ref<User[]>([])
+const drivers = ref<Driver[]>([])
 
 const showCreateModal = ref(false)
 
-const loadUsers = async () => {
-    users.value = await getUsers()
+const loadDrivers = async () => {
+    drivers.value = await getDrivers()
 }
 
 onMounted(async () => {
-    await loadUsers()
+    await loadDrivers()
 })
 
 </script>
@@ -28,12 +29,12 @@ onMounted(async () => {
         <div class="flex items-center justify-between mb-6">
 
             <h1 class="text-3xl font-bold text-gray-800">
-                Users
+                Drivers
             </h1>
 
             <button @click="showCreateModal = true"
                 class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl shadow transition">
-                + Create User
+                + Create Driver
             </button>
 
         </div>
@@ -54,18 +55,18 @@ onMounted(async () => {
 
                 <tbody>
 
-                    <tr v-for="user in users" :key="user.id" class="border-b hover:bg-gray-50 transition">
+                    <tr v-for="driver in drivers" :key="driver.id" class="border-b hover:bg-gray-50 transition">
 
                         <td class="px-6 py-4">
-                            {{ user.email }}
+                            {{ driver.email }}
                         </td>
 
                         <td class="px-6 py-4">
-                            {{ user.firstName }}
+                            {{ driver.firstName }}
                         </td>
 
                         <td class="px-6 py-4">
-                            {{ user.lastName }}
+                            {{ driver.lastName }}
                         </td>
 
                     </tr>
@@ -76,7 +77,7 @@ onMounted(async () => {
 
         </div>
 
-        <CreateUserModal :show="showCreateModal" @close="showCreateModal = false" @created="loadUsers" />
+        <CreateDriverModal :show="showCreateModal" @close="showCreateModal = false" @created="loadDrivers" />
 
     </div>
 
