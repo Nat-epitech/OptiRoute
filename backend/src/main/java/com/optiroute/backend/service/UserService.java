@@ -1,6 +1,6 @@
 package com.optiroute.backend.service;
 
-import com.optiroute.backend.dto.user.CreateUserRequest;
+import com.optiroute.backend.dto.user.UserRequest;
 import com.optiroute.backend.dto.user.UserResponse;
 import com.optiroute.backend.entity.UserEntity;
 import com.optiroute.backend.repository.UserRepository;
@@ -24,7 +24,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public UserResponse createUser(CreateUserRequest request) {
+    public UserResponse createUser(UserRequest request) {
         UserEntity user = new UserEntity();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));

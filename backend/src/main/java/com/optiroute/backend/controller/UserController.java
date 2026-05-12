@@ -1,6 +1,6 @@
 package com.optiroute.backend.controller;
 
-import com.optiroute.backend.dto.user.CreateUserRequest;
+import com.optiroute.backend.dto.user.UserRequest;
 import com.optiroute.backend.dto.user.UserResponse;
 import com.optiroute.backend.entity.UserEntity;
 import com.optiroute.backend.service.UserService;
@@ -25,8 +25,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponse createUser(
-            @Valid @RequestBody CreateUserRequest request) {
+    public UserResponse createUser(@Valid @RequestBody UserRequest request) {
         return userService.createUser(request);
     }
 }
