@@ -7,6 +7,7 @@ import DriversView from '@/views/DriversView.vue'
 import MapsView from '@/views/MapsView.vue'
 
 import MainLayout from '@/layouts/MainLayout.vue'
+import MapLayout from '@/layouts/MapLayout.vue'
 
 import { useAuthStore } from '@/stores/authStore'
 
@@ -30,11 +31,14 @@ const routes = [
             {
                 path: 'drivers',
                 component: DriversView
-            },
-            {
-                path: 'maps',
-                component: MapsView
             }
+        ]
+    },
+    {
+        path: '/maps',
+        component: MapLayout,
+        children: [
+            { path: '', component: MapsView }
         ]
     }
 ]
