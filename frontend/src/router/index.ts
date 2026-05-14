@@ -4,6 +4,7 @@ import DashboardView from '@/views/DashboardView.vue'
 import UsersView from '@/views/UsersView.vue'
 import LoginView from '@/views/LoginView.vue'
 import DriversView from '@/views/DriversView.vue'
+import MapsView from '@/views/MapsView.vue'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 
@@ -29,6 +30,10 @@ const routes = [
             {
                 path: 'drivers',
                 component: DriversView
+            },
+            {
+                path: 'maps',
+                component: MapsView
             }
         ]
     }

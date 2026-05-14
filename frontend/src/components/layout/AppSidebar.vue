@@ -24,6 +24,10 @@ import { RouterLink } from 'vue-router'
             <RouterLink to="/drivers" class="block px-4 py-3 rounded-xl hover:bg-gray-800 transition">
                 Drivers
             </RouterLink>
+
+            <RouterLink to="/maps" class="block px-4 py-3 rounded-xl hover:bg-gray-800 transition">
+                Maps
+            </RouterLink>
         </nav>
 
     </aside>
