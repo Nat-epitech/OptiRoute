@@ -10,6 +10,8 @@ import { onMounted, ref } from 'vue'
 const mapContainer = ref<HTMLElement | null>(null)
 let map: any
 let routeLine: any
+let fromMarker: any = null
+let toMarker: any = null
 
 // Functions
 
@@ -41,8 +43,37 @@ const drawRoute = (lineStrings: any[]) => {
     })
 }
 
+const setMarker = (
+    position: { lat: number; lng: number },
+    type: 'from' | 'to'
+) => {
+
+    if (!map) return
+
+    const marker = new H.map.Marker(position)
+
+    // Supprime ancien marker
+    if (type === 'from' && fromMarker) {
+        map.removeObject(fromMarker)
+    }
+
+    if (type === 'to' && toMarker) {
+        map.removeObject(toMarker)
+    }
+
+    // Stocke nouveau marker
+    if (type === 'from') {
+        fromMarker = marker
+    } else {
+        toMarker = marker
+    }
+
+    map.addObject(marker)
+}
+
 defineExpose({
     setCenter,
+    setMarker,
     drawRoute
 })
 

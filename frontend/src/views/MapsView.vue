@@ -30,27 +30,42 @@
                 <div class="flex flex-col gap-5">
 
                     <!-- FROM -->
-                    <div>
-                        <label class="block text-sm text-slate-600 mb-1">
-                            Départ
-                        </label>
+                    <div class="space-y-4">
 
-                        <input v-model="from" placeholder="Adresse de départ" class="w-full px-4 py-3 rounded-xl
-                     border border-slate-200
-                     focus:outline-none focus:ring-2
-                     focus:ring-blue-500" />
-                    </div>
+                        <!-- Départ -->
+                        <div class="relative">
+                            <input v-model="fromQuery" @input="onSearch('from')" placeholder="Adresse de départ" class="w-full px-5 py-4 rounded-2xl
+                   bg-white/90 backdrop-blur-md
+                   shadow-lg border border-slate-100
+                   focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-                    <!-- TO -->
-                    <div>
-                        <label class="block text-sm text-slate-600 mb-1">
-                            Arrivée
-                        </label>
+                            <ul v-if="fromResults.length" class="absolute z-50 mt-3 w-full bg-white
+                   rounded-xl shadow-xl max-h-72 overflow-auto
+                   border border-slate-100">
+                                <li v-for="item in fromResults" :key="item.id" @click="selectPlace(item, 'from')"
+                                    class="px-4 py-3 hover:bg-slate-100 cursor-pointer transition">
+                                    {{ item.title }}
+                                </li>
+                            </ul>
+                        </div>
 
-                        <input v-model="to" placeholder="Adresse d'arrivée" class="w-full px-4 py-3 rounded-xl
-                     border border-slate-200
-                     focus:outline-none focus:ring-2
-                     focus:ring-blue-500" />
+                        <!-- Arrivée -->
+                        <div class="relative">
+                            <input v-model="toQuery" @input="onSearch('to')" placeholder="Adresse d'arrivée" class="w-full px-5 py-4 rounded-2xl
+                   bg-white/90 backdrop-blur-md
+                   shadow-lg border border-slate-100
+                   focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                            <ul v-if="toResults.length" class="absolute z-50 mt-3 w-full bg-white
+                   rounded-xl shadow-xl max-h-72 overflow-auto
+                   border border-slate-100">
+                                <li v-for="item in toResults" :key="item.id" @click="selectPlace(item, 'to')"
+                                    class="px-4 py-3 hover:bg-slate-100 cursor-pointer transition">
+                                    {{ item.title }}
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
 
                     <!-- CHECKBOX -->
@@ -120,21 +135,25 @@ import {
     ChevronRight
 } from 'lucide-vue-next'
 
-// Variables
-
-const query = ref('')
-const results = ref<any[]>([])
-const mapRef = ref<InstanceType<typeof HereMap> | null>(null)
-
-const from = ref('')
-const to = ref('')
-const truck = ref(false)
+// Variables UI
 
 const open = ref(true)
 const loading = ref(false)
-
+const mapRef = ref<InstanceType<typeof HereMap> | null>(null)
 let debounceTimer: number | undefined
 
+// Route variables
+
+const truck = ref(false)
+
+const fromQuery = ref('')
+const toQuery = ref('')
+
+const fromResults = ref<any[]>([])
+const toResults = ref<any[]>([])
+
+const fromPosition = ref<any>(null)
+const toPosition = ref<any>(null)
 
 // HERE Implementation
 const platform = new H.service.Platform({
@@ -145,45 +164,70 @@ const router = platform.getRoutingService()
 
 // Functions
 
-const onSearch = () => {
+const onSearch = (type: 'from' | 'to') => {
     clearTimeout(debounceTimer)
 
-    if (!query.value) {
-        results.value = []
+    const query = type === 'from'
+        ? fromQuery.value
+        : toQuery.value
+
+    if (!query) {
+        if (type === 'from') {
+            fromResults.value = []
+        } else {
+            toResults.value = []
+        }
         return
     }
 
     debounceTimer = window.setTimeout(() => {
         searchService.autosuggest(
             {
-                q: query.value,
-                at: '45.7640,4.8357' // bias Lyon
+                q: query,
+                at: '45.7640,4.8357'
             },
             (res: any) => {
-                results.value = res.items || []
+                if (type === 'from') {
+                    fromResults.value = res.items || []
+                } else {
+                    toResults.value = res.items || []
+                }
             },
             console.error
         )
-    }, 300)
+    }, 250)
 }
 
-const selectPlace = (item: any) => {
-    results.value = []
-    query.value = item.title
+const selectPlace = (item: any, type: 'from' | 'to') => {
 
-    // Si HERE renvoie directement une position
+    const applyPosition = (pos: any) => {
+        if (type === 'from') {
+            fromQuery.value = item.title
+            fromResults.value = []
+            fromPosition.value = pos
+        } else {
+            toQuery.value = item.title
+            toResults.value = []
+            toPosition.value = pos
+        }
+        mapRef.value?.setCenter(pos)
+        mapRef.value?.setMarker(pos, type)
+    }
+
+    // HERE renvoie parfois directement la position
     if (item.position) {
-        mapRef.value?.setCenter(item.position)
+        applyPosition(item.position)
         return
     }
 
-    // fallback: geocode si pas de position
+    // fallback geocode
     searchService.geocode(
         { q: item.title },
         (res: any) => {
             const pos = res.items?.[0]?.position
+
             if (pos) {
-                mapRef.value?.setCenter(pos)
+                applyPosition(pos)
             }
         },
         console.error
@@ -191,15 +235,15 @@ const selectPlace = (item: any) => {
 }
 
 const searchRoute = () => {
-    if (!from.value || !to.value) return
+    if (!fromPosition.value || !toPosition.value) return
 
     loading.value = true
 
     router.calculateRoute(
         {
             transportMode: truck.value ? 'truck' : 'car',
-            origin: from.value,
-            destination: to.value,
+            origin: `${fromPosition.value.lat},${fromPosition.value.lng}`,
+            destination: `${toPosition.value.lat},${toPosition.value.lng}`,
             return: 'polyline,summary,travelSummary',
 
             ...(truck.value && {
@@ -211,7 +255,6 @@ const searchRoute = () => {
 
         (result: any) => {
             try {
-
                 const route = result.routes?.[0]
 
                 if (!route) {
