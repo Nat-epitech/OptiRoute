@@ -29,42 +29,68 @@
                 <!-- FORM -->
                 <div class="flex flex-col gap-5">
 
-                    <!-- FROM -->
-                    <div class="space-y-4">
+                    <!-- départ -->
+                    <div class="relative">
 
-                        <!-- Départ -->
-                        <div class="relative">
-                            <input v-model="fromQuery" @input="onSearch('from')" placeholder="Adresse de départ" class="w-full px-5 py-4 rounded-2xl
-                   bg-white/90 backdrop-blur-md
-                   shadow-lg border border-slate-100
-                   focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <div class="flex items-center gap-2">
 
-                            <ul v-if="fromResults.length" class="absolute z-50 mt-3 w-full bg-white
-                   rounded-xl shadow-xl max-h-72 overflow-auto
-                   border border-slate-100">
-                                <li v-for="item in fromResults" :key="item.id" @click="selectPlace(item, 'from')"
-                                    class="px-4 py-3 hover:bg-slate-100 cursor-pointer transition">
-                                    {{ item.title }}
-                                </li>
-                            </ul>
+                            <input v-model="from.query" @input="onSearch(from)" placeholder="Départ" class="flex-1 px-5 py-4 rounded-2xl
+                       bg-white/90 shadow-lg border
+                       focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                            <!-- bouton + -->
+                            <button @click="addWaypoint" class="w-8 h-8 rounded-full
+                       bg-blue-500 text-white
+                       flex items-center justify-center
+                       hover:bg-blue-600 transition">
+                                +
+                            </button>
+
                         </div>
 
-                        <!-- Arrivée -->
-                        <div class="relative">
-                            <input v-model="toQuery" @input="onSearch('to')" placeholder="Adresse d'arrivée" class="w-full px-5 py-4 rounded-2xl
-                   bg-white/90 backdrop-blur-md
-                   shadow-lg border border-slate-100
-                   focus:outline-none focus:ring-2 focus:ring-blue-500" />
-
-                            <ul v-if="toResults.length" class="absolute z-50 mt-3 w-full bg-white
+                        <!-- dropdown -->
+                        <ul v-if="from.results.length" class="absolute z-50 mt-3 w-full bg-white
                    rounded-xl shadow-xl max-h-72 overflow-auto
                    border border-slate-100">
-                                <li v-for="item in toResults" :key="item.id" @click="selectPlace(item, 'to')"
-                                    class="px-4 py-3 hover:bg-slate-100 cursor-pointer transition">
-                                    {{ item.title }}
-                                </li>
-                            </ul>
+                            <li v-for="item in from.results" :key="item.id" @click="selectPlace(item, from)" class="px-4 py-3 hover:bg-slate-100
+                       cursor-pointer transition">
+                                {{ item.title }}
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <!-- vias + arrivée -->
+                    <div v-for="(waypoint, index) in waypoints.slice(1)" :key="waypoint.id" class="relative">
+
+                        <div class="flex items-center gap-2">
+
+                            <!-- input -->
+                            <input v-model="waypoint.query" @input="onSearch(waypoint)" :placeholder="waypoint.label"
+                                class="flex-1 px-5 py-4 rounded-2xl
+                       bg-white/90 shadow-lg border
+                       focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                            <!-- delete uniquement vias -->
+                            <button v-if="waypoint.type === 'via'" @click="removeWaypoint(index + 1)" class="w-8 h-8 rounded-full
+                       bg-red-500 text-white
+                       flex items-center justify-center
+                       hover:bg-red-600 transition">
+                                ✕
+                            </button>
+
                         </div>
+
+                        <!-- dropdown -->
+                        <ul v-if="waypoint.results.length" class="absolute z-50 mt-3 w-full bg-white
+                   rounded-xl shadow-xl max-h-72 overflow-auto
+                   border border-slate-100">
+                            <li v-for="item in waypoint.results" :key="item.id" @click="selectPlace(item, waypoint)"
+                                class="px-4 py-3 hover:bg-slate-100
+                       cursor-pointer transition">
+                                {{ item.title }}
+                            </li>
+                        </ul>
 
                     </div>
 
@@ -127,8 +153,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import HereMap from '@/components/maps/HereMap.vue'
+import type { HereItem } from '@/models/Waypoint'
+import type { Position } from '@/models/Waypoint'
+import type { Waypoint } from '@/models/Waypoint'
 
 import {
     ChevronLeft,
@@ -144,16 +173,26 @@ let debounceTimer: number | undefined
 
 // Route variables
 
+const from = computed(() => waypoints.value.find(w => w.type === 'from')!)
 const truck = ref(false)
-
-const fromQuery = ref('')
-const toQuery = ref('')
-
-const fromResults = ref<any[]>([])
-const toResults = ref<any[]>([])
-
-const fromPosition = ref<any>(null)
-const toPosition = ref<any>(null)
+const waypoints = ref<Waypoint[]>([
+    {
+        id: crypto.randomUUID(),
+        type: 'from',
+        label: 'Départ',
+        query: '',
+        results: [] as HereItem[],
+        position: null
+    },
+    {
+        id: crypto.randomUUID(),
+        type: 'to',
+        label: 'Arrivée',
+        query: '',
+        results: [] as HereItem[],
+        position: null
+    }
+])
 
 // HERE Implementation
 const platform = new H.service.Platform({
@@ -164,63 +203,72 @@ const router = platform.getRoutingService()
 
 // Functions
 
-const onSearch = (type: 'from' | 'to') => {
+const removeWaypoint = (index: number) => {
+    const wp = waypoints.value[index]
+
+    // remove marker map
+    if (wp?.id) {
+        mapRef.value?.removeMarker?.(wp.id)
+    }
+
+    waypoints.value.splice(index, 1)
+}
+
+const addWaypoint = () => {
+    const arrival = waypoints.value.pop()
+
+    waypoints.value.push({
+        id: crypto.randomUUID(),
+        type: 'via',
+        label: 'Via',
+        query: '',
+        results: [],
+        position: null
+    })
+
+    if (arrival) {
+        waypoints.value.push(arrival)
+    }
+}
+
+const onSearch = (waypoint: any) => {
     clearTimeout(debounceTimer)
 
-    const query = type === 'from'
-        ? fromQuery.value
-        : toQuery.value
-
-    if (!query) {
-        if (type === 'from') {
-            fromResults.value = []
-        } else {
-            toResults.value = []
-        }
+    if (!waypoint.query) {
+        waypoint.results = []
         return
     }
 
     debounceTimer = window.setTimeout(() => {
         searchService.autosuggest(
             {
-                q: query,
+                q: waypoint.query,
                 at: '45.7640,4.8357'
             },
             (res: any) => {
-                if (type === 'from') {
-                    fromResults.value = res.items || []
-                } else {
-                    toResults.value = res.items || []
-                }
+                waypoint.results = res.items || []
             },
             console.error
         )
     }, 250)
 }
 
-const selectPlace = (item: any, type: 'from' | 'to') => {
-
+const selectPlace = (item: any, waypoint: any) => {
     const applyPosition = (pos: any) => {
-        if (type === 'from') {
-            fromQuery.value = item.title
-            fromResults.value = []
-            fromPosition.value = pos
-        } else {
-            toQuery.value = item.title
-            toResults.value = []
-            toPosition.value = pos
-        }
+
+        waypoint.query = item.title
+        waypoint.results = []
+        waypoint.position = pos
+
         mapRef.value?.setCenter(pos)
-        mapRef.value?.setMarker(pos, type)
+        mapRef.value?.setMarker(pos, waypoint.id)
     }
 
-    // HERE renvoie parfois directement la position
     if (item.position) {
         applyPosition(item.position)
         return
     }
 
-    // fallback geocode
     searchService.geocode(
         { q: item.title },
         (res: any) => {
@@ -235,49 +283,58 @@ const selectPlace = (item: any, type: 'from' | 'to') => {
 }
 
 const searchRoute = () => {
-    if (!fromPosition.value || !toPosition.value) return
+    const validPoints = waypoints.value.filter(
+        (w): w is Waypoint & { position: Position } => w.position !== null
+    )
 
-    loading.value = true
+    if (validPoints.length < 2) {
+        return
+    }
+
+    const origin = validPoints[0]!
+    const destination = validPoints[validPoints.length - 1]!
+
+    if (!origin?.position || !destination?.position) return
+
+    const vias = validPoints.slice(1, -1)
+
+    const params: any = {
+        transportMode: truck.value ? 'truck' : 'car',
+
+        origin: `${origin.position.lat},${origin.position.lng}`,
+
+        destination: `${destination.position.lat},${destination.position.lng}`,
+
+        return: 'polyline,summary,travelSummary'
+    }
+
+    if (vias.length) {
+        params.via = vias.map(v =>
+            `${v.position.lat},${v.position.lng}`
+        )
+    }
+
+    if (truck.value) {
+        params.truck = {
+            grossWeight: 40000
+        }
+    }
 
     router.calculateRoute(
-        {
-            transportMode: truck.value ? 'truck' : 'car',
-            origin: `${fromPosition.value.lat},${fromPosition.value.lng}`,
-            destination: `${toPosition.value.lat},${toPosition.value.lng}`,
-            return: 'polyline,summary,travelSummary',
-
-            ...(truck.value && {
-                truck: {
-                    grossWeight: 40000
-                }
-            })
-        },
-
+        params,
         (result: any) => {
-            try {
-                const route = result.routes?.[0]
 
-                if (!route) {
-                    return
-                }
+            const route = result.routes?.[0]
 
-                const sections = route.sections
+            if (!route) return
 
-                const lineStrings = sections.map((s: any) =>
-                    H.geo.LineString.fromFlexiblePolyline(s.polyline)
-                )
+            const lineStrings = route.sections.map((s: any) =>
+                H.geo.LineString.fromFlexiblePolyline(s.polyline)
+            )
 
-                mapRef.value?.drawRoute(lineStrings)
-
-            } finally {
-                loading.value = false
-            }
+            mapRef.value?.drawRoute(lineStrings)
         },
-
-        (error: any) => {
-            console.error(error)
-            loading.value = false
-        }
+        console.error
     )
 }
 </script>

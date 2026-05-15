@@ -10,8 +10,7 @@ import { onMounted, ref } from 'vue'
 const mapContainer = ref<HTMLElement | null>(null)
 let map: any
 let routeLine: any
-let fromMarker: any = null
-let toMarker: any = null
+const markers = new Map<string, any>()
 
 // Functions
 
@@ -23,7 +22,6 @@ const setCenter = (position: { lat: number; lng: number }) => {
 }
 
 const drawRoute = (lineStrings: any[]) => {
-    console.log("drawRoute appelé")
     if (!map) return
 
     if (routeLine) {
@@ -31,49 +29,43 @@ const drawRoute = (lineStrings: any[]) => {
     }
 
     const multiLineString = new H.geo.MultiLineString(lineStrings)
-
     routeLine = new H.map.Polyline(multiLineString, {
         style: { strokeColor: 'blue', lineWidth: 5 }
     })
 
     map.addObject(routeLine)
-
     map.getViewModel().setLookAtData({
         bounds: routeLine.getBoundingBox()
     })
 }
 
-const setMarker = (
-    position: { lat: number; lng: number },
-    type: 'from' | 'to'
-) => {
-
+const setMarker = (position: any, id: string) => {
     if (!map) return
 
+    const existing = markers.get(id)
+    if (existing) {
+        map.removeObject(existing)
+    }
+
     const marker = new H.map.Marker(position)
-
-    // Supprime ancien marker
-    if (type === 'from' && fromMarker) {
-        map.removeObject(fromMarker)
-    }
-
-    if (type === 'to' && toMarker) {
-        map.removeObject(toMarker)
-    }
-
-    // Stocke nouveau marker
-    if (type === 'from') {
-        fromMarker = marker
-    } else {
-        toMarker = marker
-    }
+    markers.set(id, marker)
 
     map.addObject(marker)
+}
+
+const removeMarker = (id: string) => {
+    const marker = markers.get(id)
+
+    if (marker && map) {
+        map.removeObject(marker)
+        markers.delete(id)
+    }
 }
 
 defineExpose({
     setCenter,
     setMarker,
+    removeMarker,
     drawRoute
 })
 
