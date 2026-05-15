@@ -283,58 +283,58 @@ const selectPlace = (item: any, waypoint: any) => {
 }
 
 const searchRoute = () => {
+    loading.value = true
+
     const validPoints = waypoints.value.filter(
         (w): w is Waypoint & { position: Position } => w.position !== null
     )
 
     if (validPoints.length < 2) {
+        loading.value = false
         return
     }
 
     const origin = validPoints[0]!
     const destination = validPoints[validPoints.length - 1]!
 
-    if (!origin?.position || !destination?.position) return
-
-    const vias = validPoints.slice(1, -1)
-
     const params: any = {
         transportMode: truck.value ? 'truck' : 'car',
-
         origin: `${origin.position.lat},${origin.position.lng}`,
-
         destination: `${destination.position.lat},${destination.position.lng}`,
-
         return: 'polyline,summary,travelSummary'
     }
 
-    if (vias.length) {
-        params.via = vias.map(v =>
+    if (validPoints.length > 2) {
+        params.via = validPoints.slice(1, -1).map(v =>
             `${v.position.lat},${v.position.lng}`
         )
     }
 
     if (truck.value) {
-        params.truck = {
-            grossWeight: 40000
-        }
+        params.truck = { grossWeight: 40000 }
     }
 
     router.calculateRoute(
         params,
         (result: any) => {
-
             const route = result.routes?.[0]
-
-            if (!route) return
+            if (!route) {
+                loading.value = false
+                return
+            }
 
             const lineStrings = route.sections.map((s: any) =>
                 H.geo.LineString.fromFlexiblePolyline(s.polyline)
             )
 
             mapRef.value?.drawRoute(lineStrings)
+
+            loading.value = false
         },
-        console.error
+        (err: any) => {
+            console.error(err)
+            loading.value = false
+        }
     )
 }
 </script>
