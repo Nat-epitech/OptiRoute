@@ -1,7 +1,7 @@
 package com.optiroute.backend.service;
 
-import com.optiroute.backend.dto.driver.DriverRequest;
-import com.optiroute.backend.dto.driver.DriverResponse;
+import com.optiroute.backend.dto.request.DriverRequest;
+import com.optiroute.backend.dto.response.DriverResponse;
 import com.optiroute.backend.entity.DriverEntity;
 import com.optiroute.backend.repository.DriverRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;

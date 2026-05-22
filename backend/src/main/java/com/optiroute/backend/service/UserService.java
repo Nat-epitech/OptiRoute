@@ -1,7 +1,7 @@
 package com.optiroute.backend.service;
 
-import com.optiroute.backend.dto.user.UserRequest;
-import com.optiroute.backend.dto.user.UserResponse;
+import com.optiroute.backend.dto.request.UserRequest;
+import com.optiroute.backend.dto.response.UserResponse;
 import com.optiroute.backend.entity.UserEntity;
 import com.optiroute.backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +33,7 @@ public class UserService {
 
         UserEntity savedUser = userRepository.save(user);
 
-        return UserResponse.builder().id(savedUser.getId()).email(savedUser.getEmail()).firstName(savedUser.getFirstName()).lastName(savedUser.getLastName()).build();
+        return UserResponse.builder().id(savedUser.getId()).email(savedUser.getEmail())
+                .firstName(savedUser.getFirstName()).lastName(savedUser.getLastName()).build();
     }
 }

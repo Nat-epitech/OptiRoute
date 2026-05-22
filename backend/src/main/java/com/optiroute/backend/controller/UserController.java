@@ -1,7 +1,7 @@
 package com.optiroute.backend.controller;
 
-import com.optiroute.backend.dto.user.UserRequest;
-import com.optiroute.backend.dto.user.UserResponse;
+import com.optiroute.backend.dto.request.UserRequest;
+import com.optiroute.backend.dto.response.UserResponse;
 import com.optiroute.backend.entity.UserEntity;
 import com.optiroute.backend.service.UserService;
 import jakarta.validation.Valid;

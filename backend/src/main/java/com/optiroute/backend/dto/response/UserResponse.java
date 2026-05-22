@@ -1,14 +1,13 @@
-package com.optiroute.backend.dto.driver;
+package com.optiroute.backend.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class DriverResponse {
+public class UserResponse {
     private Long id;
     private String email;
     private String firstName;
     private String lastName;
-    private String phoneNumber;
 }
