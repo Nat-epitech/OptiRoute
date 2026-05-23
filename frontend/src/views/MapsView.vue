@@ -6,15 +6,31 @@ import RouteSidebar from '@/components/maps/RouteSidebar.vue'
 
 const mapRef = ref()
 
-const routeResponse = ref()
+const routeResponse = ref<any>(null)
+const selectedRouteIndex = ref<number>(0)
 
 function handleRouteCalculated(response: any) {
 
     routeResponse.value = response
+    selectedRouteIndex.value = 0
 
-    const selected = response.selectedRoute
+    mapRef.value?.displayRoutes(
+        response.alternatives,
+        response.alternatives[0]
+    )
+}
 
-    mapRef.value?.displayRoutes(response.alternatives, selected)
+function handleSelectRoute(index: number) {
+
+    selectedRouteIndex.value = index
+
+    const selected =
+        routeResponse.value.alternatives[index]
+
+    mapRef.value?.displayRoutes(
+        routeResponse.value.alternatives,
+        selected
+    )
 }
 </script>
 
@@ -28,7 +44,8 @@ function handleRouteCalculated(response: any) {
 
         <!-- SIDEBAR -->
         <div class="absolute top-0 left-0 h-full z-10">
-            <RouteSidebar @route-calculated="handleRouteCalculated" />
+            <RouteSidebar :route-response="routeResponse" :selected-index="selectedRouteIndex"
+                @route-selected="handleSelectRoute" @route-calculated="handleRouteCalculated" />
         </div>
 
     </div>
