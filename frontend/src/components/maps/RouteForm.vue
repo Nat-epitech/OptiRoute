@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { reactive, toRaw } from 'vue'
+import { reactive } from 'vue'
+import HereAutocompleteInput from './HereAutocompleteInput.vue'
 import { calculateRoute } from '@/api/routeApi'
 
 //Variables
@@ -9,24 +10,14 @@ const emit = defineEmits([
 ])
 
 const form = reactive({
-    origin: {
-        lat: 45.7640,
-        lng: 4.8357
-    },
+    origin: null as any,
+    destination: null as any,
 
-    destination: {
-        lat: 45.8992,
-        lng: 6.1294
-    },
+    departureTime: '',
 
     mode: 'CHEAPEST',
-
-    departureTime: '2026-05-26T08:30:00+02:00',
-
     fuelPricePerLiter: 1.85,
-
     driverHourlyRate: 38,
-
     maxTravelTimeMinutes: 240,
 
     truck: {
@@ -38,19 +29,34 @@ const form = reactive({
     }
 })
 
-const loading = false
-
-//Functions
+// Functions
 
 async function submit() {
-    try {
-        const response = await calculateRoute(form)
 
-        emit(
-            'route-calculated',
+    if (!form.origin || !form.destination) {
+        return
+    }
+
+    try {
+        const payload = {
+            origin: form.origin.position,
+            destination: form.destination.position,
+
+            departureTime: toOffsetDateTime(form.departureTime),
+
+            mode: form.mode,
+            fuelPricePerLiter: form.fuelPricePerLiter,
+            driverHourlyRate: form.driverHourlyRate,
+            maxTravelTimeMinutes: form.maxTravelTimeMinutes,
+
+            truck: form.truck
+        }
+
+        const response = await calculateRoute(payload)
+        emit('route-calculated',
             {
                 response,
-                request: structuredClone(toRaw(form))
+                request: payload
             }
         )
     } catch (e) {
@@ -58,12 +64,24 @@ async function submit() {
     }
 }
 
+function toOffsetDateTime(value: string) {
+    if (!value) return null
+
+    return new Date(value).toISOString()
+}
 
 </script>
 
 <template>
-    <div class="space-y-6">
+    <div class="space-y-5">
 
+        <!-- ORIGIN -->
+        <HereAutocompleteInput label="Départ" @selected="form.origin = $event" />
+
+        <!-- DESTINATION -->
+        <HereAutocompleteInput label="Arrivée" @selected="form.destination = $event" />
+
+        <!-- MODE -->
         <div>
 
             <label class="block text-sm font-medium mb-2">
@@ -78,12 +96,61 @@ async function submit() {
                 <option value="CHEAPEST">
                     Plus économique
                 </option>
+
             </select>
 
         </div>
 
-        <button @click="submit" class="w-full bg-slate-900 text-white rounded-xl p-3
-                   hover:bg-slate-800 transition">
+        <!-- DATE -->
+        <div>
+
+            <label class="block text-sm font-medium mb-2">
+                Départ prévu
+            </label>
+
+            <input v-model="form.departureTime" type="datetime-local"
+                class="w-full rounded-xl border border-slate-300 p-3" />
+
+        </div>
+
+        <!-- FUEL -->
+        <div>
+
+            <label class="block text-sm font-medium mb-2">
+                Prix carburant €/L
+            </label>
+
+            <input v-model="form.fuelPricePerLiter" type="number" step="0.01"
+                class="w-full rounded-xl border border-slate-300 p-3" />
+
+        </div>
+
+        <!-- DRIVER -->
+        <div>
+
+            <label class="block text-sm font-medium mb-2">
+                Coût chauffeur €/h
+            </label>
+
+            <input v-model="form.driverHourlyRate" type="number"
+                class="w-full rounded-xl border border-slate-300 p-3" />
+
+        </div>
+
+        <!-- MAX TIME -->
+        <div>
+
+            <label class="block text-sm font-medium mb-2">
+                Temps max (minutes)
+            </label>
+
+            <input v-model="form.maxTravelTimeMinutes" type="number"
+                class="w-full rounded-xl border border-slate-300 p-3" />
+
+        </div>
+
+        <!-- BUTTON -->
+        <button @click="submit" class="w-full bg-slate-900 text-white rounded-xl p-3 hover:bg-slate-800 transition">
             Calculer l'itinéraire
         </button>
 
