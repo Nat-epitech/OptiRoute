@@ -5,8 +5,9 @@ import { RouterLink } from 'vue-router'
 <template>
     <aside class="w-64 bg-gray-900 text-white flex flex-col h-full">
 
-        <!-- LOGO SECTION (same height as topbar) -->
-        <div class="h-16 flex items-center justify-center border-b border-gray-800 px-4">
+        <!-- LOGO SECTION -->
+        <div class="h-16 flex items-center justify-center px-4
+                   bg-white border-b border-gray-200 border-r border-r-gray-200">
 
             <img src="@/assets/images/logo.png" alt="OptiRoute logo" class="h-12 w-auto object-contain" />
 

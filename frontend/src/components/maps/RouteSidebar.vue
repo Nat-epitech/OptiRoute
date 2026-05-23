@@ -45,9 +45,7 @@ const selectedRoute = computed(() => {
 
                 <!-- HEADER -->
                 <div class="p-4 border-b">
-                    <h1 class="text-xl font-bold">
-                        Rechercher un itinéraire
-                    </h1>
+                    <h1 class="text-xl font-bold"> Rechercher un itinéraire </h1>
                 </div>
 
                 <!-- CONTENT -->
@@ -59,9 +57,7 @@ const selectedRoute = computed(() => {
                     <!-- ALTERNATIVES -->
                     <div v-if="routeResponse?.alternatives" class="space-y-2">
 
-                        <h2 class="font-semibold">
-                            Itinéraires trouvés:
-                        </h2>
+                        <h2 class="font-semibold"> Itinéraires trouvés: </h2>
 
                         <div class="space-y-2">
 
@@ -75,13 +71,9 @@ const selectedRoute = computed(() => {
 
                                 <div class="flex justify-between text-sm">
 
-                                    <span>
-                                        {{ (route.distanceMeters / 1000).toFixed(0) }} km
-                                    </span>
+                                    <span> {{ (route.distanceMeters / 1000).toFixed(0) }} km </span>
 
-                                    <span>
-                                        {{ route.costs.totalCost.toFixed(0) }} €
-                                    </span>
+                                    <span> {{ route.costs.totalCost.toFixed(0) }} € </span>
 
                                 </div>
 
@@ -97,23 +89,15 @@ const selectedRoute = computed(() => {
                     <!-- DÉTAIL COÛTS -->
                     <div v-if="selectedRoute" class="space-y-2">
 
-                        <h2 class="font-semibold">
-                            Détail coûts:
-                        </h2>
+                        <h2 class="font-semibold"> Détail coûts: </h2>
 
                         <div class="text-sm space-y-1 text-slate-600">
 
-                            <p>
-                                Carburant : {{ selectedRoute.costs.fuelCost.toFixed(2) }} €
-                            </p>
+                            <p> Carburant : {{ selectedRoute.costs.fuelCost.toFixed(2) }} € </p>
 
-                            <p>
-                                Péages : {{ selectedRoute.costs.tollCost.toFixed(2) }} €
-                            </p>
+                            <p> Péages : {{ selectedRoute.costs.tollCost.toFixed(2) }} € </p>
 
-                            <p>
-                                Chauffeur : {{ selectedRoute.costs.driverCost.toFixed(2) }} €
-                            </p>
+                            <p> Chauffeur : {{ selectedRoute.costs.driverCost.toFixed(2) }} € </p>
 
                         </div>
 
@@ -125,9 +109,19 @@ const selectedRoute = computed(() => {
         </div>
 
         <!-- TOGGLE -->
-        <button @click="open = !open"
-            class="absolute top-1/2 -translate-y-1/2 left-full h-16 w-8 bg-white border rounded-r-xl">
-            {{ open ? '<' : '>' }} </button>
+        <button @click="open = !open" :class="[
+            'absolute top-1/2 -translate-y-1/2 z-50',
+            'h-16 w-8 rounded-r-xl',
+            'bg-white border border-slate-200 border-l-0',
+            'shadow-lg hover:bg-slate-50',
+            'flex items-center justify-center',
+            'transition-all duration-300',
+            open ? 'left-[420px]' : 'left-0'
+        ]">
+
+            <span class="text-slate-600 text-lg"> {{ open ? '<' : '>' }} </span>
+
+        </button>
 
     </div>
 </template>
