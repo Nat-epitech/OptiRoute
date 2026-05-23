@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue'
 import RouteForm from './RouteForm.vue'
 
+//Variables
+
 const props = defineProps({
     routeResponse: Object,
     selectedIndex: Number
@@ -14,8 +16,10 @@ const emit = defineEmits([
 
 const open = ref(true)
 
-function onRouteCalculated(res: any) {
-    emit('route-calculated', res)
+//Functions
+
+function onRouteCalculated(payload: any) {
+    emit('route-calculated', payload)
 }
 
 function selectRoute(index: number) {
@@ -25,6 +29,7 @@ function selectRoute(index: number) {
 const selectedRoute = computed(() => {
     return props.routeResponse?.alternatives?.[props.selectedIndex ?? 0]
 })
+
 </script>
 
 <template>
@@ -87,8 +92,8 @@ const selectedRoute = computed(() => {
                         <div class="space-y-2">
 
                             <div v-for="(route, index) in routeResponse.alternatives" :key="index"
-                                @click="selectRoute(Number(index))" class="p-3 border rounded-xl cursor-pointer transition"
-                                :class="[
+                                @click="selectRoute(Number(index))"
+                                class="p-3 border rounded-xl cursor-pointer transition" :class="[
                                     index === selectedIndex
                                         ? 'border-blue-500 bg-blue-50'
                                         : 'hover:bg-slate-50'

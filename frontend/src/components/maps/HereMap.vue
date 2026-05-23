@@ -5,17 +5,27 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
-const mapContainer =
-    ref<HTMLElement | null>(null)
+//Variables
 
+const mapContainer = ref<HTMLElement | null>(null)
 let map: any
 
 const routePolylines: any[] = []
 
-const markers = new Map<string, any>()
+let startMarker: any = null
+let endMarker: any = null
+
+const emit = defineEmits([
+    'route-selected'
+])
+
+//Functions
+
+function emitRouteSelected(index: number) {
+    emit('route-selected', index)
+}
 
 function clearRoutes() {
-
     for (const route of routePolylines) {
         map.removeObject(route)
     }
@@ -23,94 +33,78 @@ function clearRoutes() {
     routePolylines.length = 0
 }
 
-function addMarker(
-    position: any,
-    id: string
-) {
-
-    const existing =
-        markers.get(id)
-
-    if (existing) {
-        map.removeObject(existing)
+function clearMarkers() {
+    if (startMarker) {
+        map.removeObject(startMarker)
     }
 
-    const marker =
-        new H.map.Marker(position)
-
-    markers.set(id, marker)
-
-    map.addObject(marker)
+    if (endMarker) {
+        map.removeObject(endMarker)
+    }
 }
 
-function displayRoutes(
-    alternatives: any[],
-    selectedRoute: any
-) {
+function setMarkers(origin: any, destination: any) {
+    clearMarkers()
 
+    startMarker = new H.map.Marker(origin)
+    endMarker = new H.map.Marker(destination)
+
+    map.addObject(startMarker)
+    map.addObject(endMarker)
+}
+
+function displayRoutes(alternatives: any[], selectedRoute: any) {
     if (!map) return
-
     clearRoutes()
 
-    alternatives.forEach((route) => {
-
-        const lineString =
-            H.geo.LineString.fromFlexiblePolyline(
-                route.polyline
-            )
-
-        const polyline =
-            new H.map.Polyline(
-                lineString,
-                {
-                    style: {
-                        lineWidth:
-                            route === selectedRoute
-                                ? 7
-                                : 4,
-
-                        strokeColor:
-                            route === selectedRoute
-                                ? '#2563eb'
-                                : '#94a3b8'
-                    }
+    alternatives.forEach((route, index) => {
+        const lineString = H.geo.LineString.fromFlexiblePolyline(route.polyline)
+        const isSelected = route === selectedRoute
+        const polyline = new H.map.Polyline(lineString,
+            {
+                style: {
+                    lineWidth: isSelected ? 7 : 4,
+                    strokeColor: isSelected ? '#2563eb' : '#94a3b8'
                 }
-            )
+            }
+        )
+
+        polyline.routeIndex = index
+        polyline.addEventListener('tap',
+            () => {
+
+                emitRouteSelected(index)
+            }
+        )
 
         routePolylines.push(polyline)
-
         map.addObject(polyline)
     })
 
     if (routePolylines.length > 0) {
-
-        map.getViewModel()
-            .setLookAtData({
-                bounds:
-                    routePolylines[0]
-                        .getBoundingBox()
-            })
+        map.getViewModel().setLookAtData({
+            bounds:
+                routePolylines[0]
+                    .getBoundingBox()
+        })
     }
 }
 
 defineExpose({
-    displayRoutes
+    displayRoutes,
+    setMarkers
 })
 
 onMounted(() => {
 
-    const platform =
-        new H.service.Platform({
-            apikey:
-                import.meta.env
-                    .VITE_HERE_API_KEY
-        })
+    const platform = new H.service.Platform({
+        apikey:
+            import.meta.env.VITE_HERE_API_KEY
+    })
 
-    const defaultLayers =
-        platform.createDefaultLayers()
+    const defaultLayers = platform.createDefaultLayers()
 
-    map = new H.Map(
-        mapContainer.value!,
+    map = new H.Map(mapContainer.value!,
         defaultLayers.vector.normal.map,
         {
             center: {

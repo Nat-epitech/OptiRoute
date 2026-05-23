@@ -4,34 +4,42 @@ import { ref } from 'vue'
 import HereMap from '@/components/maps/HereMap.vue'
 import RouteSidebar from '@/components/maps/RouteSidebar.vue'
 
+//Variables
+
 const mapRef = ref()
 
+const lastRequest = ref<any>(null)
 const routeResponse = ref<any>(null)
+
 const selectedRouteIndex = ref<number>(0)
 
-function handleRouteCalculated(response: any) {
+//Functions
 
-    routeResponse.value = response
+function handleRouteCalculated(payload: { response: any, request: any }) {
+
+    routeResponse.value = payload.response
+    lastRequest.value = payload.request
     selectedRouteIndex.value = 0
 
     mapRef.value?.displayRoutes(
-        response.alternatives,
-        response.alternatives[0]
+        payload.response.alternatives,
+        payload.response.alternatives[0]
+    )
+
+    mapRef.value?.setMarkers(
+        payload.request.origin,
+        payload.request.destination
     )
 }
 
 function handleSelectRoute(index: number) {
-
     selectedRouteIndex.value = index
 
-    const selected =
-        routeResponse.value.alternatives[index]
+    const selected = routeResponse.value.alternatives[index]
 
-    mapRef.value?.displayRoutes(
-        routeResponse.value.alternatives,
-        selected
-    )
+    mapRef.value?.displayRoutes(routeResponse.value.alternatives, selected)
 }
+
 </script>
 
 <template>
@@ -39,7 +47,7 @@ function handleSelectRoute(index: number) {
 
         <!-- MAP -->
         <div class="absolute inset-0">
-            <HereMap ref="mapRef" />
+            <HereMap ref="mapRef" @route-selected="handleSelectRoute" />s
         </div>
 
         <!-- SIDEBAR -->

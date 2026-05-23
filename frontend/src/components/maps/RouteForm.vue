@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, toRaw } from 'vue'
 import { calculateRoute } from '@/api/routeApi'
+
+//Variables
 
 const emit = defineEmits([
     'route-calculated'
@@ -38,23 +40,25 @@ const form = reactive({
 
 const loading = false
 
+//Functions
+
 async function submit() {
-
     try {
-
-        const response =
-            await calculateRoute(form)
+        const response = await calculateRoute(form)
 
         emit(
             'route-calculated',
-            response
+            {
+                response,
+                request: structuredClone(toRaw(form))
+            }
         )
-
     } catch (e) {
-
         console.error(e)
     }
 }
+
+
 </script>
 
 <template>
