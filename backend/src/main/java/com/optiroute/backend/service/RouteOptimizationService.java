@@ -2,7 +2,12 @@ package com.optiroute.backend.service;
 
 import com.optiroute.backend.dto.request.RouteRequest;
 import com.optiroute.backend.dto.response.*;
+
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class RouteOptimizationService {
@@ -11,9 +16,7 @@ public class RouteOptimizationService {
     private final HereRouteParser hereRouteParser;
     private final RouteCostService routeCostService;
 
-    public RouteOptimizationService(
-            HereRoutingService hereRoutingService,
-            HereRouteParser hereRouteParser,
+    public RouteOptimizationService(HereRoutingService hereRoutingService, HereRouteParser hereRouteParser,
             RouteCostService routeCostService) {
         this.hereRoutingService = hereRoutingService;
         this.hereRouteParser = hereRouteParser;
@@ -22,33 +25,73 @@ public class RouteOptimizationService {
 
     public RouteResponse calculateRoute(RouteRequest request) {
 
-        // 1. appel HERE
-        String raw = hereRoutingService.calculateFastestRoute(request);
+        // 1. HERE
+        String raw = hereRoutingService.calculateRoutes(request);
 
-        // 2. parsing
-        HereRouteParser.ParsedRoute parsed = hereRouteParser.parse(raw);
+        // 2. Parsing
+        List<HereRouteParser.ParsedRoute> parsedRoutes = hereRouteParser.parseRoutes(raw);
 
-        // 3. calcul coûts
-        double km = parsed.distanceMeters / 1000.0;
-        double hours = parsed.durationSeconds / 3600.0;
+        // 3. Conversion DTO + coûts
+        List<RouteAlternativeDto> alternatives = new ArrayList<>();
 
-        var costs = routeCostService.calculateCosts(
-                km,
-                hours,
-                request.getTruck().getFuelConsumptionLitersPer100Km(),
-                request.getFuelPricePerLiter(),
-                0.0, // toll placeholder pour V1
-                request.getDriverHourlyRate());
+        for (HereRouteParser.ParsedRoute parsed : parsedRoutes) {
 
-        // 4. response
-        RouteAlternativeDto route = new RouteAlternativeDto();
-        route.setDistanceMeters(parsed.distanceMeters);
-        route.setDurationSeconds(parsed.durationSeconds);
-        route.setPolyline(parsed.polyline);
-        route.setCosts(costs);
+            double km = parsed.distanceMeters / 1000.0;
 
+            double hours = parsed.durationSeconds / 3600.0;
+
+            RouteCostDetailsDto costs = routeCostService.calculateCosts(km, hours,
+                    request.getTruck().getFuelConsumptionLitersPer100Km(), request.getFuelPricePerLiter(),
+                    parsed.tollCost, request.getDriverHourlyRate());
+
+            RouteAlternativeDto dto = new RouteAlternativeDto();
+
+            dto.setDistanceMeters(parsed.distanceMeters);
+            dto.setDurationSeconds(parsed.durationSeconds);
+            dto.setPolyline(parsed.polyline);
+            dto.setCosts(costs);
+
+            alternatives.add(dto);
+        }
+
+        // 4. Route FASTEST de référence
+        RouteAlternativeDto fastestRoute = alternatives.stream()
+                .min(Comparator.comparingLong(RouteAlternativeDto::getDurationSeconds)).orElseThrow();
+
+        long fastestDuration = fastestRoute.getDurationSeconds();
+
+        // 5. Temps max autorisé
+        long maxDuration;
+
+        if (request.getMaxTravelTimeMinutes() != null) {
+            maxDuration = request.getMaxTravelTimeMinutes() * 60L;
+        } else {
+            maxDuration = (long) (fastestDuration * 1.10);
+        }
+
+        // 6. Filtrage
+        List<RouteAlternativeDto> validRoutes = alternatives.stream().filter(r -> r.getDurationSeconds() <= maxDuration)
+                .toList();
+
+        // fallback sécurité
+        if (validRoutes.isEmpty()) {
+            validRoutes = List.of(fastestRoute);
+        }
+
+        // 7. Sélection économique
+        RouteAlternativeDto cheapestRoute = validRoutes.stream()
+                .min(Comparator.comparingDouble(r -> r.getCosts().getTotalCost())).orElseThrow();
+
+        // 8. Réponse
         RouteResponse response = new RouteResponse();
-        response.setSelectedRoute(route);
+
+        if (request.getMode().name().equals("FASTEST")) {
+            response.setSelectedRoute(fastestRoute);
+        } else {
+            response.setSelectedRoute(cheapestRoute);
+        }
+
+        response.setAlternatives(alternatives);
 
         return response;
     }

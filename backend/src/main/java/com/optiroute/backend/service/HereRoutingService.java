@@ -15,17 +15,14 @@ public class HereRoutingService {
         this.hereApiClient = hereApiClient;
     }
 
-    public String calculateFastestRoute(RouteRequest request) {
+    public String calculateRoutes(RouteRequest request) {
 
         String origin = request.getOrigin().getLat() + "," + request.getOrigin().getLng();
         String destination = request.getDestination().getLat() + "," + request.getDestination().getLng();
-
         String departureTime = request.getDepartureTime() != null
-                ? request.getDepartureTime()
-                        .withNano(0)
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"))
+                ? request.getDepartureTime().withNano(0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"))
                 : null;
 
-        return hereApiClient.getFastestRoute(origin, destination, departureTime);
+        return hereApiClient.getRoutes(origin, destination, departureTime);
     }
 }

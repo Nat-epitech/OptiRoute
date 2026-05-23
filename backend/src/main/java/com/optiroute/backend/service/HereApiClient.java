@@ -17,12 +17,13 @@ public class HereApiClient {
         this.properties = properties;
     }
 
-    public String getFastestRoute(String origin, String destination, String departureTime) {
+    public String getRoutes(String origin, String destination, String departureTime) {
 
         String url = UriComponentsBuilder
                 .fromHttpUrl("https://router.hereapi.com/v8/routes")
                 .queryParam("transportMode", "truck")
                 .queryParam("routingMode", "fast")
+                .queryParam("alternatives", "5")
                 .queryParam("origin", origin)
                 .queryParam("destination", destination)
                 .queryParam("departureTime", departureTime)
