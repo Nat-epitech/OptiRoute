@@ -20,7 +20,7 @@ public class HereApiClient {
     public String getRoutes(String origin, String destination, String departureTime) {
 
         String url = UriComponentsBuilder
-                .fromHttpUrl("https://router.hereapi.com/v8/routes")
+                .fromUriString("https://router.hereapi.com/v8/routes")
                 .queryParam("transportMode", "truck")
                 .queryParam("routingMode", "fast")
                 .queryParam("alternatives", "5")

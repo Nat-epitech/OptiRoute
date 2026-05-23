@@ -87,7 +87,7 @@ const selectedRoute = computed(() => {
                         <div class="space-y-2">
 
                             <div v-for="(route, index) in routeResponse.alternatives" :key="index"
-                                @click="selectRoute(index)" class="p-3 border rounded-xl cursor-pointer transition"
+                                @click="selectRoute(Number(index))" class="p-3 border rounded-xl cursor-pointer transition"
                                 :class="[
                                     index === selectedIndex
                                         ? 'border-blue-500 bg-blue-50'
