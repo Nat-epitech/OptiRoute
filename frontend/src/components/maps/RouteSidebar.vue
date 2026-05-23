@@ -46,7 +46,7 @@ const selectedRoute = computed(() => {
                 <!-- HEADER -->
                 <div class="p-4 border-b">
                     <h1 class="text-xl font-bold">
-                        OptiRoute
+                        Rechercher un itinéraire
                     </h1>
                 </div>
 
@@ -56,37 +56,11 @@ const selectedRoute = computed(() => {
                     <!-- FORM -->
                     <RouteForm @route-calculated="onRouteCalculated" />
 
-                    <!-- SUMMARY -->
-                    <div v-if="selectedRoute" class="space-y-2">
-
-                        <h2 class="font-semibold">
-                            Résumé sélectionné
-                        </h2>
-
-                        <div class="text-sm text-slate-600">
-                            <p>
-                                Distance :
-                                {{ (selectedRoute.distanceMeters / 1000).toFixed(0) }} km
-                            </p>
-
-                            <p>
-                                Durée :
-                                {{ (selectedRoute.durationSeconds / 3600).toFixed(1) }} h
-                            </p>
-
-                            <p>
-                                Coût total :
-                                {{ selectedRoute.costs.totalCost.toFixed(2) }} €
-                            </p>
-                        </div>
-
-                    </div>
-
                     <!-- ALTERNATIVES -->
                     <div v-if="routeResponse?.alternatives" class="space-y-2">
 
                         <h2 class="font-semibold">
-                            Alternatives
+                            Itinéraires trouvés:
                         </h2>
 
                         <div class="space-y-2">
@@ -124,7 +98,7 @@ const selectedRoute = computed(() => {
                     <div v-if="selectedRoute" class="space-y-2">
 
                         <h2 class="font-semibold">
-                            Détail coûts
+                            Détail coûts:
                         </h2>
 
                         <div class="text-sm space-y-1 text-slate-600">

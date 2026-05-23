@@ -3,16 +3,18 @@ import { RouterLink } from 'vue-router'
 </script>
 
 <template>
+    <aside class="w-64 bg-gray-900 text-white flex flex-col h-full">
 
-    <aside class="w-64 bg-gray-900 text-white flex flex-col">
+        <!-- LOGO SECTION (same height as topbar) -->
+        <div class="h-16 flex items-center justify-center border-b border-gray-800 px-4">
 
-        <div class="h-16 flex items-center px-6 border-b border-gray-800">
-            <h1 class="text-2xl font-bold tracking-wide">
-                OptiRoute
-            </h1>
+            <img src="@/assets/images/logo.png" alt="OptiRoute logo" class="h-12 w-auto object-contain" />
+
         </div>
 
+        <!-- NAVIGATION -->
         <nav class="flex-1 p-4 space-y-2">
+
             <RouterLink to="/dashboard" class="block px-4 py-3 rounded-xl hover:bg-gray-800 transition">
                 Dashboard
             </RouterLink>
@@ -28,8 +30,8 @@ import { RouterLink } from 'vue-router'
             <RouterLink to="/maps" class="block px-4 py-3 rounded-xl hover:bg-gray-800 transition">
                 Maps
             </RouterLink>
+
         </nav>
 
     </aside>
-
 </template>
