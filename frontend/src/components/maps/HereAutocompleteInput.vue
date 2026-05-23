@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { debounce } from 'lodash-es'
 import { autocompletePlaces, geocodePlace } from '@/api/placeApi'
 
 //Variables
@@ -7,53 +8,75 @@ import { autocompletePlaces, geocodePlace } from '@/api/placeApi'
 const props = defineProps({ label: String })
 
 const emit = defineEmits(['selected'])
-
-const query = ref('')
-
-const loading = ref(false)
-
+const inputValue = ref('')
 const results = ref<any[]>([])
+const loading = ref(false)
+const isSelecting = ref(false)
 
 //Functions
 
-watch(query, async (value) => {
+watch(inputValue, (value) => {
+    if (isSelecting.value) return
 
-    if (!value || value.length < 3) {
-        results.value = []
-        return
-    }
-
-    loading.value = true
-    try {
-        results.value = await autocompletePlaces(value)
-    } catch (e) {
-        console.error(e)
-    }
-
-    loading.value = false
+    fetchPlaces(value)
 })
+
+const fetchPlaces = debounce(
+    async (value: string) => {
+
+        if (!value || value.length < 4) {
+            results.value = []
+            return
+        }
+
+        loading.value = true
+
+        try {
+            console.log('fetching places for', value)
+            results.value = await autocompletePlaces(value)
+        } catch (e) {
+            console.error(e)
+        } finally {
+            loading.value = false
+        }
+
+    },
+    800, // debounce
+    {
+        maxWait: 5000 // équivalent VueUse maxWait
+    }
+)
 
 async function selectPlace(item: any) {
     try {
+        isSelecting.value = true
+
         const place = await geocodePlace(item.id)
 
-        query.value = place.address.label
+        const label = place.address.label
 
+        // ❗ crucial : on stop le debounce en cours
+        fetchPlaces.cancel?.()
+
+        inputValue.value = label
         results.value = []
 
         emit('selected', {
-            label: place.address.label,
-
+            label,
             position: {
                 lat: place.position.lat,
                 lng: place.position.lng
             }
         })
-    } catch (e) {
-        console.error(e)
+
+    } finally {
+        loading.value = false
+
+        setTimeout(() => {
+            isSelecting.value = false
+        }, 0)
     }
 }
-
 </script>
 
 <template>
@@ -63,7 +86,8 @@ async function selectPlace(item: any) {
             {{ label }}
         </label>
 
-        <input v-model="query" type="text" class="w-full rounded-xl border border-slate-300 p-3" :placeholder="label" />
+        <input v-model="inputValue" type="text" class="w-full rounded-xl border border-slate-300 p-3"
+            :placeholder="label" />
 
         <!-- RESULTS -->
         <div v-if="results.length > 0"

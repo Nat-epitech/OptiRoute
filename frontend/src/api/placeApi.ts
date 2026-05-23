@@ -18,7 +18,8 @@ export async function autocompletePlaces(query: string) {
             params: {
                 q: query,
                 apiKey: API_KEY,
-                limit: 5
+                limit: 5,
+                in: 'countryCode:FRA'
             }
         }
     )
