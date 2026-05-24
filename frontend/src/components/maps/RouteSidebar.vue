@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import RouteForm from './RouteForm.vue'
+import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
 
 //Variables
 
@@ -119,7 +120,8 @@ const selectedRoute = computed(() => {
             open ? 'left-[420px]' : 'left-0'
         ]">
 
-            <span class="text-slate-600 text-lg"> {{ open ? '<' : '>' }} </span>
+            <ChevronLeft v-if="open" class="h-5 w-5 text-slate-600" />
+            <ChevronRight v-else class="h-5 w-5 text-slate-600" />
 
         </button>
 

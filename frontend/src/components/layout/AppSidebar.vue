@@ -7,9 +7,9 @@ import { RouterLink } from 'vue-router'
 
         <!-- LOGO SECTION -->
         <div class="h-16 flex items-center justify-center px-4
-                   bg-white border-b border-gray-200 border-r border-r-gray-200">
+bg-white border-b border-gray-200 border-r border-r-gray-200">
 
-            <img src="@/assets/images/logo.png" alt="OptiRoute logo" class="h-12 w-auto object-contain" />
+            <img src="@/assets/images/logo.png" alt="OptiRoute logo" class="h-8 w-auto object-contain" />
 
         </div>
 
