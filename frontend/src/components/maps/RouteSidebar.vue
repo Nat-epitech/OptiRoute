@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import RouteForm from './RouteForm.vue'
-import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
+import { ChevronLeft, ChevronRight, Map, Route, Fuel, Receipt, User, Navigation, Milestone } from 'lucide-vue-next'
 
 //Variables
 
@@ -31,6 +31,18 @@ const selectedRoute = computed(() => {
     return props.routeResponse?.alternatives?.[props.selectedIndex ?? 0]
 })
 
+const formatDuration = (seconds: number) => {
+    const totalMinutes = Math.round(seconds / 60)
+    const hours = Math.floor(totalMinutes / 60)
+    const minutes = totalMinutes % 60
+
+    if (minutes === 0) {
+        return `${hours} h`
+    }
+
+    return `${hours} h ${minutes}`
+}
+
 </script>
 
 <template>
@@ -56,30 +68,57 @@ const selectedRoute = computed(() => {
                     <RouteForm @route-calculated="onRouteCalculated" />
 
                     <!-- ALTERNATIVES -->
-                    <div v-if="routeResponse?.alternatives" class="space-y-2">
+                    <div v-if="routeResponse?.alternatives" class="space-y-3">
 
-                        <h2 class="font-semibold"> Itinéraires trouvés: </h2>
+                        <h2 class="text-xl font-bold text-slate-800">
+                            Itinéraires trouvés
+                        </h2>
 
-                        <div class="space-y-2">
+                        <div class="space-y-3">
 
                             <div v-for="(route, index) in routeResponse.alternatives" :key="index"
                                 @click="selectRoute(Number(index))"
-                                class="p-3 border rounded-xl cursor-pointer transition" :class="[
+                                class="p-4 border rounded-2xl cursor-pointer transition-all" :class="[
                                     index === selectedIndex
-                                        ? 'border-blue-500 bg-blue-50'
-                                        : 'hover:bg-slate-50'
+                                        ? 'border-blue-500 bg-blue-50 shadow-sm'
+                                        : 'border-slate-200 hover:bg-slate-50'
                                 ]">
 
-                                <div class="flex justify-between text-sm">
+                                <div class="flex items-start justify-between gap-4">
 
-                                    <span> {{ (route.distanceMeters / 1000).toFixed(0) }} km </span>
+                                    <!-- LEFT -->
+                                    <div class="flex items-center gap-4 text-sm text-slate-700">
 
-                                    <span> {{ route.costs.totalCost.toFixed(0) }} € </span>
+                                        <div class="flex items-center gap-1">
+                                            <Fuel class="h-4 w-4 text-slate-500" />
+                                            <span>{{ route.costs.fuelCost.toFixed(0) }} €</span>
+                                        </div>
 
-                                </div>
+                                        <div class="flex items-center gap-1">
+                                            <Receipt class="h-4 w-4 text-slate-500" />
+                                            <span>{{ route.costs.tollCost.toFixed(0) }} €</span>
+                                        </div>
 
-                                <div class="text-xs text-slate-500">
-                                    {{ (route.durationSeconds / 3600).toFixed(1) }} h
+                                        <div class="flex items-center gap-1">
+                                            <User class="h-4 w-4 text-slate-500" />
+                                            <span>{{ route.costs.driverCost.toFixed(0) }} €</span>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- RIGHT -->
+                                    <div class="text-right">
+
+                                        <div class="text-lg font-semibold text-slate-800">
+                                            {{ formatDuration(route.durationSeconds) }}
+                                        </div>
+
+                                        <div class="text-sm text-slate-500 mt-1">
+                                            {{ (route.distanceMeters / 1000).toFixed(0) }} km
+                                        </div>
+
+                                    </div>
+
                                 </div>
 
                             </div>
@@ -88,21 +127,30 @@ const selectedRoute = computed(() => {
                     </div>
 
                     <!-- DÉTAIL COÛTS -->
-                    <div v-if="selectedRoute" class="space-y-2">
+                    <!-- <div v-if="selectedRoute" class="space-y-2">
 
                         <h2 class="font-semibold"> Détail coûts: </h2>
 
                         <div class="text-sm space-y-1 text-slate-600">
 
-                            <p> Carburant : {{ selectedRoute.costs.fuelCost.toFixed(2) }} € </p>
+                            <p>
+                                <Fuel class="h-4 w-4 text-slate-500" /> Carburant : {{
+                                    selectedRoute.costs.fuelCost.toFixed(2) }} €
+                            </p>
 
-                            <p> Péages : {{ selectedRoute.costs.tollCost.toFixed(2) }} € </p>
+                            <p>
+                                <Receipt class="h-4 w-4 text-slate-500" /> Péages : {{
+                                    selectedRoute.costs.tollCost.toFixed(2) }} €
+                            </p>
 
-                            <p> Chauffeur : {{ selectedRoute.costs.driverCost.toFixed(2) }} € </p>
+                            <p>
+                                <User class="h-4 w-4 text-slate-500" /> Chauffeur : {{
+                                    selectedRoute.costs.driverCost.toFixed(2) }} €
+                            </p>
 
                         </div>
 
-                    </div>
+                    </div> -->
 
                 </div>
 

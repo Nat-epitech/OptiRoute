@@ -17,7 +17,7 @@ const form = reactive({
     departureTime: null as any,
 
     mode: 'FASTEST',
-    driverHourlyRate: 38,
+    driverHourlyRate: 0,
     maxTravelTimeMinutes: null,
 
     truck: {
