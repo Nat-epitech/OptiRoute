@@ -17,8 +17,6 @@ public class RouteRequest {
 
     private Integer maxTravelTimeMinutes;
 
-    private Double fuelPricePerLiter;
-
     private Double driverHourlyRate;
 
     private TruckConfiguration truck;
@@ -61,14 +59,6 @@ public class RouteRequest {
 
     public void setMaxTravelTimeMinutes(Integer maxTravelTimeMinutes) {
         this.maxTravelTimeMinutes = maxTravelTimeMinutes;
-    }
-
-    public Double getFuelPricePerLiter() {
-        return fuelPricePerLiter;
-    }
-
-    public void setFuelPricePerLiter(Double fuelPricePerLiter) {
-        this.fuelPricePerLiter = fuelPricePerLiter;
     }
 
     public Double getDriverHourlyRate() {

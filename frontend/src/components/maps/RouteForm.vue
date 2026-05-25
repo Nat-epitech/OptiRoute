@@ -17,7 +17,6 @@ const form = reactive({
     departureTime: null as any,
 
     mode: 'FASTEST',
-    fuelPricePerLiter: 1.85,
     driverHourlyRate: 38,
     maxTravelTimeMinutes: null,
 
@@ -46,7 +45,6 @@ async function submit() {
             departureTime: toOffsetDateTime(form.departureTime),
 
             mode: form.mode,
-            fuelPricePerLiter: form.fuelPricePerLiter,
             driverHourlyRate: form.driverHourlyRate,
             maxTravelTimeMinutes: form.maxTravelTimeMinutes,
 
@@ -125,18 +123,6 @@ function toOffsetDateTime(value: string) {
             </select>
 
             <input v-if="departureMode === 'PLANNED'" v-model="form.departureTime" type="datetime-local"
-                class="w-full rounded-xl border border-slate-300 p-3" />
-
-        </div>
-
-        <!-- FUEL -->
-        <div>
-
-            <label class="block text-sm font-medium mb-2">
-                Prix carburant €/L
-            </label>
-
-            <input v-model="form.fuelPricePerLiter" type="number" step="0.01"
                 class="w-full rounded-xl border border-slate-300 p-3" />
 
         </div>
