@@ -6,10 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
-public class BackendApplication {
+public class OptiRouteApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BackendApplication.class, args);
+        SpringApplication.run(OptiRouteApplication.class, args);
     }
 
 }

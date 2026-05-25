@@ -12,9 +12,9 @@
         },
         {
             "type": "java",
-            "name": "BackendApplication",
+            "name": "OptiRouteApplication",
             "request": "launch",
-            "mainClass": "com.optiroute.backend.BackendApplication",
+            "mainClass": "com.optiroute.backend.OptiRouteApplication",
             "projectName": "backend"
         }
     ]
