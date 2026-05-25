@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import HereAutocompleteInput from './HereAutocompleteInput.vue'
 import { calculateRoute } from '@/api/routeApi'
 
 //Variables
+const departureMode = ref('NOW')
 
 const emit = defineEmits([
     'route-calculated'
@@ -13,7 +14,7 @@ const form = reactive({
     origin: null as any,
     destination: null as any,
 
-    departureTime: '',
+    departureTime: null as any,
 
     mode: 'CHEAPEST',
     fuelPricePerLiter: 1.85,
@@ -102,13 +103,24 @@ function toOffsetDateTime(value: string) {
         </div>
 
         <!-- DATE -->
-        <div>
+        <!-- DEPARTURE TIME -->
+        <div class="space-y-3">
 
-            <label class="block text-sm font-medium mb-2">
-                Départ prévu
+            <label class="block text-sm font-medium">
+                Départ
             </label>
 
-            <input v-model="form.departureTime" type="datetime-local"
+            <select v-model="departureMode" class="w-full rounded-xl border border-slate-300 p-3">
+                <option value="NOW">
+                    Départ maintenant
+                </option>
+
+                <option value="PLANNED">
+                    Départ prévu à
+                </option>
+            </select>
+
+            <input v-if="departureMode === 'PLANNED'" v-model="form.departureTime" type="datetime-local"
                 class="w-full rounded-xl border border-slate-300 p-3" />
 
         </div>
