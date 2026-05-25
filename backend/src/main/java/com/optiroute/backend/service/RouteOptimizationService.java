@@ -15,12 +15,14 @@ public class RouteOptimizationService {
     private final HereRoutingService hereRoutingService;
     private final HereRouteParser hereRouteParser;
     private final RouteCostService routeCostService;
+    private final FuelPriceService fuelPriceService;
 
     public RouteOptimizationService(HereRoutingService hereRoutingService, HereRouteParser hereRouteParser,
-            RouteCostService routeCostService) {
+            RouteCostService routeCostService, FuelPriceService fuelPriceService) {
         this.hereRoutingService = hereRoutingService;
         this.hereRouteParser = hereRouteParser;
         this.routeCostService = routeCostService;
+        this.fuelPriceService = fuelPriceService;
     }
 
     public RouteResponse calculateRoute(RouteRequest request) {
@@ -33,19 +35,19 @@ public class RouteOptimizationService {
 
         // 3. Conversion DTO + coûts
         List<RouteAlternativeDto> alternatives = new ArrayList<>();
+        double fuelPrice = fuelPriceService.getAverageDieselPrice();
+        double consumption = request.getTruck().getFuelConsumptionLitersPer100Km();
+        double driverRate = request.getDriverHourlyRate();
 
         for (HereRouteParser.ParsedRoute parsed : parsedRoutes) {
-
             double km = parsed.distanceMeters / 1000.0;
-
             double hours = parsed.durationSeconds / 3600.0;
 
             RouteCostDetailsDto costs = routeCostService.calculateCosts(km, hours,
-                    request.getTruck().getFuelConsumptionLitersPer100Km(), request.getFuelPricePerLiter(),
-                    parsed.tollCost, request.getDriverHourlyRate());
+                    consumption, fuelPrice,
+                    parsed.tollCost, driverRate);
 
             RouteAlternativeDto dto = new RouteAlternativeDto();
-
             dto.setDistanceMeters(parsed.distanceMeters);
             dto.setDurationSeconds(parsed.durationSeconds);
             dto.setPolyline(parsed.polyline);

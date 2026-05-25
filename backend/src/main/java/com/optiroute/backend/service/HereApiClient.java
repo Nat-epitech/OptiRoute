@@ -23,7 +23,7 @@ public class HereApiClient {
                 .fromUriString("https://router.hereapi.com/v8/routes")
                 .queryParam("transportMode", "truck")
                 .queryParam("routingMode", "fast")
-                .queryParam("alternatives", "5")
+                .queryParam("alternatives", "3")
                 .queryParam("origin", origin)
                 .queryParam("destination", destination)
                 .queryParam("departureTime", departureTime)

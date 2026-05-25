@@ -16,10 +16,10 @@ const form = reactive({
 
     departureTime: null as any,
 
-    mode: 'CHEAPEST',
+    mode: 'FASTEST',
     fuelPricePerLiter: 1.85,
     driverHourlyRate: 38,
-    maxTravelTimeMinutes: 240,
+    maxTravelTimeMinutes: null,
 
     truck: {
         grossWeightKg: 32000,
@@ -66,7 +66,7 @@ async function submit() {
 }
 
 function toOffsetDateTime(value: string) {
-    if (!value) return null
+    if (departureMode.value === 'NOW' || !value) return null
 
     return new Date(value).toISOString()
 }
@@ -83,9 +83,9 @@ function toOffsetDateTime(value: string) {
         <HereAutocompleteInput label="Arrivée" @selected="form.destination = $event" />
 
         <!-- MODE -->
-        <div>
+        <div class="space-y-3">
 
-            <label class="block text-sm font-medium mb-2">
+            <label class="block text-sm font-medium">
                 Mode
             </label>
 
@@ -100,9 +100,13 @@ function toOffsetDateTime(value: string) {
 
             </select>
 
+            <!-- MAX TIME -->
+            <input v-if="form.mode === 'CHEAPEST'" v-model="form.maxTravelTimeMinutes" type="number"
+                placeholder="(Optionnel) Temps de trajet max en minutes"
+                class="w-full rounded-xl border border-slate-300 p-3" />
+
         </div>
 
-        <!-- DATE -->
         <!-- DEPARTURE TIME -->
         <div class="space-y-3">
 
@@ -145,18 +149,6 @@ function toOffsetDateTime(value: string) {
             </label>
 
             <input v-model="form.driverHourlyRate" type="number"
-                class="w-full rounded-xl border border-slate-300 p-3" />
-
-        </div>
-
-        <!-- MAX TIME -->
-        <div>
-
-            <label class="block text-sm font-medium mb-2">
-                Temps max (minutes)
-            </label>
-
-            <input v-model="form.maxTravelTimeMinutes" type="number"
                 class="w-full rounded-xl border border-slate-300 p-3" />
 
         </div>
