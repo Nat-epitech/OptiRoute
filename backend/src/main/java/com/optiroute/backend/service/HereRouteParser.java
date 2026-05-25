@@ -40,17 +40,26 @@ public class HereRouteParser {
     }
 
     private double extractTollCost(JsonNode section) {
-        JsonNode fares = section.path("tolls").path("fares");
-
-        if (fares.isArray() && !fares.isEmpty()) {
-            return fares.get(0).path("price").path("value").asDouble(0.0);
+        JsonNode tolls = section.path("tolls");
+        if (!tolls.isArray()) {
+            return 0.0;
         }
 
-        return 0.0;
+        double sum = 0.0;
+        for (JsonNode tollSystem : tolls) {
+            JsonNode fares = tollSystem.path("fares");
+
+            if (fares.isArray()) {
+                for (JsonNode fare : fares) {
+                    sum += fare.path("price").path("value").asDouble(0.0);
+                }
+            }
+        }
+
+        return sum;
     }
 
     public static class ParsedRoute {
-
         public long durationSeconds;
         public long distanceMeters;
         public String polyline;
