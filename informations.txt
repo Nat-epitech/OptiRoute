@@ -5,3 +5,6 @@ http://localhost:8080
 Frontend
 npm run dev
 http://localhost:5173
+
+18 Rue de la Poste, 69100 Villeurbanne, France
+42 Allée des Reysses, 74370 Annecy, France

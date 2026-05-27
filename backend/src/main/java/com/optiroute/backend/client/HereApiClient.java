@@ -1,4 +1,4 @@
-package com.optiroute.backend.service;
+package com.optiroute.backend.client;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;

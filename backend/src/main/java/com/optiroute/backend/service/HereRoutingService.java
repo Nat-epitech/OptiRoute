@@ -1,5 +1,6 @@
 package com.optiroute.backend.service;
 
+import com.optiroute.backend.client.HereApiClient;
 import com.optiroute.backend.dto.request.RouteRequest;
 
 import java.time.OffsetDateTime;

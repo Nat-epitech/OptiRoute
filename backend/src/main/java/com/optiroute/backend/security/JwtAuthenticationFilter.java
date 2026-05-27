@@ -1,4 +1,4 @@
-package com.optiroute.backend.auth.jwt;
+package com.optiroute.backend.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

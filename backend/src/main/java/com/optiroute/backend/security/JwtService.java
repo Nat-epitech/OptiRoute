@@ -1,4 +1,4 @@
-package com.optiroute.backend.auth.jwt;
+package com.optiroute.backend.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

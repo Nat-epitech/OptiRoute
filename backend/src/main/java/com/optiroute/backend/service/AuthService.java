@@ -1,10 +1,11 @@
-package com.optiroute.backend.auth.service;
+package com.optiroute.backend.service;
 
-import com.optiroute.backend.auth.dto.LoginRequest;
-import com.optiroute.backend.auth.dto.LoginResponse;
-import com.optiroute.backend.auth.jwt.JwtService;
+import com.optiroute.backend.dto.request.LoginRequest;
+import com.optiroute.backend.dto.response.LoginResponse;
 import com.optiroute.backend.entity.UserEntity;
 import com.optiroute.backend.repository.UserRepository;
+import com.optiroute.backend.security.JwtService;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

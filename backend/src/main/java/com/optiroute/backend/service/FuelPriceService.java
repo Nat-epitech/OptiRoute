@@ -34,6 +34,8 @@ public class FuelPriceService {
         try {
             SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
             RestTemplate restTemplate = new RestTemplate(factory);
+
+            @SuppressWarnings("null")
             ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET, null, byte[].class);
 
             byte[] bodyBytes = response.getBody();

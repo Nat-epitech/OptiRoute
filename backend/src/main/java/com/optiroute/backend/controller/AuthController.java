@@ -1,8 +1,9 @@
-package com.optiroute.backend.auth;
+package com.optiroute.backend.controller;
 
-import com.optiroute.backend.auth.dto.LoginRequest;
-import com.optiroute.backend.auth.dto.LoginResponse;
-import com.optiroute.backend.auth.service.AuthService;
+import com.optiroute.backend.dto.request.LoginRequest;
+import com.optiroute.backend.dto.response.LoginResponse;
+import com.optiroute.backend.service.AuthService;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.optiroute.backend.auth.dto;
+package com.optiroute.backend.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
