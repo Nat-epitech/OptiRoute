@@ -28,7 +28,7 @@ function selectRoute(index: number) {
 }
 
 const selectedRoute = computed(() => {
-    return props.routeResponse?.alternatives?.[props.selectedIndex ?? 0]
+    return props.routeResponse?.routes?.[props.selectedIndex ?? 0]
 })
 
 const formatDuration = (seconds: number) => {
@@ -67,8 +67,8 @@ const formatDuration = (seconds: number) => {
                     <!-- FORM -->
                     <RouteForm @route-calculated="onRouteCalculated" />
 
-                    <!-- ALTERNATIVES -->
-                    <div v-if="routeResponse?.alternatives" class="space-y-3">
+                    <!-- RESULTS -->
+                    <div v-if="routeResponse?.routes" class="space-y-3">
 
                         <h2 class="text-xl font-bold text-slate-800">
                             Itinéraires trouvés
@@ -76,7 +76,7 @@ const formatDuration = (seconds: number) => {
 
                         <div class="space-y-3">
 
-                            <div v-for="(route, index) in routeResponse.alternatives" :key="index"
+                            <div v-for="(route, index) in routeResponse.routes" :key="index"
                                 @click="selectRoute(Number(index))"
                                 class="p-4 border rounded-2xl cursor-pointer transition-all" :class="[
                                     index === selectedIndex

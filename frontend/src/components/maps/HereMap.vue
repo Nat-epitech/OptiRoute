@@ -53,11 +53,11 @@ function setMarkers(origin: any, destination: any) {
     map.addObject(endMarker)
 }
 
-function displayRoutes(alternatives: any[], selectedRoute: any) {
+function displayRoutes(routes: any[], selectedRoute: any) {
     if (!map) return
     clearRoutes()
 
-    alternatives.forEach((route, index) => {
+    routes.forEach((route, index) => {
         const lineString = H.geo.LineString.fromFlexiblePolyline(route.polyline)
         const isSelected = route === selectedRoute
         const polyline = new H.map.Polyline(lineString,

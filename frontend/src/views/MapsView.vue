@@ -22,8 +22,8 @@ function handleRouteCalculated(payload: { response: any, request: any }) {
     selectedRouteIndex.value = 0
 
     mapRef.value?.displayRoutes(
-        payload.response.alternatives,
-        payload.response.alternatives[0]
+        payload.response.routes,
+        payload.response.routes[0]
     )
 
     mapRef.value?.setMarkers(
@@ -35,9 +35,9 @@ function handleRouteCalculated(payload: { response: any, request: any }) {
 function handleSelectRoute(index: number) {
     selectedRouteIndex.value = index
 
-    const selected = routeResponse.value.alternatives[index]
+    const selected = routeResponse.value.routes[index]
 
-    mapRef.value?.displayRoutes(routeResponse.value.alternatives, selected)
+    mapRef.value?.displayRoutes(routeResponse.value.routes, selected)
 }
 
 </script>
