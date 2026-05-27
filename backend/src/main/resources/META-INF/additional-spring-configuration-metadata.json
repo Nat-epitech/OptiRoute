@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "here.api.api-key",
+  "type": "java.lang.String",
+  "description": "HERE API key"
+}]}
