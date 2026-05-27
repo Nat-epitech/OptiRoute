@@ -1,4 +1,4 @@
-package com.optiroute.backend.dto.response;
+package com.optiroute.backend.client.dto;
 
 public class RouteCostDetailsDto {
 

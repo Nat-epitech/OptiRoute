@@ -2,25 +2,17 @@ package com.optiroute.backend.dto.response;
 
 import java.util.List;
 
+import com.optiroute.backend.client.dto.RoutesDto;
+
 public class RouteResponse {
 
-    private RouteAlternativeDto selectedRoute;
+    private List<RoutesDto> routes;
 
-    private List<RouteAlternativeDto> alternatives;
-
-    public RouteAlternativeDto getSelectedRoute() {
-        return selectedRoute;
+    public List<RoutesDto> getRoutes() {
+        return routes;
     }
 
-    public void setSelectedRoute(RouteAlternativeDto selectedRoute) {
-        this.selectedRoute = selectedRoute;
-    }
-
-    public List<RouteAlternativeDto> getAlternatives() {
-        return alternatives;
-    }
-
-    public void setAlternatives(List<RouteAlternativeDto> alternatives) {
-        this.alternatives = alternatives;
+    public void setRoutes(List<RoutesDto> routes) {
+        this.routes = routes;
     }
 }

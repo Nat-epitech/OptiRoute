@@ -1,6 +1,6 @@
-package com.optiroute.backend.dto.response;
+package com.optiroute.backend.client.dto;
 
-public class RouteAlternativeDto {
+public class RoutesDto {
 
     private long durationSeconds;
     private long distanceMeters;
