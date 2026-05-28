@@ -14,31 +14,51 @@ import { useAuthStore } from '@/stores/authStore'
 const routes = [
     {
         path: '/login',
-        component: LoginView
+        name: 'login',
+        component: LoginView,
+        meta: { public: true }
     },
+
+    {
+        path: '/',
+        redirect: '/dashboard'
+    },
+
     {
         path: '/',
         component: MainLayout,
+        meta: { requiresAuth: true },
+
         children: [
             {
                 path: 'dashboard',
+                name: 'dashboard',
                 component: DashboardView
             },
             {
                 path: 'users',
+                name: 'users',
                 component: UsersView
             },
             {
                 path: 'drivers',
+                name: 'drivers',
                 component: DriversView
             }
         ]
     },
+
     {
         path: '/maps',
         component: MapLayout,
+        meta: { requiresAuth: true },
+
         children: [
-            { path: '', component: MapsView }
+            {
+                path: '',
+                name: 'maps',
+                component: MapsView
+            }
         ]
     }
 ]
@@ -50,11 +70,21 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const authStore = useAuthStore()
-    const publicPages = ['/login']
-    const authRequired = !publicPages.includes(to.path)
 
-    if (authRequired && !authStore.isAuthenticated) {
+    const requiresAuth = to.matched.some(
+        record => record.meta.requiresAuth
+    )
+
+    const isPublic = to.matched.some(
+        record => record.meta.public
+    )
+
+    if (requiresAuth && !authStore.isAuthenticated) {
         return next('/login')
+    }
+
+    if (isPublic && authStore.isAuthenticated) {
+        return next('/dashboard')
     }
 
     next()
