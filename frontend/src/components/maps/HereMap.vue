@@ -107,17 +107,37 @@ onMounted(() => {
     map = new H.Map(mapContainer.value!,
         defaultLayers.vector.normal.map,
         {
-            center: {
-                lat: 45.7640,
-                lng: 4.8357
-            },
-
-            zoom: 8,
-
-            pixelRatio:
-                window.devicePixelRatio || 1
+            center: { lat: 46.6, lng: 2.5 },
+            zoom: 7,
+            pixelRatio: window.devicePixelRatio || 1,
         }
     )
+
+    map.addEventListener('mapviewchangeend', () => {
+        const bounds = map.getViewModel().getLookAtData().bounds
+        if (!bounds) return
+
+        const center = map.getCenter()
+
+        const lat = Math.min(
+            Math.max(center.lat, 41.0),
+            51.2
+        )
+
+        const lng = Math.min(
+            Math.max(center.lng, -5.5),
+            9.8
+        )
+
+        map.setCenter({ lat, lng })
+
+        const zoom = map.getZoom()
+        if (zoom < 6) {
+            map.setZoom(6)
+        } else if (zoom > 12) {
+            map.setZoom(12)
+        }
+    })
 
     new H.mapevents.Behavior(
         new H.mapevents.MapEvents(map)
