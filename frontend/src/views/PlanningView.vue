@@ -1,13 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
-const selectedDriver = ref<number>()
-const selectedDate = ref(new Date().toISOString().split('T')[0])
+import { getDrivers } from '@/api/driverApi'
+import { getPlanningByDriver } from '@/api/planningApi'
+
+import type { Driver } from '@/models/Driver'
+
+const selectedDriver = ref<number | undefined>()
+const drivers = ref<Driver[]>([])
+
+const events = ref<any[]>([])
+const loading = ref(false)
 
 const calendarOptions = ref({
     plugins: [
@@ -17,11 +25,10 @@ const calendarOptions = ref({
     ],
 
     initialView: 'timeGridWeek',
-
     locale: 'fr',
 
-    slotMinTime: '05:00:00',
-    slotMaxTime: '23:00:00',
+    slotMinTime: '00:00:00',
+    slotMaxTime: '23:59:59',
 
     headerToolbar: {
         left: '',
@@ -29,21 +36,44 @@ const calendarOptions = ref({
         right: 'prev,next'
     },
 
-    events: [
-        {
-            id: '1',
-            title: 'Livraison Lyon',
-            start: '2026-05-30T08:00:00',
-            end: '2026-05-30T11:00:00'
-        },
-        {
-            id: '2',
-            title: 'Livraison Grenoble',
-            start: '2026-05-30T13:00:00',
-            end: '2026-05-30T16:00:00'
-        }
-    ]
+    events: events
 })
+
+const loadDrivers = async () => {
+    drivers.value = await getDrivers()
+}
+
+const loadPlanning = async () => {
+    if (!selectedDriver.value) {
+        events.value = []
+        return
+    }
+
+    loading.value = true
+
+    try {
+        const data = await getPlanningByDriver(selectedDriver.value)
+
+        events.value = data.map((e: any) => ({
+            id: e.id,
+            title: e.title,
+            start: e.start,
+            end: e.end
+        }))
+
+    } finally {
+        loading.value = false
+    }
+}
+
+watch(selectedDriver, async () => {
+    await loadPlanning()
+})
+
+onMounted(async () => {
+    await loadDrivers()
+})
+
 </script>
 
 <template>
@@ -60,12 +90,21 @@ const calendarOptions = ref({
                     Sélectionner un chauffeur
                 </option>
 
-                <!-- drivers -->
+                <option v-for="driver in drivers" :key="driver.id" :value="driver.id">
+                    {{ driver.firstName }} {{ driver.lastName }}
+                </option>
             </select>
+
         </div>
 
         <div class="bg-white rounded shadow p-4">
+
+            <div v-if="loading" class="mb-2 text-gray-500">
+                Chargement du planning...
+            </div>
+
             <FullCalendar :options="calendarOptions" />
+
         </div>
 
     </div>
