@@ -21,8 +21,20 @@ const routes = [
 
     {
         path: '/',
-        redirect: '/dashboard'
+        redirect: '/planning/dashboard'
     },
+
+    {
+        path: '/planning',
+        redirect: '/planning/dashboard'
+    },
+
+    {
+        path: '/admin',
+        redirect: '/admin/users'
+    },
+
+    // MAIN APP LAYOUT (padding / standard pages)
 
     {
         path: '/',
@@ -31,37 +43,58 @@ const routes = [
 
         children: [
             {
-                path: 'dashboard',
-                name: 'dashboard',
-                component: DashboardView
+                path: 'planning',
+                children: [
+                    {
+                        path: 'dashboard',
+                        name: 'planning-dashboard',
+                        component: DashboardView
+                    },
+                    {
+                        path: 'drivers',
+                        name: 'drivers',
+                        component: DriversView
+                    }
+                ]
             },
+
             {
-                path: 'users',
-                name: 'users',
-                component: UsersView
-            },
-            {
-                path: 'drivers',
-                name: 'drivers',
-                component: DriversView
+                path: 'admin',
+                children: [
+                    {
+                        path: 'users',
+                        name: 'admin-users',
+                        component: UsersView
+                    }
+                ]
             }
         ]
     },
 
+    // MAP LAYOUT (full screen / no padding)
+
     {
-        path: '/maps',
+
+        path: '/',
         component: MapLayout,
         meta: { requiresAuth: true },
 
         children: [
             {
-                path: '',
-                name: 'maps',
-                component: MapsView
+                path: 'routes',
+                children: [
+                    {
+                        path: '',
+                        name: 'routes',
+                        component: MapsView
+                    }
+                ]
             }
         ]
     }
 ]
+
+// Router configurations
 
 const router = createRouter({
     history: createWebHistory(),
@@ -84,7 +117,7 @@ router.beforeEach((to, from, next) => {
     }
 
     if (isPublic && authStore.isAuthenticated) {
-        return next('/dashboard')
+        return next('/planning/dashboard')
     }
 
     next()

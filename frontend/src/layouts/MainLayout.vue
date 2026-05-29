@@ -5,13 +5,9 @@ import AppTopbar from '@/components/layout/AppTopbar.vue'
 
 <template>
     <div class="h-screen flex bg-gray-100">
-
-        <!-- LEFT COLUMN (LOGO + SIDEBAR) -->
         <AppSidebar />
 
-        <!-- RIGHT SIDE -->
         <div class="flex-1 flex flex-col overflow-hidden">
-
             <AppTopbar />
 
             <main class="flex-1 overflow-y-auto p-6">
@@ -19,6 +15,5 @@ import AppTopbar from '@/components/layout/AppTopbar.vue'
             </main>
 
         </div>
-
     </div>
 </template>

@@ -1,36 +1,63 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import SidebarLink from '@/components/layout/SidebarLink.vue'
+
+// Variables
+
+const route = useRoute()
+
+const isRoutesSection = computed(() =>
+    route.path.startsWith('/routes')
+)
+
+const isPlanningSection = computed(() =>
+    route.path.startsWith('/planning')
+)
+
+const isAdminSection = computed(() =>
+    route.path.startsWith('/admin')
+)
+
 </script>
 
 <template>
-    <aside class="w-64 bg-gray-900 text-white flex flex-col h-full">
+    <aside class="w-64 bg-slate-900 text-white flex flex-col h-full">
 
-        <!-- LOGO SECTION -->
-        <div class="h-16 flex items-center justify-center px-4
-bg-white border-b border-gray-200 border-r border-r-gray-200">
+        <!-- LOGO -->
+        <div class="h-16 flex items-center justify-center px-4 bg-white border-b border-r border-gray-200">
 
             <img src="@/assets/images/logo.png" alt="OptiRoute logo" class="h-8 w-auto object-contain" />
 
         </div>
 
         <!-- NAVIGATION -->
-        <nav class="flex-1 p-4 space-y-2">
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
 
-            <RouterLink to="/dashboard" class="block px-4 py-3 rounded-xl hover:bg-gray-800 transition">
-                Dashboard
-            </RouterLink>
+            <!-- ROUTES SECTION -->
+            <template v-if="isRoutesSection">
 
-            <RouterLink to="/users" class="block px-4 py-3 rounded-xl hover:bg-gray-800 transition">
-                Users
-            </RouterLink>
+                <SidebarLink to="/routes" label="Rechercher un itinéraire" />
 
-            <RouterLink to="/drivers" class="block px-4 py-3 rounded-xl hover:bg-gray-800 transition">
-                Drivers
-            </RouterLink>
+            </template>
 
-            <RouterLink to="/maps" class="block px-4 py-3 rounded-xl hover:bg-gray-800 transition">
-                Maps
-            </RouterLink>
+            <!-- PLANNING SECTION -->
+            <template v-else-if="isPlanningSection">
+
+                <SidebarLink to="/planning/dashboard" label="Dashboard" />
+
+                <SidebarLink to="/planning/drivers" label="Chauffeurs" />
+
+                <SidebarLink to="/planning/schedule" label="Planning" />
+
+            </template>
+
+            <!-- ADMIN SECTION -->
+            <template v-else-if="isAdminSection">
+
+                <SidebarLink to="/admin/users" label="Utilisateurs" />
+
+            </template>
 
         </nav>
 
