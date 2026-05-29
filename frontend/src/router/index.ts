@@ -5,6 +5,7 @@ import UsersView from '@/views/UsersView.vue'
 import LoginView from '@/views/LoginView.vue'
 import DriversView from '@/views/DriversView.vue'
 import MapsView from '@/views/MapsView.vue'
+import PlanningView from '@/views/PlanningView.vue'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import MapLayout from '@/layouts/MapLayout.vue'
@@ -54,6 +55,11 @@ const routes = [
                         path: 'drivers',
                         name: 'drivers',
                         component: DriversView
+                    },
+                    {
+                        path: 'schedule',
+                        name: 'schedule',
+                        component: PlanningView
                     }
                 ]
             },
