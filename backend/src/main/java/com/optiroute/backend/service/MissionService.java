@@ -1,11 +1,11 @@
 package com.optiroute.backend.service;
 
-import com.optiroute.backend.dto.request.PlanningEventRequest;
-import com.optiroute.backend.dto.response.PlanningEventResponse;
+import com.optiroute.backend.dto.request.MissionRequest;
+import com.optiroute.backend.dto.response.MissionResponse;
 import com.optiroute.backend.entity.DriverEntity;
-import com.optiroute.backend.entity.PlanningEvent;
+import com.optiroute.backend.entity.MissionEntity;
 import com.optiroute.backend.repository.DriverRepository;
-import com.optiroute.backend.repository.PlanningEventRepository;
+import com.optiroute.backend.repository.MissionRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PlanningEventService {
+public class MissionService {
 
-    private final PlanningEventRepository planningEventRepository;
+    private final MissionRepository missionRepository;
     private final DriverRepository driverRepository;
 
-    public PlanningEvent create(PlanningEventRequest request) {
+    public MissionEntity create(MissionRequest request) {
 
         DriverEntity driver = driverRepository.findById(request.driverId()).orElseThrow(() -> new RuntimeException("Driver not found"));
 
@@ -28,7 +28,7 @@ public class PlanningEventService {
             throw new IllegalArgumentException("End datetime must be after start datetime");
         }
 
-        PlanningEvent event = new PlanningEvent();
+        MissionEntity event = new MissionEntity();
 
         event.setDriver(driver);
         event.setTitle(request.title());
@@ -38,14 +38,14 @@ public class PlanningEventService {
         event.setCreatedAt(LocalDateTime.now());
         event.setUpdatedAt(LocalDateTime.now());
 
-        return planningEventRepository.save(event);
+        return missionRepository.save(event);
     }
 
-    public List<PlanningEventResponse> getByDriver(Long driverId) {
+    public List<MissionResponse> getByDriver(Long driverId) {
 
-        return planningEventRepository.findByDriverId(driverId)
+        return missionRepository.findByDriverId(driverId)
                 .stream()
-                .map(e -> new PlanningEventResponse(
+                .map(e -> new MissionResponse(
                         e.getId(),
                         e.getTitle(),
                         e.getStartDatetime(),
