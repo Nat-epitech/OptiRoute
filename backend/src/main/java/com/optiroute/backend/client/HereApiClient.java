@@ -27,7 +27,7 @@ public class HereApiClient {
                 .queryParam("origin", origin)
                 .queryParam("destination", destination)
                 .queryParam("departureTime", departureTime)
-                .queryParam("return", "summary,travelSummary,tolls,polyline")
+                .queryParam("return", "summary,travelSummary,tolls,polyline,actions,instructions")
                 .queryParam("apikey", properties.getApiKey())
                 .toUriString();
 
