@@ -2,55 +2,70 @@ package com.optiroute.backend.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "planning_event")
+@Table(name = "mission")
 public class MissionEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "route_id")
+    private RouteEntity route;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_id", nullable = false)
     private DriverEntity driver;
 
-    @Column(nullable = false)
-    private String title;
+    @Column(name = "planned_start", nullable = false)
+    private OffsetDateTime plannedStart;
 
-    @Column(nullable = false)
-    private LocalDateTime startDatetime;
-
-    @Column(nullable = false)
-    private LocalDateTime endDatetime;
+    @Column(name = "planned_end")
+    private OffsetDateTime plannedEnd;
 
     @Column(nullable = false)
     private String status;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
 
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    // Persist callback to set default values before saving
 
     @PrePersist
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        this.status = "PLANNED";
+        this.createdAt = OffsetDateTime.now();
+
+        if (this.status == null) {
+            this.status = "PLANNED";
+        }
     }
 
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
+    // Getters and Setters
+
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getName() {
+        return name;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public RouteEntity getRoute() {
+        return route;
+    }
+
+    public void setRoute(RouteEntity route) {
+        this.route = route;
     }
 
     public DriverEntity getDriver() {
@@ -61,28 +76,20 @@ public class MissionEntity {
         this.driver = driver;
     }
 
-    public String getTitle() {
-        return title;
+    public OffsetDateTime getPlannedStart() {
+        return plannedStart;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPlannedStart(OffsetDateTime plannedStart) {
+        this.plannedStart = plannedStart;
     }
 
-    public LocalDateTime getStartDatetime() {
-        return startDatetime;
+    public OffsetDateTime getPlannedEnd() {
+        return plannedEnd;
     }
 
-    public void setStartDatetime(LocalDateTime startDatetime) {
-        this.startDatetime = startDatetime;
-    }
-
-    public LocalDateTime getEndDatetime() {
-        return endDatetime;
-    }
-
-    public void setEndDatetime(LocalDateTime endDatetime) {
-        this.endDatetime = endDatetime;
+    public void setPlannedEnd(OffsetDateTime plannedEnd) {
+        this.plannedEnd = plannedEnd;
     }
 
     public String getStatus() {
@@ -93,19 +100,7 @@ public class MissionEntity {
         this.status = status;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public OffsetDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

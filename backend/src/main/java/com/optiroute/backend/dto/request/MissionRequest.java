@@ -2,17 +2,19 @@ package com.optiroute.backend.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+
+import com.optiroute.backend.client.dto.RoutesDto;
 
 public record MissionRequest(
 
         @NotNull Long driverId,
 
-        @NotNull String title,
+        @NotNull String name,
 
-        @NotNull LocalDateTime startDatetime,
+        @NotNull OffsetDateTime plannedStart,
 
-        @NotNull LocalDateTime endDatetime
+        @NotNull OffsetDateTime plannedEnd,
 
-) {
+        @NotNull RoutesDto selectedRoute) {
 }
