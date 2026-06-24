@@ -62,7 +62,11 @@ public class RouteOptimizationService {
                         return dtoA;
                     }).toList());
 
-            dto.setRawHereData(parsed.rawJson);
+            dto.setOriginLat(request.getOrigin().getLat());
+            dto.setOriginLng(request.getOrigin().getLng());
+            dto.setDestinationLat(request.getDestination().getLat());
+            dto.setDestinationLng(request.getDestination().getLng());
+            // dto.setRawHereData(parsed.rawJson);
 
             routes.add(dto);
         }

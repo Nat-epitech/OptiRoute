@@ -3,6 +3,9 @@ package com.optiroute.backend.entity;
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 @Entity
 @Table(name = "route")
 public class RouteEntity {
@@ -28,12 +31,15 @@ public class RouteEntity {
     private OffsetDateTime arrivalTime;
 
     @Lob
+    @Column(columnDefinition = "text")
     private String polyline;
 
-    @Lob
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
     private String actions;
 
     @Lob
+    @Column(columnDefinition = "text")
     private String hereData;
 
     private OffsetDateTime createdAt;

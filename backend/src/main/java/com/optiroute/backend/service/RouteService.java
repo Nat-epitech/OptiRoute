@@ -33,8 +33,7 @@ public class RouteService {
 
             route.setPolyline(dto.getPolyline());
 
-            route.setActions(
-                    objectMapper.writeValueAsString(dto.getActions()));
+            route.setActions(objectMapper.writeValueAsString(dto.getActions()));
 
             route.setHereData(dto.getRawHereData());
 

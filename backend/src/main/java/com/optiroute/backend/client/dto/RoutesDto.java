@@ -7,6 +7,12 @@ public class RoutesDto {
     private long durationSeconds;
     private long distanceMeters;
 
+    private double originLat;
+    private double originLng;
+
+    private double destinationLat;
+    private double destinationLng;
+
     private String polyline;
     private List<RouteActionDto> actions;
     private RouteCostDetailsDto costs;
@@ -58,5 +64,37 @@ public class RoutesDto {
 
     public void setRawHereData(String rawHereData) {
         this.rawHereData = rawHereData;
+    }
+
+    public double getOriginLat() {
+        return originLat;
+    }
+
+    public void setOriginLat(double originLat) {
+        this.originLat = originLat;
+    }
+
+    public double getOriginLng() {
+        return originLng;
+    }
+
+    public void setOriginLng(double originLng) {
+        this.originLng = originLng;
+    }
+
+    public double getDestinationLat() {
+        return destinationLat;
+    }
+
+    public void setDestinationLat(double destinationLat) {
+        this.destinationLat = destinationLat;
+    }
+
+    public double getDestinationLng() {
+        return destinationLng;
+    }
+
+    public void setDestinationLng(double destinationLng) {
+        this.destinationLng = destinationLng;
     }
 }
