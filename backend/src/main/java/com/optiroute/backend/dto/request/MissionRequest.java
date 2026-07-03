@@ -1,20 +1,24 @@
 package com.optiroute.backend.dto.request;
 
-import jakarta.validation.constraints.NotNull;
-
 import java.time.OffsetDateTime;
-
-import com.optiroute.backend.client.dto.RoutesDto;
 
 public record MissionRequest(
 
-        @NotNull Long driverId,
+        String name,
+        Long driverId,
+        Long vehicleId,
+        Long customerId,
 
-        @NotNull String name,
+        OffsetDateTime plannedStart,
+        OffsetDateTime plannedEnd,
 
-        @NotNull OffsetDateTime plannedStart,
+        String originName,
+        String originAddress,
+        double originLat,
+        double originLng,
 
-        @NotNull OffsetDateTime plannedEnd,
-
-        @NotNull RoutesDto selectedRoute) {
+        String destinationName,
+        String destinationAddress,
+        double destinationLat,
+        double destinationLng) {
 }

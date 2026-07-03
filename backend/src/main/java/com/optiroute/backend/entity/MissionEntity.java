@@ -1,7 +1,6 @@
 package com.optiroute.backend.entity;
 
 import jakarta.persistence.*;
-
 import java.time.OffsetDateTime;
 
 @Entity
@@ -12,68 +11,108 @@ public class MissionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    private String externalId;
+    private String externalSource = "MANUAL";
+
     private String name;
+    private String status = "PLANNED";
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "route_id")
-    private RouteEntity route;
+    private Long driverId;
+    private Long vehicleId;
+    private Long customerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "driver_id", nullable = false)
-    private DriverEntity driver;
-
-    @Column(name = "planned_start", nullable = false)
     private OffsetDateTime plannedStart;
-
-    @Column(name = "planned_end")
     private OffsetDateTime plannedEnd;
 
-    @Column(nullable = false)
-    private String status;
+    private OffsetDateTime actualStart;
+    private OffsetDateTime actualEnd;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    private String originName;
+    private String originAddress;
+    private double originLat;
+    private double originLng;
+
+    private String destinationName;
+    private String destinationAddress;
+    private double destinationLat;
+    private double destinationLng;
+
     private OffsetDateTime createdAt;
-
-    // Persist callback to set default values before saving
+    private OffsetDateTime updatedAt;
 
     @PrePersist
     public void prePersist() {
-        this.createdAt = OffsetDateTime.now();
-
-        if (this.status == null) {
-            this.status = "PLANNED";
-        }
+        createdAt = OffsetDateTime.now();
+        updatedAt = createdAt;
     }
 
-    // Getters and Setters
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = OffsetDateTime.now();
     }
 
     public Long getId() {
         return id;
     }
 
-    public RouteEntity getRoute() {
-        return route;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setRoute(RouteEntity route) {
-        this.route = route;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public DriverEntity getDriver() {
-        return driver;
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
-    public void setDriver(DriverEntity driver) {
-        this.driver = driver;
+    public String getExternalSource() {
+        return externalSource;
+    }
+
+    public void setExternalSource(String externalSource) {
+        this.externalSource = externalSource;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(Long driverId) {
+        this.driverId = driverId;
+    }
+
+    public Long getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
     public OffsetDateTime getPlannedStart() {
@@ -92,15 +131,99 @@ public class MissionEntity {
         this.plannedEnd = plannedEnd;
     }
 
-    public String getStatus() {
-        return status;
+    public OffsetDateTime getActualStart() {
+        return actualStart;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setActualStart(OffsetDateTime actualStart) {
+        this.actualStart = actualStart;
+    }
+
+    public OffsetDateTime getActualEnd() {
+        return actualEnd;
+    }
+
+    public void setActualEnd(OffsetDateTime actualEnd) {
+        this.actualEnd = actualEnd;
+    }
+
+    public String getOriginName() {
+        return originName;
+    }
+
+    public void setOriginName(String originName) {
+        this.originName = originName;
+    }
+
+    public String getOriginAddress() {
+        return originAddress;
+    }
+
+    public void setOriginAddress(String originAddress) {
+        this.originAddress = originAddress;
+    }
+
+    public double getOriginLat() {
+        return originLat;
+    }
+
+    public void setOriginLat(double originLat) {
+        this.originLat = originLat;
+    }
+
+    public double getOriginLng() {
+        return originLng;
+    }
+
+    public void setOriginLng(double originLng) {
+        this.originLng = originLng;
+    }
+
+    public String getDestinationName() {
+        return destinationName;
+    }
+
+    public void setDestinationName(String destinationName) {
+        this.destinationName = destinationName;
+    }
+
+    public String getDestinationAddress() {
+        return destinationAddress;
+    }
+
+    public void setDestinationAddress(String destinationAddress) {
+        this.destinationAddress = destinationAddress;
+    }
+
+    public double getDestinationLat() {
+        return destinationLat;
+    }
+
+    public void setDestinationLat(double destinationLat) {
+        this.destinationLat = destinationLat;
+    }
+
+    public double getDestinationLng() {
+        return destinationLng;
+    }
+
+    public void setDestinationLng(double destinationLng) {
+        this.destinationLng = destinationLng;
     }
 
     public OffsetDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
