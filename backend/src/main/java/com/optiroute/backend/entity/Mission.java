@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "mission")
-public class MissionEntity {
+public class Mission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

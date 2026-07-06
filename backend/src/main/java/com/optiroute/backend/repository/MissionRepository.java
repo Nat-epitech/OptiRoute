@@ -1,7 +1,7 @@
 package com.optiroute.backend.repository;
 
-import com.optiroute.backend.entity.MissionEntity;
+import com.optiroute.backend.entity.Mission;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MissionRepository extends JpaRepository<MissionEntity, Long> {
+public interface MissionRepository extends JpaRepository<Mission, Long> {
 }

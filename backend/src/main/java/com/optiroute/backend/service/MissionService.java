@@ -1,7 +1,7 @@
 package com.optiroute.backend.service;
 
 import com.optiroute.backend.dto.request.MissionRequest;
-import com.optiroute.backend.entity.MissionEntity;
+import com.optiroute.backend.entity.Mission;
 import com.optiroute.backend.repository.MissionRepository;
 
 import org.springframework.stereotype.Service;
@@ -18,9 +18,9 @@ public class MissionService {
     }
 
     @Transactional
-    public MissionEntity create(MissionRequest req) {
+    public Mission create(MissionRequest req) {
 
-        MissionEntity m = new MissionEntity();
+        Mission m = new Mission();
 
         m.setName(req.name());
         m.setDriverId(req.driverId());
