@@ -1,7 +1,5 @@
 package com.optiroute.backend.client.dto;
 
-import java.util.List;
-
 public class RoutesDto {
 
     private long durationSeconds;
@@ -14,7 +12,6 @@ public class RoutesDto {
     private double destinationLng;
 
     private String polyline;
-    private List<RouteActionDto> actions;
     private RouteCostDetailsDto costs;
     private String rawHereData;
 
@@ -48,14 +45,6 @@ public class RoutesDto {
 
     public void setCosts(RouteCostDetailsDto costs) {
         this.costs = costs;
-    }
-
-    public List<RouteActionDto> getActions() {
-        return actions;
-    }
-
-    public void setActions(List<RouteActionDto> actions) {
-        this.actions = actions;
     }
 
     public String getRawHereData() {

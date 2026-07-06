@@ -1,7 +1,6 @@
 package com.optiroute.backend.service;
 
 import com.optiroute.backend.client.dto.RoutesDto;
-import com.optiroute.backend.client.dto.RouteActionDto;
 import com.optiroute.backend.client.dto.RouteCostDetailsDto;
 import com.optiroute.backend.dto.request.RouteRequest;
 import com.optiroute.backend.dto.response.*;
@@ -51,16 +50,6 @@ public class RouteOptimizationService {
             dto.setDurationSeconds(parsed.durationSeconds);
             dto.setPolyline(parsed.polyline);
             dto.setCosts(costs);
-            dto.setActions(parsed.actions.stream()
-                    .map(a -> {
-                        RouteActionDto dtoA = new RouteActionDto();
-                        dtoA.setAction(a.getAction());
-                        dtoA.setInstruction(a.getInstruction());
-                        dtoA.setOffset(a.getOffset());
-                        dtoA.setLength(a.getLength());
-                        dtoA.setDuration(a.getDuration());
-                        return dtoA;
-                    }).toList());
 
             dto.setOriginLat(request.getOrigin().getLat());
             dto.setOriginLng(request.getOrigin().getLng());
