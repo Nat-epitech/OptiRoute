@@ -2,7 +2,7 @@ package com.optiroute.backend.service;
 
 import org.springframework.stereotype.Service;
 
-import com.optiroute.backend.client.dto.RouteCostDetailsDto;
+import com.optiroute.backend.dto.dto.RouteCostDetailsDto;
 
 @Service
 public class RouteCostService {

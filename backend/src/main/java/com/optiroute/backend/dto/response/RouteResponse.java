@@ -2,7 +2,7 @@ package com.optiroute.backend.dto.response;
 
 import java.util.List;
 
-import com.optiroute.backend.client.dto.RoutesDto;
+import com.optiroute.backend.dto.dto.RoutesDto;
 
 public class RouteResponse {
 

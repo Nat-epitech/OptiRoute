@@ -1,7 +1,7 @@
 package com.optiroute.backend.service;
 
-import com.optiroute.backend.client.dto.RoutesDto;
-import com.optiroute.backend.client.dto.RouteCostDetailsDto;
+import com.optiroute.backend.dto.dto.RouteCostDetailsDto;
+import com.optiroute.backend.dto.dto.RoutesDto;
 import com.optiroute.backend.dto.request.RouteRequest;
 import com.optiroute.backend.dto.response.*;
 
