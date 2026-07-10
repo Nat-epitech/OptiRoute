@@ -2,7 +2,7 @@ package com.optiroute.backend.service;
 
 import com.optiroute.backend.dto.request.LoginRequest;
 import com.optiroute.backend.dto.response.LoginResponse;
-import com.optiroute.backend.entity.UserEntity;
+import com.optiroute.backend.entity.User;
 import com.optiroute.backend.repository.UserRepository;
 import com.optiroute.backend.security.JwtService;
 
@@ -23,7 +23,7 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest request) {
-        UserEntity user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         boolean passwordMatches = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if (!passwordMatches) {

@@ -1,7 +1,7 @@
 package com.optiroute.backend.mapper;
 
 import com.optiroute.backend.dto.request.RouteRequest;
-import com.optiroute.backend.entity.DriverEntity;
+import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.entity.Mission;
 import com.optiroute.backend.model.RouteMode;
 import com.optiroute.backend.model.TruckConfiguration;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RouteRequestFactory {
 
-	public RouteRequest fromMission(Mission mission, Vehicle vehicle, DriverEntity driver) {
+	public RouteRequest fromMission(Mission mission, Vehicle vehicle, Driver driver) {
 
 		RouteRequest request = new RouteRequest();
 

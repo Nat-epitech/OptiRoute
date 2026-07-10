@@ -8,3 +8,137 @@ http://localhost:5173
 
 18 Rue de la Poste, 69100 Villeurbanne, France
 42 Allée des Reysses, 74370 Annecy, France
+
+---- Architecture ----
+RouteEstimate / Trajets / EventCost / Chauffeur / Véhicule /
+
+Trajets -> A vide / Prestataire
+EventCost -> péage / essence
+
+---- DataType ----
+Argent → BigDecimal
+Distances → long
+Consommation → Double
+Dates → OffsetDateTime
+
+---- Flux création mission ----
+
+POST /api/missions
+        │
+        ▼
+MissionController
+        │
+        ▼
+MissionFacadeService.createMission()
+        │
+        ├── 1. MissionService.create()
+        │
+        │       ▼
+        │
+        │   mission table
+        │
+        │
+        ├── 2. Récupération :
+        │
+        │       DriverRepository
+        │       VehicleRepository
+        │
+        │
+        ├── 3. RouteRequestFactory
+        │
+        │       Mission
+        │       Driver
+        │       Vehicle
+        │
+        │              ▼
+        │
+        │          RouteRequest
+        │
+        │
+        ├── 4. RouteOptimizationService
+        │
+        │       RouteRequest
+        │              │
+        │              ▼
+        │          HERE API
+        │              │
+        │              ▼
+        │        RouteResponse
+        │
+        │
+        └── 5. MissionRouteEstimateService
+                │
+                ▼
+        MissionRouteEstimate
+                │
+                ▼
+        mission_route_estimate table
+
+---- Responsabilité des classes ----
+
+MissionController
+    |
+    |-- reçoit les requêtes HTTP
+    |-- retourne les réponses
+
+MissionFacadeService
+    |
+    |-- orchestre le scénario métier
+    |-- crée mission
+    |-- déclenche calcul route
+    |-- sauvegarde estimation
+
+MissionService
+    |
+    |-- CRUD Mission
+    |-- MissionRepository
+
+RouteRequestFactory
+    |
+    |-- transforme :
+    |
+    |   Mission
+    |   Vehicle
+    |   Driver
+    |
+    |        ↓
+    |
+    |   RouteRequest
+
+RouteOptimizationService
+    |
+    |-- appelle HERE
+    |-- parse la réponse
+    |-- calcule les coûts
+    |
+    |        ↓
+    |
+    |   RouteResponse
+
+MissionRouteEstimateService
+    |
+    |-- transforme :
+    |
+    |   Mission
+    |   RouteResponse
+    |
+    |        ↓
+    |
+    |   MissionRouteEstimate
+    |
+    |-- sauvegarde
+
+Repositories
+    |
+    |-- accès PostgreSQL
+
+----- Utilisation ----
+
+Cas 1 : Simulation
+
+L'utilisateur clique sur "Calculer":
+RouteRequest -> routeOptimizationService -> RouteResponse -> Frontend
+Aucune persistance.
+
+Cas 2: Import Dashdoc
+Mission Dashdoc -> Mission -> RouteOptimizationService -> RouteResponse -> MissionRouteEstimate

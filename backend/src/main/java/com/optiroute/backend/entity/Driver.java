@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "driver")
 @Getter
 @Setter
-public class DriverEntity {
+public class Driver {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

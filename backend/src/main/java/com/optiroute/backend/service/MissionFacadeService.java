@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.optiroute.backend.dto.request.RouteRequest;
 import com.optiroute.backend.dto.response.RouteResponse;
-import com.optiroute.backend.entity.DriverEntity;
+import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.entity.Vehicle;
 import com.optiroute.backend.repository.DriverRepository;
 import com.optiroute.backend.repository.VehicleRepository;
@@ -48,7 +48,7 @@ public class MissionFacadeService {
         Mission mission = missionService.create(request);
 
         // 2. Chargement des données nécessaires au calcul
-        DriverEntity driver = driverRepository.findById(mission.getDriverId()).orElseThrow(() -> new RuntimeException("Driver not found"));
+        Driver driver = driverRepository.findById(mission.getDriverId()).orElseThrow(() -> new RuntimeException("Driver not found"));
 
         Vehicle vehicle = vehicleRepository.findById(mission.getVehicleId()).orElseThrow(() -> new RuntimeException("Vehicle not found"));
 

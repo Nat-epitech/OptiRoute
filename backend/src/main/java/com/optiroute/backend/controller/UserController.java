@@ -2,7 +2,7 @@ package com.optiroute.backend.controller;
 
 import com.optiroute.backend.dto.request.UserRequest;
 import com.optiroute.backend.dto.response.UserResponse;
-import com.optiroute.backend.entity.UserEntity;
+import com.optiroute.backend.entity.User;
 import com.optiroute.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserEntity> getUsers() {
+    public List<User> getUsers() {
         return userService.getAllUsers();
     }
 

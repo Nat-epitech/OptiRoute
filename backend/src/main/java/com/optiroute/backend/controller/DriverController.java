@@ -2,7 +2,7 @@ package com.optiroute.backend.controller;
 
 import com.optiroute.backend.dto.request.DriverRequest;
 import com.optiroute.backend.dto.response.DriverResponse;
-import com.optiroute.backend.entity.DriverEntity;
+import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.service.DriverService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class DriverController {
     }
 
     @GetMapping
-    public List<DriverEntity> getDrivers() {
+    public List<Driver> getDrivers() {
         return driverService.getAllDrivers();
     }
 
