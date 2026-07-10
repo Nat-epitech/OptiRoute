@@ -1,22 +1,27 @@
 package com.optiroute.backend.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import com.optiroute.backend.dto.request.MissionRequest;
 import com.optiroute.backend.entity.Mission;
 import com.optiroute.backend.service.MissionFacadeService;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/missions")
 public class MissionController {
 
-    private final MissionFacadeService facadeService;
+    private final MissionFacadeService missionFacadeService;
 
-    public MissionController(MissionFacadeService facadeService) {
-        this.facadeService = facadeService;
+    public MissionController(MissionFacadeService missionFacadeService) {
+        this.missionFacadeService = missionFacadeService;
     }
 
     @PostMapping
-    public Mission create(@RequestBody MissionRequest request) {
-        return facadeService.createMission(request);
+    public ResponseEntity<Mission> create(@RequestBody MissionRequest request) {
+        Mission mission = missionFacadeService.createMission(request);
+
+        return ResponseEntity.ok(mission);
     }
+
 }

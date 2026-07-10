@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "drivers")
+@Table(name = "driver")
 @Getter
 @Setter
 public class DriverEntity {
@@ -29,6 +30,9 @@ public class DriverEntity {
 
     @Column(nullable = false)
     private Boolean isActive = true;
+
+    @Column(name = "hourly_rate", precision = 8, scale = 2)
+    private BigDecimal hourlyRate;
 
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();

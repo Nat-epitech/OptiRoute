@@ -23,11 +23,11 @@ public class HereApiClient {
                 .fromUriString("https://router.hereapi.com/v8/routes")
                 .queryParam("transportMode", "truck")
                 .queryParam("routingMode", "fast")
-                .queryParam("alternatives", "3")
+                .queryParam("alternatives", "2")
                 .queryParam("origin", origin)
                 .queryParam("destination", destination)
                 .queryParam("departureTime", departureTime)
-                .queryParam("return", "summary,travelSummary,tolls,polyline,actions,instructions")
+                .queryParam("return", "summary,travelSummary,tolls,polyline")
                 .queryParam("apikey", properties.getApiKey())
                 .toUriString();
 
