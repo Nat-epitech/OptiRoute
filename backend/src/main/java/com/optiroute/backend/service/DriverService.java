@@ -2,7 +2,7 @@ package com.optiroute.backend.service;
 
 import com.optiroute.backend.dto.request.DriverRequest;
 import com.optiroute.backend.dto.response.DriverResponse;
-import com.optiroute.backend.entity.DriverEntity;
+import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.repository.DriverRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,18 +18,18 @@ public class DriverService {
         this.driverRepository = driverRepository;
     }
 
-    public List<DriverEntity> getAllDrivers() {
+    public List<Driver> getAllDrivers() {
         return driverRepository.findAll();
     }
 
     public DriverResponse createDriver(DriverRequest request) {
-        DriverEntity driver = new DriverEntity();
+        Driver driver = new Driver();
         driver.setEmail(request.getEmail());
         driver.setFirstName(request.getFirstName());
         driver.setLastName(request.getLastName());
         driver.setPhoneNumber(request.getPhoneNumber());
 
-        DriverEntity savedDriver = driverRepository.save(driver);
+        Driver savedDriver = driverRepository.save(driver);
 
         return DriverResponse.builder().id(savedDriver.getId()).email(savedDriver.getEmail())
                 .firstName(savedDriver.getFirstName()).lastName(savedDriver.getLastName()).build();
