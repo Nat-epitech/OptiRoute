@@ -37,8 +37,8 @@ public class MissionController {
     }
 
     @GetMapping("/planning")
-    public ResponseEntity<List<MissionPlanningDto>> getPlanning(@RequestParam LocalDate date) {
-        return ResponseEntity.ok(missionPlanningService.getPlanning(date));
+    public List<MissionPlanningDto> getPlanning(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+        return missionPlanningService.getPlanning(startDate, endDate);
     }
 
     @GetMapping("/{id}")

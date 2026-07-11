@@ -30,12 +30,15 @@ public class MissionPlanningService {
     }
 
     // Récupére le planning des missions pour une date donnée (1 jour)
-    public List<MissionPlanningDto> getPlanning(LocalDate date) {
+    public List<MissionPlanningDto> getPlanning(LocalDate startDate, LocalDate endDate) {
+        if (endDate.isBefore(startDate) || endDate.isEqual(startDate)) {
+            throw new IllegalArgumentException("endDate must be after startDate");
+        }
 
-        OffsetDateTime start = date.atStartOfDay().atOffset(ZoneOffset.UTC);
-        OffsetDateTime end = start.plusDays(1);
+        OffsetDateTime start = startDate.atStartOfDay().atOffset(ZoneOffset.UTC);
+        OffsetDateTime end = endDate.atStartOfDay().atOffset(ZoneOffset.UTC);
 
-        return missionRepository.findByPlannedStartBetween(start, end).stream().map(mission -> {
+        return missionRepository.findByPlannedStartGreaterThanEqualAndPlannedStartLessThan(start, end).stream().map(mission -> {
 
             Driver driver = driverRepository.findById(mission.getDriverId()).orElseThrow();
             MissionRouteEstimate estimate = estimateRepository.findByMissionId(mission.getId()).orElse(null);
