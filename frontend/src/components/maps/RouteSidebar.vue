@@ -12,8 +12,8 @@ import {
 
 import AssignRouteModal from '@/components/ui/AssignRouteModal.vue'
 
-import type { RouteRequest } from '@/models/RouteRequest'
-import type { RouteResponse } from '@/models/RouteResponse'
+import type { RouteRequest } from '@/models/route/RouteRequest.ts'
+import type { RouteResponse } from '@/models/route/RouteResponse.ts'
 import type { Driver } from '@/models/Driver'
 
 import { getDrivers } from '@/api/driverApi'

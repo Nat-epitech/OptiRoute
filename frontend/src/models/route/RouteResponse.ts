@@ -1,4 +1,4 @@
-import type { RoutesDto } from '@/models/RoutesDto'
+import type { RoutesDto } from '@/models/route/RoutesDto'
 
 export interface RouteResponse {
     routes: RoutesDto[]
