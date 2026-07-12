@@ -5,7 +5,7 @@ import { getVehicles } from '@/api/vehicleApi'
 
 import type { Vehicle } from '@/models/Vehicle'
 
-/* import CreateVehicleModal from '@/components/vehicles/CreateVehicleModal.vue' */
+import CreateVehicleModal from '@/components/vehicles/CreateVehicleModal.vue'
 
 const vehicles = ref<Vehicle[]>([])
 
@@ -76,7 +76,7 @@ onMounted(async () => {
 
         </div>
 
-        <!-- <CreateVehicleModal :show="showCreateModal" @close="showCreateModal = false" @created="loadVehicles" /> -->
+        <CreateVehicleModal :show="showCreateModal" @close="showCreateModal = false" @created="loadVehicles" />
 
     </div>
 

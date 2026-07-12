@@ -1,30 +1,33 @@
-export type VehicleFuelType =
-    | "DIESEL"
-    | "PETROL"
-    | "ELECTRIC"
-    | "HYBRID"
-    | "LNG"
-    | "CNG"
-    | "OTHER";
-
 export interface Vehicle {
-    id: number;
+    id: number
 
-    externalId: string | null;
-    externalSource: string;
+    externalId: string | null
+    externalSource: string
 
-    registration: string;
+    registration: string
 
-    brand: string | null;
-    model: string | null;
+    brand: string | null
+    model: string | null
 
-    fuelType: VehicleFuelType | null;
+    fuelType: string | null
+    averageConsumption: number | null
+    tankCapacity: number | null
 
-    averageConsumption: number | null;
-    tankCapacity: number | null;
+    metadata: Record<string, unknown> | null
+}
 
-    metadata: Record<string, unknown> | null;
+export interface CreateVehicleRequest {
+    externalId: string | null
+    externalSource: string
 
-    createdAt: string;
-    updatedAt: string;
+    registration: string
+
+    brand: string | null
+    model: string | null
+
+    fuelType: string | null
+    averageConsumption: number | null
+    tankCapacity: number | null
+
+    metadata: Record<string, unknown> | null
 }
