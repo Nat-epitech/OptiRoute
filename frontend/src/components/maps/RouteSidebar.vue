@@ -12,8 +12,6 @@ import {
 
 import AssignRouteModal from '@/components/ui/AssignRouteModal.vue'
 
-import { createPlanningEvent } from '@/api/planningApi'
-
 import type { RouteRequest } from '@/models/RouteRequest'
 import type { RouteResponse } from '@/models/RouteResponse'
 import type { Driver } from '@/models/Driver'
@@ -84,14 +82,7 @@ const formatDuration = (seconds: number) => {
 }
 
 const handleAssignRoute = async (data: { title: string, driverId: number }) => {
-    await createPlanningEvent({
-        driverId: data.driverId,
-        title: data.title,
-        startDatetime: assignStartDate.value,
-        endDatetime: assignEndDate.value
-    })
-
-    showAssignModal.value = false
+    console.log('Assigning route with data:', data)
 }
 
 onMounted(async () => {

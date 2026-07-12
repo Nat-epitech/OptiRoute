@@ -1,36 +1,40 @@
 <template>
-    <div class="grid border-b border-gray-200 bg-white" :style="gridStyle">
-        <DriverInfoCell :driver="driver" />
+    <div class="grid border-b border-slate-200 bg-white" :style="gridStyle">
+        <DriverInfoCell :driver-name="driver.name" :mission-count="missionCount" />
 
-        <DriverCostCell :driver="driver" />
+        <DriverCostCell :total-cost="driver.totalCost" />
 
-        <PlanningDayCell v-for="day in days" :key="day" :missions="missionsByDay(day)" />
+        <PlanningDayCell v-for="day in days" :key="day.key" :missions="driver.days[day.key] ?? []" />
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 
-import DriverInfoCell from "./DriverInfoCell.vue";
-import DriverCostCell from "./DriverCostCell.vue";
-import PlanningDayCell from "./PlanningDayCell.vue";
+import DriverCostCell from "@/components/planning/DriverCostCell.vue";
+import DriverInfoCell from "@/components/planning/DriverInfoCell.vue";
+import PlanningDayCell from "@/components/planning/PlanningDayCell.vue";
+
+import type {
+    PlanningDay,
+    PlanningDriver,
+} from "@/models/planning/planning";
 
 const props = defineProps<{
-    driver: any;
-    days: string[];
+    driver: PlanningDriver;
+    days: PlanningDay[];
 }>();
 
+const missionCount = computed<number>(() => {
+    return Object.values(props.driver.days).reduce(
+        (total, dayMissions) => total + dayMissions.length,
+        0
+    );
+});
+
 const gridStyle = computed(() => ({
-    gridTemplateColumns: `240px 120px repeat(${props.days.length}, minmax(220px,1fr))`
+    gridTemplateColumns: `240px 120px repeat(${props.days.length}, minmax(220px, 1fr))`,
+    minWidth: "100%",
+    width: "max-content",
 }));
-
-function missionsByDay(day: string) {
-    return props.driver.missions.filter((mission: any) => {
-        const missionDate = new Date(mission.plannedStart)
-            .toLocaleDateString("fr-FR")
-            .slice(0, 5);
-
-        return missionDate === day;
-    });
-}
 </script>

@@ -142,3 +142,30 @@ Aucune persistance.
 
 Cas 2: Import Dashdoc
 Mission Dashdoc -> Mission -> RouteOptimizationService -> RouteResponse -> MissionRouteEstimate
+
+----- Frontend -----
+src/
+├── views/
+│   └── planning/
+│       └── PlanningView.vue
+│
+├── components/
+│   └── planning/
+│       ├── PlanningToolbar.vue
+│       ├── PlanningGrid.vue
+│       ├── PlanningHeader.vue
+│       ├── DriverRow.vue
+│       ├── DriverInfoCell.vue
+│       ├── DriverCostCell.vue
+│       ├── PlanningDayCell.vue
+│       ├── MissionCard.vue
+│       └── MissionDetailDrawer.vue
+│
+├── services/
+│   └── planning.service.ts
+│
+├── types/
+│   └── planning.ts
+│
+└── composables/
+    └── usePlanning.ts

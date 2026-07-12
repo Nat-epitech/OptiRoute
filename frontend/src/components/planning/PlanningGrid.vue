@@ -1,19 +1,67 @@
 <template>
-  <div class="overflow-auto">
-    <DriverRow
-      v-for="driver in drivers"
-      :key="driver.id"
-      :driver="driver"
-      :days="days"
-    />
+  <div class="min-h-0 flex-1 overflow-auto bg-white">
+    <PlanningHeader :days="days" />
+
+    <div v-if="loading" class="flex min-h-[240px] items-center justify-center">
+      <div class="flex items-center gap-3 text-sm text-slate-500">
+        <div class="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-slate-700" />
+
+        Chargement du planning...
+      </div>
+    </div>
+
+    <div v-else-if="error" class="flex min-h-[240px] flex-col items-center justify-center gap-4 px-6 text-center">
+      <div>
+        <p class="font-medium text-slate-800">
+          Le planning n’a pas pu être chargé
+        </p>
+
+        <p class="mt-1 text-sm text-slate-500">
+          {{ error }}
+        </p>
+      </div>
+
+      <button type="button"
+        class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+        @click="emit('retry')">
+        Réessayer
+      </button>
+    </div>
+
+    <div v-else-if="drivers.length === 0" class="flex min-h-[240px] items-center justify-center px-6 text-center">
+      <div>
+        <p class="font-medium text-slate-700">
+          Aucune mission planifiée
+        </p>
+
+        <p class="mt-1 text-sm text-slate-500">
+          Aucune mission n’est présente pour cette semaine.
+        </p>
+      </div>
+    </div>
+
+    <div v-else>
+      <DriverRow v-for="driver in drivers" :key="driver.id" :driver="driver" :days="days" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import DriverRow from "./DriverRow.vue";
+import DriverRow from "@/components/planning/DriverRow.vue";
+import PlanningHeader from "@/components/planning/PlanningHeader.vue";
+
+import type {
+  PlanningDay,
+  PlanningDriver,
+} from "@/models/planning/planning";
 
 defineProps<{
-  drivers: any[];
-  days: string[];
+  drivers: PlanningDriver[];
+  days: PlanningDay[];
+  loading: boolean;
+  error: string | null;
 }>();
+
+const emit = defineEmits<{ retry: []; }>();
+
 </script>
