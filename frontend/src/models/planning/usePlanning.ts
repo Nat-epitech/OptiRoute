@@ -1,6 +1,6 @@
 import { ref } from "vue";
 
-import planningService from "@/api/planning.service";
+import { getPlanning } from "@/api/planningApi";
 
 import type {
     PlanningMission,
@@ -17,7 +17,7 @@ export function usePlanning() {
         try {
             loading.value = true;
             error.value = null;
-            missions.value = await planningService.getPlanning(request);
+            missions.value = await getPlanning(request);
         } catch (e) {
             console.error(e);
             error.value = "Impossible de charger le planning.";

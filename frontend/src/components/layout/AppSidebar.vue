@@ -46,7 +46,9 @@ const isAdminSection = computed(() =>
 
                 <SidebarLink to="/planning/dashboard" label="Dashboard" />
 
-                <SidebarLink to="/planning/drivers" label="Chauffeurs" />
+                <SidebarLink to="/planning/drivers" label="Conducteurs" />
+
+                <SidebarLink to="/planning/vehicles" label="Véhicules" />
 
                 <SidebarLink to="/planning/schedule" label="Planning" />
 
