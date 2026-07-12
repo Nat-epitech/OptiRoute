@@ -2,6 +2,12 @@ package com.optiroute.backend.entity;
 
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -40,8 +46,9 @@ public class Vehicle {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    @Column(columnDefinition = "jsonb")
-    private String metadata;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "metadata", columnDefinition = "jsonb")
+    private JsonNode metadata;
 
     @PrePersist
     void prePersist() {
@@ -142,11 +149,11 @@ public class Vehicle {
         this.updatedAt = updatedAt;
     }
 
-    public String getMetadata() {
+    public JsonNode getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(String metadata) {
+    public void setMetadata(JsonNode metadata) {
         this.metadata = metadata;
     }
 
