@@ -1,11 +1,11 @@
-package com.optiroute.backend.dto.dto;
+package com.optiroute.backend.dto.response;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-public record VehicleDto(
+public record VehicleResponse(
         Long id,
         String externalId,
         String externalSource,

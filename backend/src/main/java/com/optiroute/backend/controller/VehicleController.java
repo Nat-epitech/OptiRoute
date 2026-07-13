@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.optiroute.backend.dto.dto.VehicleDto;
 import com.optiroute.backend.dto.request.VehicleRequest;
+import com.optiroute.backend.dto.response.VehicleResponse;
 import com.optiroute.backend.service.VehicleService;
 
 @RestController
@@ -21,19 +21,19 @@ public class VehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<VehicleDto> create(@RequestBody VehicleRequest request) {
-        VehicleDto createdVehicle = vehicleService.create(request);
+    public ResponseEntity<VehicleResponse> create(@RequestBody VehicleRequest request) {
+        VehicleResponse createdVehicle = vehicleService.create(request);
 
         return ResponseEntity.created(URI.create("/api/vehicles/" + createdVehicle.id())).body(createdVehicle);
     }
 
     @GetMapping
-    public List<VehicleDto> getAll() {
+    public List<VehicleResponse> getAll() {
         return vehicleService.getAll();
     }
 
     @GetMapping("/{id}")
-    public VehicleDto getById(@PathVariable Long id) {
+    public VehicleResponse getById(@PathVariable Long id) {
         return vehicleService.getById(id);
     }
 }

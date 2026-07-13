@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.optiroute.backend.dto.dto.VehicleDto;
 import com.optiroute.backend.dto.request.VehicleRequest;
+import com.optiroute.backend.dto.response.VehicleResponse;
 import com.optiroute.backend.entity.Vehicle;
 import com.optiroute.backend.repository.VehicleRepository;
 
@@ -20,7 +20,7 @@ public class VehicleService {
     }
 
     @Transactional
-    public VehicleDto create(VehicleRequest request) {
+    public VehicleResponse create(VehicleRequest request) {
 
         if (vehicleRepository.existsByRegistration(request.registration())) {
             throw new IllegalArgumentException(
@@ -53,7 +53,7 @@ public class VehicleService {
     }
 
     @Transactional(readOnly = true)
-    public List<VehicleDto> getAll() {
+    public List<VehicleResponse> getAll() {
         return vehicleRepository.findAll()
                 .stream()
                 .map(this::toDto)
@@ -61,7 +61,7 @@ public class VehicleService {
     }
 
     @Transactional(readOnly = true)
-    public VehicleDto getById(Long id) {
+    public VehicleResponse getById(Long id) {
 
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(
@@ -70,8 +70,8 @@ public class VehicleService {
         return toDto(vehicle);
     }
 
-    private VehicleDto toDto(Vehicle vehicle) {
-        return new VehicleDto(
+    private VehicleResponse toDto(Vehicle vehicle) {
+        return new VehicleResponse(
                 vehicle.getId(),
                 vehicle.getExternalId(),
                 vehicle.getExternalSource(),
