@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "driver")
 @Getter
 @Setter
-public class Driver {
+public class Driver extends EntityUtils {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +32,4 @@ public class Driver {
 
     @Column(name = "hourly_rate", precision = 8, scale = 2)
     private BigDecimal hourlyRate;
-
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
 }
