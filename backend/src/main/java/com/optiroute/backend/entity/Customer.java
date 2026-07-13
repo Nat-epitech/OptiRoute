@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -39,8 +44,9 @@ public class Customer {
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
 
-    @Column(columnDefinition = "jsonb")
-    private String metadata;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "metadata", columnDefinition = "jsonb")
+    private JsonNode metadata;
 
     @PrePersist
     public void prePersist() {
@@ -123,11 +129,11 @@ public class Customer {
         return updatedAt;
     }
 
-    public String getMetadata() {
+    public JsonNode getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(String metadata) {
+    public void setMetadata(JsonNode metadata) {
         this.metadata = metadata;
     }
 }
