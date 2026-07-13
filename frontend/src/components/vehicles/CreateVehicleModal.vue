@@ -100,7 +100,7 @@ watch(
                         Inscription
                     </label>
 
-                    <input v-model="form.registration" type="text" placeholder="AB-123-CD" required
+                    <input v-model="form.registration" type="text" required
                         class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
                 </div>
 
@@ -109,7 +109,7 @@ watch(
                         Marque
                     </label>
 
-                    <input v-model="form.brand" type="text" placeholder="Renault Trucks"
+                    <input v-model="form.brand" type="text"
                         class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
                 </div>
 
@@ -118,7 +118,7 @@ watch(
                         Modèle
                     </label>
 
-                    <input v-model="form.model" type="text" placeholder="T High"
+                    <input v-model="form.model" type="text"
                         class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
                 </div>
 
@@ -154,7 +154,6 @@ watch(
                         </label>
 
                         <input v-model.number="form.averageConsumption" type="number" min="0" step="0.01"
-                            placeholder="31.50"
                             class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
 
                         <p class="mt-1 text-xs text-gray-500">
@@ -167,7 +166,7 @@ watch(
                             Capacité du réservoir
                         </label>
 
-                        <input v-model.number="form.tankCapacity" type="number" min="0" step="0.01" placeholder="750"
+                        <input v-model.number="form.tankCapacity" type="number" min="0" step="0.01"
                             class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
 
                         <p class="mt-1 text-xs text-gray-500">
@@ -190,7 +189,7 @@ watch(
 
                 <button type="submit" :disabled="loading"
                     class="rounded-xl bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50">
-                    {{ loading ? 'Création en cours...' : 'Ajouter le véhicule' }}
+                    {{ loading ? 'Création...' : 'Ajouter le véhicule' }}
                 </button>
             </div>
         </form>

@@ -28,12 +28,12 @@ onMounted(async () => {
         <div class="flex items-center justify-between mb-6">
 
             <h1 class="text-3xl font-bold text-gray-800">
-                Users
+                Utilisateurs
             </h1>
 
             <button @click="showCreateModal = true"
                 class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl shadow transition">
-                + Create User
+                Ajouter un utilisateur
             </button>
 
         </div>
@@ -46,8 +46,8 @@ onMounted(async () => {
 
                     <tr>
                         <th class="text-left px-6 py-4">Email</th>
-                        <th class="text-left px-6 py-4">First Name</th>
-                        <th class="text-left px-6 py-4">Last Name</th>
+                        <th class="text-left px-6 py-4">Prénom</th>
+                        <th class="text-left px-6 py-4">Nom</th>
                     </tr>
 
                 </thead>
