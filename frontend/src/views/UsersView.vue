@@ -97,12 +97,12 @@ const closeUserAction = () => {
                             <AppDropdown v-slot="{ close }">
 
                                 <button class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-50"
-                                    @click="close(), openEditUserModal(user)">
+                                    @click="close(); openEditUserModal(user)">
                                     Modifier
                                 </button>
 
                                 <button class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                                    @click="close(), askDeleteUser(user)">
+                                    @click="close(); askDeleteUser(user)">
                                     Supprimer
                                 </button>
 

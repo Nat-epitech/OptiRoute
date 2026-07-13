@@ -45,9 +45,9 @@ onMounted(async () => {
                 <thead class="bg-gray-50 border-b">
 
                     <tr>
-                        <th class="text-left px-6 py-4">Registration</th>
-                        <th class="text-left px-6 py-4">Brand</th>
-                        <th class="text-left px-6 py-4">Model</th>
+                        <th class="text-left px-6 py-4">Inscription</th>
+                        <th class="text-left px-6 py-4">Marque</th>
+                        <th class="text-left px-6 py-4">Modèle</th>
                     </tr>
 
                 </thead>
