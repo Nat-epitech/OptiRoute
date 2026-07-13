@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.optiroute.backend.dto.dto.CustomerDto;
 import com.optiroute.backend.dto.request.CustomerRequest;
+import com.optiroute.backend.dto.response.CustomerResponse;
 import com.optiroute.backend.entity.Customer;
 import com.optiroute.backend.repository.CustomerRepository;
 
@@ -20,7 +20,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerDto create(CustomerRequest request) {
+    public CustomerResponse create(CustomerRequest request) {
 
         if (request.name() == null || request.name().isBlank()) {
             throw new IllegalArgumentException("Customer name is required");
@@ -48,20 +48,20 @@ public class CustomerService {
     }
 
     @Transactional(readOnly = true)
-    public List<CustomerDto> getAll() {
+    public List<CustomerResponse> getAll() {
         return customerRepository.findAll().stream().map(this::toDto).toList();
     }
 
     @Transactional(readOnly = true)
-    public CustomerDto getById(Long id) {
+    public CustomerResponse getById(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with id: " + id));
 
         return toDto(customer);
     }
 
-    private CustomerDto toDto(Customer customer) {
-        return new CustomerDto(
+    private CustomerResponse toDto(Customer customer) {
+        return new CustomerResponse(
                 customer.getId(),
                 customer.getExternalId(),
                 customer.getExternalSource(),

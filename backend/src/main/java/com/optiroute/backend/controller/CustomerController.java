@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.optiroute.backend.dto.dto.CustomerDto;
 import com.optiroute.backend.dto.request.CustomerRequest;
+import com.optiroute.backend.dto.response.CustomerResponse;
 import com.optiroute.backend.service.CustomerService;
 
 @RestController
@@ -21,21 +21,21 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerDto> create(
+    public ResponseEntity<CustomerResponse> create(
             @RequestBody CustomerRequest request) {
 
-        CustomerDto createdCustomer = customerService.create(request);
+        CustomerResponse createdCustomer = customerService.create(request);
 
         return ResponseEntity.created(URI.create("/api/customers/" + createdCustomer.id())).body(createdCustomer);
     }
 
     @GetMapping({ "", "/" })
-    public List<CustomerDto> getAll() {
+    public List<CustomerResponse> getAll() {
         return customerService.getAll();
     }
 
     @GetMapping("/{id}")
-    public CustomerDto getById(@PathVariable Long id) {
+    public CustomerResponse getById(@PathVariable Long id) {
         return customerService.getById(id);
     }
 }
