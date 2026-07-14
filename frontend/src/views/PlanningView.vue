@@ -1,10 +1,12 @@
 <template>
-    <div class="flex h-full min-h-0 flex-col bg-slate-100">
+    <div class="relative flex h-full min-h-0 flex-col overflow-hidden bg-slate-100">
         <PlanningToolbar :week-label="weekLabel" @previous-week="showPreviousWeek" @today="showCurrentWeek"
             @next-week="showNextWeek" />
 
-        <PlanningGrid :drivers="planningDrivers" :days="days" :loading="loading" :error="error"
-            @retry="loadCurrentWeek" />
+        <PlanningGrid :drivers="planningDrivers" :days="days" :loading="loading" :error="error" @retry="loadCurrentWeek"
+            @mission-select="openMission" />
+
+        <MissionDetailDrawer :open="selectedMissionId !== null" :mission-id="selectedMissionId" @close="closeMission" />
     </div>
 </template>
 
@@ -13,6 +15,7 @@ import { computed, ref, watch } from "vue";
 
 import PlanningGrid from "@/components/planning/PlanningGrid.vue";
 import PlanningToolbar from "@/components/planning/PlanningToolbar.vue";
+import MissionDetailDrawer from "@/components/missions/MissionDetailDrawer.vue";
 
 import { usePlanning } from "@/models/planning/usePlanning";
 
@@ -21,6 +24,16 @@ import type {
     PlanningDriver,
     PlanningMission,
 } from "@/models/planning/planning";
+
+const selectedMissionId = ref<number | null>(null);
+
+function openMission(missionId: number): void {
+    selectedMissionId.value = missionId;
+}
+
+function closeMission(): void {
+    selectedMissionId.value = null;
+}
 
 const selectedDate = ref<Date>(new Date());
 

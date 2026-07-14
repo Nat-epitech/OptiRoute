@@ -41,7 +41,8 @@
     </div>
 
     <div v-else>
-      <DriverRow v-for="driver in drivers" :key="driver.id" :driver="driver" :days="days" />
+      <DriverRow v-for="driver in drivers" :key="driver.id" :driver="driver" :days="days"
+        @mission-select="emit('mission-select', $event)" />
     </div>
   </div>
 </template>
@@ -62,6 +63,9 @@ defineProps<{
   error: string | null;
 }>();
 
-const emit = defineEmits<{ retry: []; }>();
+const emit = defineEmits<{
+  retry: [];
+  "mission-select": [missionId: number];
+}>();
 
 </script>
