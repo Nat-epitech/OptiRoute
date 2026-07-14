@@ -2,7 +2,6 @@ package com.optiroute.backend.service;
 
 import com.optiroute.backend.dto.request.DriverRequest;
 import com.optiroute.backend.dto.response.DriverResponse;
-import com.optiroute.backend.dto.response.UserResponse;
 import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.repository.DriverRepository;
 
@@ -11,7 +10,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 
 @Service

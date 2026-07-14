@@ -3,7 +3,8 @@ import { ref } from 'vue'
 
 import AppModal from '@/components/ui/AppModal.vue'
 
-import api from '@/api/axios'
+import { createDriver } from '@/api/driverApi'
+import type { CreateDriverRequest } from '@/models/Driver'
 
 const props = defineProps<{
     show: boolean
@@ -21,32 +22,26 @@ const phoneNumber = ref('')
 
 const loading = ref(false)
 
-const createDriver = async () => {
+const createDriverHandler = async () => {
+    const request: CreateDriverRequest = {
+        email: email.value,
+        firstName: firstName.value,
+        lastName: lastName.value,
+        phoneNumber: phoneNumber.value
+    }
 
     try {
         loading.value = true
 
-        await api.post('/drivers', {
-            email: email.value,
-            firstName: firstName.value,
-            lastName: lastName.value,
-            phoneNumber: phoneNumber.value
-        })
+        await createDriver(request)
 
         emit('created')
-
         emit('close')
-
         resetForm()
-
-    } catch (e) {
-
-        console.error(e)
-
-        alert('Error creating user')
-
+    } catch (error) {
+        console.error(error)
+        alert('Erreur lors de la création du conducteur')
     } finally {
-
         loading.value = false
     }
 }
@@ -113,7 +108,7 @@ const resetForm = () => {
                 Annuler
             </button>
 
-            <button @click="createDriver" :disabled="loading"
+            <button @click="createDriverHandler" :disabled="loading"
                 class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition">
                 {{ loading ? 'Création...' : 'Ajouter le conducteur' }}
             </button>

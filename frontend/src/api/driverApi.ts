@@ -1,12 +1,12 @@
 import api from './axios'
-import type { UpdateDriverRequest } from '@/models/Driver'
+import type { CreateDriverRequest, UpdateDriverRequest } from '@/models/Driver'
 
 export const getDrivers = async () => {
   const response = await api.get('/drivers')
   return response.data
 }
 
-export const createDriver = async (driver: any) => {
+export const createDriver = async (driver: CreateDriverRequest) => {
   const response = await api.post('/drivers', driver)
   return response.data
 }
