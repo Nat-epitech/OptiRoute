@@ -2,8 +2,6 @@ package com.optiroute.backend.entity;
 
 import jakarta.persistence.*;
 
-import java.time.OffsetDateTime;
-
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -11,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 @Entity
 @Table(name = "customer")
-public class Customer {
+public class Customer extends EntityUtils {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,26 +36,9 @@ public class Customer {
     @Column(length = 100)
     private String country;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
-
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "metadata", columnDefinition = "jsonb")
     private JsonNode metadata;
-
-    @PrePersist
-    public void prePersist() {
-        createdAt = OffsetDateTime.now();
-        updatedAt = createdAt;
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        updatedAt = OffsetDateTime.now();
-    }
 
     // getters / setters
 
@@ -119,14 +100,6 @@ public class Customer {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public OffsetDateTime getUpdatedAt() {
-        return updatedAt;
     }
 
     public JsonNode getMetadata() {

@@ -1,6 +1,6 @@
 export interface CustomerMetadata {
-    contactName?: string;
-    deliveryInstructions?: string;
+    contactName: string;
+    deliveryInstructions: string;
 
     [key: string]: unknown;
 }
@@ -25,18 +25,26 @@ export interface Customer {
 }
 
 export interface CustomerCreateRequest {
-    externalId?: string | null;
-    externalSource?: string;
+    externalId: string | null;
+    externalSource: string;
 
     name: string;
-    code?: string | null;
+    code: string | null;
 
-    address?: string | null;
-    city?: string | null;
-    country?: string | null;
+    address: string | null;
+    city: string | null;
+    country: string | null;
 
-    metadata?: CustomerMetadata | null;
+    metadata: CustomerMetadata | null;
 }
 
-export type CustomerUpdateRequest =
-    Partial<CustomerCreateRequest>;
+export interface CustomerUpdateRequest {
+    name: string;
+    code: string | null;
+
+    address: string | null;
+    city: string | null;
+    country: string | null;
+
+    metadata: CustomerMetadata | null;
+}

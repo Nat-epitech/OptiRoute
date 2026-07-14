@@ -6,6 +6,10 @@ import { getCustomers } from '@/api/customerApi'
 import type { Customer } from '@/models/Customer'
 
 import CreateCustomerModal from '@/components/customers/CreateCustomerModal.vue'
+import EditCustomerModal from '@/components/customers/EditCustomerModal.vue'
+import DeleteCustomerModal from '@/components/customers/DeleteCustomerModal.vue'
+import AppDropdown from '@/components/ui/AppDropdown.vue'
+
 
 const customers = ref<Customer[]>([])
 
@@ -13,6 +17,25 @@ const showCreateModal = ref(false)
 
 const loadCustomers = async () => {
     customers.value = await getCustomers()
+}
+
+type CustomerAction = 'edit' | 'delete' | null
+const selectedCustomer = ref<Customer | null>(null)
+const activeAction = ref<CustomerAction>(null)
+
+const openEditCustomerModal = (customer: Customer) => {
+    selectedCustomer.value = customer
+    activeAction.value = 'edit'
+}
+
+const askDeleteCustomer = (customer: Customer) => {
+    selectedCustomer.value = customer
+    activeAction.value = 'delete'
+}
+
+const closeCustomerAction = () => {
+    selectedCustomer.value = null
+    activeAction.value = null
 }
 
 onMounted(async () => {
@@ -38,7 +61,7 @@ onMounted(async () => {
 
         </div>
 
-        <div class="bg-white rounded-2xl shadow overflow-hidden">
+        <div class="bg-white rounded-2xl shadow">
 
             <table class="w-full">
 
@@ -49,6 +72,7 @@ onMounted(async () => {
                         <th class="text-left px-6 py-4">Code</th>
                         <th class="text-left px-6 py-4">Ville</th>
                         <th class="text-left px-6 py-4">Adresse</th>
+                        <th class="text-right px-6 py-4">Actions</th>
                     </tr>
 
                 </thead>
@@ -73,6 +97,22 @@ onMounted(async () => {
                             {{ customer.address }}
                         </td>
 
+                        <td class="px-6 py-4 text-right">
+                            <AppDropdown v-slot="{ close }">
+                                <button type="button"
+                                    class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-50"
+                                    @click="close(); openEditCustomerModal(customer)">
+                                    Modifier
+                                </button>
+
+                                <button type="button"
+                                    class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                    @click="close(); askDeleteCustomer(customer)">
+                                    Supprimer
+                                </button>
+                            </AppDropdown>
+                        </td>
+
                     </tr>
 
                 </tbody>
@@ -82,6 +122,11 @@ onMounted(async () => {
         </div>
 
         <CreateCustomerModal :show="showCreateModal" @close="showCreateModal = false" @created="loadCustomers" />
+        <EditCustomerModal :show="activeAction === 'edit'" :customer="selectedCustomer" @close="closeCustomerAction"
+            @updated="loadCustomers" />
+
+        <DeleteCustomerModal :show="activeAction === 'delete'" :customer="selectedCustomer" @close="closeCustomerAction"
+            @deleted="loadCustomers" />
 
     </div>
 

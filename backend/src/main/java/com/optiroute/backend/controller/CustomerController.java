@@ -3,12 +3,17 @@ package com.optiroute.backend.controller;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.optiroute.backend.dto.request.CustomerRequest;
+import com.optiroute.backend.dto.request.VehicleRequest;
 import com.optiroute.backend.dto.response.CustomerResponse;
+import com.optiroute.backend.dto.response.VehicleResponse;
 import com.optiroute.backend.service.CustomerService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -21,8 +26,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerResponse> create(
-            @RequestBody CustomerRequest request) {
+    public ResponseEntity<CustomerResponse> create(@RequestBody CustomerRequest request) {
 
         CustomerResponse createdCustomer = customerService.create(request);
 
@@ -37,5 +41,16 @@ public class CustomerController {
     @GetMapping("/{id}")
     public CustomerResponse getById(@PathVariable Long id) {
         return customerService.getById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCustomer(@PathVariable Long id) {
+        customerService.deleteCustomer(id);
+    }
+
+    @PutMapping("/{id}")
+    public CustomerResponse updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerRequest request) {
+        return customerService.updateCustomer(id, request);
     }
 }
