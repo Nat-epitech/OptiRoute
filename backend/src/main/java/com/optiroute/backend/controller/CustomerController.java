@@ -8,9 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.optiroute.backend.dto.request.CustomerRequest;
-import com.optiroute.backend.dto.request.VehicleRequest;
 import com.optiroute.backend.dto.response.CustomerResponse;
-import com.optiroute.backend.dto.response.VehicleResponse;
 import com.optiroute.backend.service.CustomerService;
 
 import jakarta.validation.Valid;
