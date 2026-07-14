@@ -6,6 +6,9 @@ import { getVehicles } from '@/api/vehicleApi'
 import type { Vehicle } from '@/models/Vehicle'
 
 import CreateVehicleModal from '@/components/vehicles/CreateVehicleModal.vue'
+import EditVehicleModal from '@/components/vehicles/EditVehicleModal.vue'
+import DeleteVehicleModal from '@/components/vehicles/DeleteVehicleModal.vue'
+import AppDropdown from '@/components/ui/AppDropdown.vue'
 
 const vehicles = ref<Vehicle[]>([])
 
@@ -13,6 +16,26 @@ const showCreateModal = ref(false)
 
 const loadVehicles = async () => {
     vehicles.value = await getVehicles()
+}
+
+type VehicleAction = 'edit' | 'delete' | null
+
+const selectedVehicle = ref<Vehicle | null>(null)
+const activeAction = ref<VehicleAction>(null)
+
+const openEditVehicleModal = (vehicle: Vehicle) => {
+    selectedVehicle.value = vehicle
+    activeAction.value = 'edit'
+}
+
+const askDeleteVehicle = (vehicle: Vehicle) => {
+    selectedVehicle.value = vehicle
+    activeAction.value = 'delete'
+}
+
+const closeVehicleAction = () => {
+    selectedVehicle.value = null
+    activeAction.value = null
 }
 
 onMounted(async () => {
@@ -38,16 +61,17 @@ onMounted(async () => {
 
         </div>
 
-        <div class="bg-white rounded-2xl shadow overflow-hidden">
+        <div class="bg-white rounded-2xl shadow">
 
             <table class="w-full">
 
                 <thead class="bg-gray-50 border-b">
 
                     <tr>
-                        <th class="text-left px-6 py-4">Inscription</th>
+                        <th class="text-left px-6 py-4">Immatriculation</th>
                         <th class="text-left px-6 py-4">Marque</th>
                         <th class="text-left px-6 py-4">Modèle</th>
+                        <th class="text-right px-6 py-4">Actions</th>
                     </tr>
 
                 </thead>
@@ -68,6 +92,22 @@ onMounted(async () => {
                             {{ vehicle.model }}
                         </td>
 
+                        <td class="px-6 py-4 text-right">
+                            <AppDropdown v-slot="{ close }">
+                                <button type="button"
+                                    class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-50"
+                                    @click="close(); openEditVehicleModal(vehicle)">
+                                    Modifier
+                                </button>
+
+                                <button type="button"
+                                    class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                    @click="close(); askDeleteVehicle(vehicle)">
+                                    Supprimer
+                                </button>
+                            </AppDropdown>
+                        </td>
+
                     </tr>
 
                 </tbody>
@@ -77,6 +117,11 @@ onMounted(async () => {
         </div>
 
         <CreateVehicleModal :show="showCreateModal" @close="showCreateModal = false" @created="loadVehicles" />
+        <EditVehicleModal :show="activeAction === 'edit'" :vehicle="selectedVehicle" @close="closeVehicleAction"
+            @updated="loadVehicles" />
+
+        <DeleteVehicleModal :show="activeAction === 'delete'" :vehicle="selectedVehicle" @close="closeVehicleAction"
+            @deleted="loadVehicles" />
 
     </div>
 

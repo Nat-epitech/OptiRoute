@@ -1,7 +1,6 @@
 package com.optiroute.backend.entity;
 
 import jakarta.persistence.*;
-import java.time.OffsetDateTime;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -12,7 +11,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "vehicle")
-public class Vehicle {
+public class Vehicle extends EntityUtils {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,26 +39,9 @@ public class Vehicle {
     @Column(name = "tank_capacity", precision = 5, scale = 2)
     private BigDecimal tankCapacity;
 
-    @Column(name = "created_at")
-    private OffsetDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private OffsetDateTime updatedAt;
-
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "metadata", columnDefinition = "jsonb")
     private JsonNode metadata;
-
-    @PrePersist
-    void prePersist() {
-        createdAt = OffsetDateTime.now();
-        updatedAt = createdAt;
-    }
-
-    @PreUpdate
-    void preUpdate() {
-        updatedAt = OffsetDateTime.now();
-    }
 
     public Long getId() {
         return id;
@@ -131,22 +113,6 @@ public class Vehicle {
 
     public void setTankCapacity(BigDecimal tankCapacity) {
         this.tankCapacity = tankCapacity;
-    }
-
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(OffsetDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public OffsetDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(OffsetDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public JsonNode getMetadata() {

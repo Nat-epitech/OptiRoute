@@ -31,3 +31,13 @@ export interface CreateVehicleRequest {
 
     metadata: Record<string, unknown> | null
 }
+
+export interface UpdateVehicleRequest {
+    registration: string
+    brand: string | null
+    model: string | null
+
+    fuelType: string | null
+    averageConsumption: number | null
+    tankCapacity: number | null
+}
