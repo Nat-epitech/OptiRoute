@@ -45,4 +45,27 @@ public class MissionRouteEstimateService {
 		return repository.save(estimate);
 	}
 
+	@Transactional
+	public MissionRouteEstimate saveEstimate(Mission mission, RoutesDto route, String routingProvider, String routingMode) {
+
+		MissionRouteEstimate estimate = new MissionRouteEstimate();
+
+		estimate.setMissionId(mission.getId());
+		estimate.setRoutingProvider(routingProvider);
+		estimate.setRoutingMode(routingMode);
+		estimate.setDepartureTime(mission.getPlannedStart());
+
+		estimate.setDistanceMeters(route.getDistanceMeters());
+		estimate.setDurationSeconds(route.getDurationSeconds());
+		estimate.setTrafficDurationSeconds(null);
+		estimate.setPolyline(route.getPolyline());
+
+		estimate.setEstimatedFuelCost(BigDecimal.valueOf(route.getCosts().getFuelCost()));
+		estimate.setEstimatedTollCost(BigDecimal.valueOf(route.getCosts().getTollCost()));
+		estimate.setEstimatedDriverCost(BigDecimal.valueOf(route.getCosts().getDriverCost()));
+		estimate.setEstimatedTotalCost(BigDecimal.valueOf(route.getCosts().getTotalCost()));
+
+		return repository.save(estimate);
+	}
+
 }

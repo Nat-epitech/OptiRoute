@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.optiroute.backend.dto.dto.MissionDetailDto;
 import com.optiroute.backend.dto.dto.MissionPlanningDto;
 import com.optiroute.backend.dto.request.MissionRequest;
+import com.optiroute.backend.dto.request.CreateMissionFromRouteRequest;
 import com.optiroute.backend.entity.Mission;
 import com.optiroute.backend.service.MissionDetailService;
 import com.optiroute.backend.service.MissionFacadeService;
@@ -44,6 +45,13 @@ public class MissionController {
     @GetMapping("/{id}")
     public ResponseEntity<MissionDetailDto> getDetail(@PathVariable Long id) {
         return ResponseEntity.ok(missionDetailService.getDetail(id));
+    }
+
+    @PostMapping("/from-route")
+    public ResponseEntity<Mission> createFromRoute(@RequestBody CreateMissionFromRouteRequest request) {
+        Mission mission = missionFacadeService.createFromRoute(request);
+
+        return ResponseEntity.ok(mission);
     }
 
 }

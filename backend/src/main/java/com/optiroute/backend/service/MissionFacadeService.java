@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.optiroute.backend.dto.request.RouteRequest;
+import com.optiroute.backend.dto.request.CreateMissionFromRouteRequest;
 import com.optiroute.backend.dto.response.RouteResponse;
 import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.entity.Vehicle;
@@ -60,6 +61,14 @@ public class MissionFacadeService {
 
         // 5. Sauvegarde de l'estimation
         missionRouteEstimateService.saveEstimate(mission, routeResponse);
+
+        return mission;
+    }
+
+    @Transactional
+    public Mission createFromRoute(CreateMissionFromRouteRequest request) {
+        Mission mission = missionService.create(request.mission());
+        missionRouteEstimateService.saveEstimate(mission, request.selectedRoute(), request.routingProvider(), request.routingMode());
 
         return mission;
     }
