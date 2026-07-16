@@ -15,10 +15,35 @@ import AssignRouteModal from '@/components/ui/AssignRouteModal.vue'
 import type { RouteRequest } from '@/models/route/RouteRequest.ts'
 import type { RouteResponse } from '@/models/route/RouteResponse.ts'
 import type { Driver } from '@/models/Driver'
+import type { Vehicle } from '@/models/Vehicle'
+import type { Customer } from '@/models/Customer'
+import type { CreateMissionRequest } from '@/models/mission/CreateMissionRequest'
 
+import { createMissionFromRoute } from '@/api/missionApi'
+import type { CreateMissionFromRouteRequest } from '@/models/mission/CreateMissionFromRouteRequest'
 import { getDrivers } from '@/api/driverApi'
+import { getVehicles } from '@/api/vehicleApi'
+import { getCustomers } from '@/api/customerApi'
 
+const drivers = ref<Driver[]>([])
+const vehicles = ref<Vehicle[]>([])
+const customers = ref<Customer[]>([])
 
+const loadAssignmentData = async () => {
+    const [
+        loadedDrivers,
+        loadedVehicles,
+        loadedCustomers
+    ] = await Promise.all([
+        getDrivers(),
+        getVehicles(),
+        getCustomers()
+    ])
+
+    drivers.value = loadedDrivers
+    vehicles.value = loadedVehicles
+    customers.value = loadedCustomers
+}
 
 const props = defineProps<{
     routeResponse?: RouteResponse
@@ -34,11 +59,6 @@ const open = ref(true)
 const showAssignModal = ref(false)
 
 const routeRequest = ref<RouteRequest>()
-
-const drivers = ref<Driver[]>([])
-const loadDrivers = async () => {
-    drivers.value = await getDrivers()
-}
 
 const onRouteCalculated = (data: { response: RouteResponse, request: RouteRequest }) => {
     routeRequest.value = data.request
@@ -81,12 +101,71 @@ const formatDuration = (seconds: number) => {
     return `${hours} h ${minutes}`
 }
 
-const handleAssignRoute = async (data: { title: string, driverId: number }) => {
-    console.log('Assigning route with data:', data)
+interface AssignRouteData {
+    title: string
+    driverId: number
+    vehicleId?: number
+    customerId?: number
+}
+
+const handleAssignRoute = async (data: AssignRouteData) => {
+    const requestValue = routeRequest.value
+
+    if (
+        !requestValue ||
+        props.selectedIndex === undefined ||
+        !props.routeResponse
+    ) {
+        return
+    }
+
+    const selectedRoute = props.routeResponse.routes[props.selectedIndex]
+
+    if (!selectedRoute) {
+        return
+    }
+
+    const plannedStart = assignStartDate.value
+    const plannedEnd = assignEndDate.value
+
+    if (!plannedStart || !plannedEnd) {
+        return
+    }
+
+    const mission: CreateMissionRequest = {
+        name: data.title,
+        driverId: data.driverId,
+        vehicleId: data.vehicleId,
+        customerId: data.customerId,
+
+        plannedStart,
+        plannedEnd,
+
+        originName: requestValue.origin.name,
+        originAddress: requestValue.origin.address,
+        originLat: requestValue.origin.lat,
+        originLng: requestValue.origin.lng,
+
+        destinationName: requestValue.destination.name,
+        destinationAddress: requestValue.destination.address,
+        destinationLat: requestValue.destination.lat,
+        destinationLng: requestValue.destination.lng
+    }
+
+    const request: CreateMissionFromRouteRequest = {
+        mission,
+        selectedRoute,
+        routingProvider: 'HERE',
+        routingMode: 'fastest'
+    }
+
+    await createMissionFromRoute(request)
+
+    showAssignModal.value = false
 }
 
 onMounted(async () => {
-    await loadDrivers()
+    await loadAssignmentData()
 })
 </script>
 
@@ -138,10 +217,10 @@ onMounted(async () => {
                                                 <span>{{ route.costs.tollCost.toFixed(0) }} €</span>
                                             </div>
 
-                                            <div class="flex items-center gap-1">
+                                            <!-- <div class="flex items-center gap-1">
                                                 <User class="h-4 w-4" />
                                                 <span>{{ route.costs.driverCost.toFixed(0) }} €</span>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
 
@@ -187,6 +266,7 @@ onMounted(async () => {
         </div>
     </div>
 
-    <AssignRouteModal :show="showAssignModal" :drivers="drivers" :start-date="assignStartDate" :end-date="assignEndDate"
-        @close="showAssignModal = false" @submit="handleAssignRoute" />
+    <AssignRouteModal :show="showAssignModal" :drivers="drivers" :vehicles="vehicles" :customers="customers"
+        :start-date="assignStartDate" :end-date="assignEndDate" @close="showAssignModal = false"
+        @submit="handleAssignRoute" />
 </template>
