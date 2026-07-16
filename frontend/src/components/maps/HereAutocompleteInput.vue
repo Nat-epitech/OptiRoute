@@ -52,7 +52,6 @@ async function selectPlace(item: any) {
         isSelecting.value = true
 
         const place = await geocodePlace(item.id)
-
         const label = place.address.label
 
         // ❗ crucial : on stop le debounce en cours
@@ -62,7 +61,8 @@ async function selectPlace(item: any) {
         results.value = []
 
         emit('selected', {
-            label,
+            name: place.address.city ?? place.title ?? label,
+            address: label,
             position: {
                 lat: place.position.lat,
                 lng: place.position.lng

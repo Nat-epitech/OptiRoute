@@ -77,8 +77,6 @@ onMounted(async () => {
         new H.mapevents.MapEvents(map)
     )
 
-    H.ui.UI.createDefault(map, defaultLayers)
-
     resizeObserver = new ResizeObserver(() => {
         map?.getViewPort().resize()
     })

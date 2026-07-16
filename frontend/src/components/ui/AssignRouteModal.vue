@@ -61,6 +61,23 @@ const submit = () => {
         customerId: customerId.value
     })
 }
+
+function formatDateTime(value: string): string {
+    if (!value) {
+        return 'Non définie'
+    }
+
+    const date = new Date(value)
+
+    if (Number.isNaN(date.getTime())) {
+        return 'Date invalide'
+    }
+
+    return new Intl.DateTimeFormat('fr-FR', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+    }).format(date)
+}
 </script>
 
 <template>
@@ -145,7 +162,7 @@ const submit = () => {
                         Départ
                     </label>
 
-                    <input :value="startDate" readonly class="w-full rounded-lg border bg-slate-100 p-3" />
+                    <input :value="formatDateTime(startDate)" readonly class="w-full rounded-lg border bg-slate-100 p-3" />
                 </div>
 
                 <div>
@@ -153,7 +170,7 @@ const submit = () => {
                         Arrivée estimée
                     </label>
 
-                    <input :value="endDate" readonly class="w-full rounded-lg border bg-slate-100 p-3" />
+                    <input :value="formatDateTime(endDate)" readonly class="w-full rounded-lg border bg-slate-100 p-3" />
                 </div>
             </div>
 

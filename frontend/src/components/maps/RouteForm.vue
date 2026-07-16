@@ -2,6 +2,7 @@
 import { ref, reactive } from 'vue'
 import HereAutocompleteInput from './HereAutocompleteInput.vue'
 import { calculateRoute } from '@/api/routeApi'
+import type { Position } from '@/models/route/Position'
 
 //Variables
 const departureMode = ref('NOW')
@@ -31,6 +32,22 @@ const form = reactive({
 
 // Functions
 
+function toPosition(place: {
+    name: string
+    address: string
+    position: {
+        lat: number
+        lng: number
+    }
+}): Position {
+    return {
+        name: place.name,
+        address: place.address,
+        lat: place.position.lat,
+        lng: place.position.lng
+    }
+}
+
 async function submit() {
 
     if (!form.origin || !form.destination) {
@@ -38,11 +55,13 @@ async function submit() {
     }
 
     try {
-        const payload = {
-            origin: form.origin.position,
-            destination: form.destination.position,
+        const effectiveDepartureTime = toOffsetDateTime(form.departureTime) ?? new Date().toISOString()
 
-            departureTime: toOffsetDateTime(form.departureTime),
+        const payload = {
+            origin: toPosition(form.origin),
+            destination: toPosition(form.destination),
+
+            departureTime: effectiveDepartureTime,
 
             mode: form.mode,
             driverHourlyRate: form.driverHourlyRate,
@@ -128,7 +147,7 @@ function toOffsetDateTime(value: string) {
         </div>
 
         <!-- DRIVER -->
-        <div>
+        <!-- <div>
 
             <label class="block text-sm font-medium mb-2">
                 Coût chauffeur €/h
@@ -137,7 +156,7 @@ function toOffsetDateTime(value: string) {
             <input v-model="form.driverHourlyRate" type="number"
                 class="w-full rounded-xl border border-slate-300 p-3" />
 
-        </div>
+        </div> -->
 
         <!-- BUTTON -->
         <button @click="submit" class="w-full bg-slate-900 text-white rounded-xl p-3 hover:bg-slate-800 transition">

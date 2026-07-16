@@ -134,11 +134,6 @@
 
                         <MissionMetricCard label="Durée avec trafic"
                             :value="formatDuration(mission.trafficDurationSeconds)" />
-
-                        <MissionMetricCard label="Départ GPS" :value="formatCoordinates(
-                            mission.originLat,
-                            mission.originLng
-                        )" />
                     </div>
                 </section>
 
@@ -344,17 +339,6 @@ function formatDuration(value: number | null): string {
     }
 
     return `${hours} h ${String(minutes).padStart(2, "0")}`;
-}
-
-function formatCoordinates(
-    latitude: number | null,
-    longitude: number | null
-): string {
-    if (latitude === null || longitude === null) {
-        return "Non renseignées";
-    }
-
-    return `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
 }
 
 watch(
