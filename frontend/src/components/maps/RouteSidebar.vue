@@ -116,11 +116,7 @@ interface AssignRouteData {
 const handleAssignRoute = async (data: AssignRouteData) => {
     const requestValue = routeRequest.value
 
-    if (
-        !requestValue ||
-        props.selectedIndex === undefined ||
-        !props.routeResponse
-    ) {
+    if (!requestValue || props.selectedIndex === undefined || !props.routeResponse) {
         return
     }
 
