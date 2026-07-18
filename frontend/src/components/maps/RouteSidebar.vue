@@ -24,6 +24,11 @@ import type { CreateMissionFromRouteRequest } from '@/models/mission/CreateMissi
 import { getDrivers } from '@/api/driverApi'
 import { getVehicles } from '@/api/vehicleApi'
 import { getCustomers } from '@/api/customerApi'
+import { getApiErrorMessage } from '@/api/utils'
+
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 const drivers = ref<Driver[]>([])
 const vehicles = ref<Vehicle[]>([])
@@ -159,9 +164,24 @@ const handleAssignRoute = async (data: AssignRouteData) => {
         routingMode: 'fastest'
     }
 
-    await createMissionFromRoute(request)
+    try {
+        await createMissionFromRoute(request)
 
-    showAssignModal.value = false
+        notification.success(
+            'Planning enregistré',
+            `La mission « ${data.title} » a bien été ajoutée.`
+        )
+    } catch (error) {
+        notification.error(
+            'Enregistrement impossible',
+            getApiErrorMessage(
+                error,
+                'La mission n’a pas pu être ajoutée au planning.'
+            )
+        )
+    } finally {
+        showAssignModal.value = false
+    }
 }
 
 onMounted(async () => {

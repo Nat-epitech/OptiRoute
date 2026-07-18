@@ -8,6 +8,7 @@ import com.optiroute.backend.service.UserService;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +29,11 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponse createUser(@Valid @RequestBody UserRequest request) {
-        return userService.createUser(request);
+    public ResponseEntity<UserResponse> createUser(
+            @Valid @RequestBody UserRequest request) {
+        UserResponse response = userService.createUser(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{id}")

@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,17 +29,21 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional
     public UserResponse createUser(UserRequest request) {
         User user = new User();
+
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
 
         User savedUser = userRepository.save(user);
+
         return toResponse(savedUser);
     }
 
+    @Transactional
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw new EntityNotFoundException("User not found with id " + id);
@@ -47,6 +52,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    @Transactional
     public UserResponse updateUser(Long id, UserUpdateRequest request) {
 
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id " + id));

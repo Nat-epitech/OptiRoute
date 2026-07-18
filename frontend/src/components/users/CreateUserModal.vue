@@ -4,6 +4,11 @@ import { ref } from 'vue'
 import AppModal from '@/components/ui/AppModal.vue'
 
 import api from '@/api/axios'
+import { getApiErrorMessage } from '@/api/utils'
+
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
@@ -24,31 +29,33 @@ const loading = ref(false)
 const createUser = async () => {
 
     try {
-
         loading.value = true
 
         await api.post('/users', {
-
             email: email.value,
             password: password.value,
             firstName: firstName.value,
             lastName: lastName.value
         })
 
-        emit('created')
+        notification.success(
+            'User enregistré',
+            `L'utilisateur « ${firstName.value} ${lastName.value} » a bien été ajouté.`
+        )
 
+        emit('created')
         emit('close')
 
         resetForm()
-
-    } catch (e) {
-
-        console.error(e)
-
-        alert('Error creating user')
-
+    } catch (error) {
+        notification.error(
+            'Enregistrement impossible',
+            getApiErrorMessage(
+                error,
+                'L\'utilisateur n’a pas pu être ajouté.'
+            )
+        )
     } finally {
-
         loading.value = false
     }
 }
