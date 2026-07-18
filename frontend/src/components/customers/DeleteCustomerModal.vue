@@ -2,9 +2,14 @@
 import { ref } from 'vue'
 
 import { deleteCustomer } from '@/api/customerApi'
+import { getApiErrorMessage } from '@/api/utils'
+
 import type { Customer } from '@/models/Customer'
 
 import ConfirmDeleteModal from '@/components/ui/ConfirmDeleteModal.vue'
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
@@ -32,11 +37,21 @@ const confirmDelete = async () => {
 
         await deleteCustomer(props.customer.id)
 
+        notification.success(
+            'Client supprimé',
+            `Le client « ${props.customer?.name ?? ''} » a bien été supprimé.`
+        )
+
         emit('deleted')
         emit('close')
     } catch (error) {
-        console.error(error)
-        alert('Erreur lors de la suppression du client')
+        notification.error(
+            'Suppression impossible',
+            getApiErrorMessage(
+                error,
+                'Le client n’a pas pu être supprimé.'
+            )
+        )
     } finally {
         deleting.value = false
     }

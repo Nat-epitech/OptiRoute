@@ -62,6 +62,7 @@ public class CustomerService {
         return toDto(customer);
     }
 
+    @Transactional
     public CustomerResponse updateCustomer(Long id, CustomerRequest request) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found with id " + id));
@@ -82,6 +83,7 @@ public class CustomerService {
         return toDto(updatedCustomer);
     }
 
+    @Transactional
     public void deleteCustomer(Long id) {
         if (!customerRepository.existsById(id)) {
             throw new EntityNotFoundException("Customer not found with id " + id);

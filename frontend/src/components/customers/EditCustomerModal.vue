@@ -4,6 +4,11 @@ import { ref, watch } from 'vue'
 import AppModal from '@/components/ui/AppModal.vue'
 
 import { updateCustomer } from '@/api/customerApi'
+import { getApiErrorMessage } from '@/api/utils'
+
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 import type {
     Customer,
@@ -67,11 +72,21 @@ const saveCustomer = async () => {
 
         await updateCustomer(props.customer.id, request)
 
+        notification.success(
+            'Client modifié',
+            `Le client « ${name.value.trim()} » a bien été modifié.`
+        )
+
         emit('updated')
         emit('close')
     } catch (error) {
-        console.error(error)
-        alert('Erreur lors de la modification du client')
+        notification.error(
+            'Modification impossible',
+            getApiErrorMessage(
+                error,
+                'Le client n’a pas pu être modifié.'
+            )
+        )
     } finally {
         loading.value = false
     }

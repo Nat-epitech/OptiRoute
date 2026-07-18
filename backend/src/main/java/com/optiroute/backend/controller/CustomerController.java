@@ -1,6 +1,5 @@
 package com.optiroute.backend.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -25,30 +24,32 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerResponse> create(@RequestBody CustomerRequest request) {
-
         CustomerResponse createdCustomer = customerService.create(request);
 
-        return ResponseEntity.created(URI.create("/api/customers/" + createdCustomer.id())).body(createdCustomer);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomer);
     }
 
     @GetMapping({ "", "/" })
-    public List<CustomerResponse> getAll() {
-        return customerService.getAll();
+    public ResponseEntity<List<CustomerResponse>> getAll() {
+        return ResponseEntity.ok(customerService.getAll());
     }
 
     @GetMapping("/{id}")
-    public CustomerResponse getById(@PathVariable Long id) {
-        return customerService.getById(id);
+    public ResponseEntity<CustomerResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(customerService.getById(id));
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCustomer(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public CustomerResponse updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerRequest request) {
-        return customerService.updateCustomer(id, request);
+    public ResponseEntity<CustomerResponse> updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerRequest request) {
+        CustomerResponse updatedCustomer = customerService.updateCustomer(id, request);
+
+        return ResponseEntity.ok(updatedCustomer);
     }
 }

@@ -5,8 +5,12 @@ import { ref } from 'vue'
 import AppModal from '@/components/ui/AppModal.vue'
 
 import api from '@/api/axios'
+import { getApiErrorMessage } from '@/api/utils'
 
 import type { CustomerCreateRequest } from '@/models/Customer'
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
@@ -30,13 +34,9 @@ const loading = ref(false)
 
 const createCustomer = async () => {
 
-    if (!name.value.trim()) {
-        alert('Le nom du client est obligatoire')
-        return
-    }
-
     try {
         loading.value = true
+
         const payload: CustomerCreateRequest = {
             externalId: null,
             externalSource: 'MANUAL',
@@ -53,12 +53,23 @@ const createCustomer = async () => {
 
         await api.post('/customers', payload)
 
+        notification.success(
+            'Client créé',
+            `Le client « ${name.value.trim()} » a bien été créé.`
+        )
+
         emit('created')
         emit('close')
+
         resetForm()
     } catch (e) {
-        console.error(e)
-        alert('Erreur lors de la création du client')
+        notification.error(
+            'Création impossible',
+            getApiErrorMessage(
+                e,
+                'Le client n’a pas pu être créé.'
+            )
+        )
     } finally {
         loading.value = false
     }
