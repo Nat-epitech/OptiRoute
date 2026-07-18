@@ -13,3 +13,7 @@ export const createMissionFromRoute = async (request: CreateMissionFromRouteRequ
 
     return response.data
 }
+
+export const deleteMission = async (id: number) => {
+    await api.delete(`/missions/${id}`)
+}

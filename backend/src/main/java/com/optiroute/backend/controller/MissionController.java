@@ -54,4 +54,11 @@ public class MissionController {
         return ResponseEntity.ok(mission);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMission(@PathVariable Long id) {
+        missionFacadeService.deleteMission(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

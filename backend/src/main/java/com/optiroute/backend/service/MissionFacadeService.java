@@ -13,6 +13,10 @@ import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.entity.Vehicle;
 import com.optiroute.backend.repository.DriverRepository;
 import com.optiroute.backend.repository.VehicleRepository;
+import com.optiroute.backend.repository.MissionRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import com.optiroute.backend.mapper.RouteRequestFactory;
 
 @Service
@@ -21,6 +25,7 @@ public class MissionFacadeService {
     private final MissionService missionService;
     private final DriverRepository driverRepository;
     private final VehicleRepository vehicleRepository;
+    private final MissionRepository missionRepository;
 
     private final RouteRequestFactory routeRequestFactory;
     private final RouteOptimizationService routeOptimizationService;
@@ -30,6 +35,7 @@ public class MissionFacadeService {
             MissionService missionService,
             DriverRepository driverRepository,
             VehicleRepository vehicleRepository,
+            MissionRepository missionRepository,
             RouteRequestFactory routeRequestFactory,
             RouteOptimizationService routeOptimizationService,
             MissionRouteEstimateService missionRouteEstimateService) {
@@ -37,6 +43,7 @@ public class MissionFacadeService {
         this.missionService = missionService;
         this.driverRepository = driverRepository;
         this.vehicleRepository = vehicleRepository;
+        this.missionRepository = missionRepository;
         this.routeRequestFactory = routeRequestFactory;
         this.routeOptimizationService = routeOptimizationService;
         this.missionRouteEstimateService = missionRouteEstimateService;
@@ -71,5 +78,14 @@ public class MissionFacadeService {
         missionRouteEstimateService.saveEstimate(mission, request.selectedRoute(), request.routingProvider(), request.routingMode());
 
         return mission;
+    }
+
+    @Transactional
+    public void deleteMission(Long id) {
+        if (!missionRepository.existsById(id)) {
+            throw new EntityNotFoundException("Mission not found with id " + id);
+        }
+
+        missionRepository.deleteById(id);
     }
 }

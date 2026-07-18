@@ -6,7 +6,8 @@
         <PlanningGrid :drivers="planningDrivers" :days="days" :loading="loading" :error="error" @retry="loadCurrentWeek"
             @mission-select="openMission" />
 
-        <MissionDetailDrawer :open="selectedMissionId !== null" :mission-id="selectedMissionId" @close="closeMission" />
+        <MissionDetailDrawer :open="selectedMissionId !== null" :mission-id="selectedMissionId" @close="closeMission"
+            @deleted="handleMissionDeleted" />
     </div>
 </template>
 
@@ -43,6 +44,11 @@ const {
     error,
     loadPlanning,
 } = usePlanning();
+
+const handleMissionDeleted = async () => {
+    closeMission()
+    await loadCurrentWeek()
+}
 
 /**
  * Retourne une nouvelle date, sans modifier la date reçue.
