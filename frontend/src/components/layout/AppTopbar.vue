@@ -76,8 +76,7 @@ function handleLogout() {
 
             <button class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl transition"
                 @click="handleLogout">
-
-                Logout
+                Se déconnecter
             </button>
 
         </div>
