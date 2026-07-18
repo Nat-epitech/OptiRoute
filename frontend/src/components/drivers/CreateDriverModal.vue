@@ -4,7 +4,13 @@ import { ref } from 'vue'
 import AppModal from '@/components/ui/AppModal.vue'
 
 import { createDriver } from '@/api/driverApi'
+import { getApiErrorMessage } from '@/api/utils'
+
 import type { CreateDriverRequest } from '@/models/Driver'
+
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
@@ -35,12 +41,24 @@ const createDriverHandler = async () => {
 
         await createDriver(request)
 
+        notification.success(
+            'Conducteur enregistré',
+            `Le conducteur « ${firstName.value} ${lastName.value} » a bien été ajouté.`
+        )
+
         emit('created')
         emit('close')
+
         resetForm()
     } catch (error) {
         console.error(error)
-        alert('Erreur lors de la création du conducteur')
+        notification.error(
+            'Enregistrement impossible',
+            getApiErrorMessage(
+                error,
+                'Le conducteur n’a pas pu être ajouté.'
+            )
+        )
     } finally {
         loading.value = false
     }

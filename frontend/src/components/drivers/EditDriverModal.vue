@@ -3,8 +3,14 @@ import { ref, watch } from 'vue'
 
 import AppModal from '@/components/ui/AppModal.vue'
 
-import { updateDriver } from '@/api/driverApi'
 import type { Driver } from '@/models/Driver'
+
+import { getApiErrorMessage } from '@/api/utils'
+import { updateDriver } from '@/api/driverApi'
+
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
@@ -55,11 +61,22 @@ const saveDriver = async () => {
             phoneNumber: phoneNumber.value
         })
 
+        notification.success(
+            'Conducteur modifié',
+            `Le conducteur « ${firstName.value} ${lastName.value} » a bien été modifié.`
+        )
+
         emit('updated')
         emit('close')
     } catch (error) {
         console.error(error)
-        alert('Erreur lors de la modification du conducteur')
+        notification.error(
+            'Modification impossible',
+            getApiErrorMessage(
+                error,
+                'Le conducteur n’a pas pu être modifié.'
+            )
+        )
     } finally {
         loading.value = false
     }

@@ -2,9 +2,14 @@
 import { ref } from 'vue'
 
 import { deleteDriver } from '@/api/driverApi'
+import { getApiErrorMessage } from '@/api/utils'
+
 import type { Driver } from '@/models/Driver'
 
 import ConfirmDeleteModal from '@/components/ui/ConfirmDeleteModal.vue'
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
@@ -32,11 +37,22 @@ const confirmDelete = async () => {
 
         await deleteDriver(props.driver.id)
 
+        notification.success(
+            'Conducteur supprimé',
+            `Le conducteur « ${props.driver?.firstName ?? ''} ${props.driver?.lastName ?? ''} » a bien été supprimé.`
+        )
+
         emit('close')
         emit('deleted')
     } catch (error) {
         console.error(error)
-        alert('Erreur lors de la suppression du conducteur')
+        notification.error(
+            'Suppression impossible',
+            getApiErrorMessage(
+                error,
+                'Le conducteur n’a pas pu être supprimé.'
+            )
+        )
     } finally {
         deleting.value = false
     }

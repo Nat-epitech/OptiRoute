@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class DriverService {
         return driverRepository.findAll();
     }
 
+    @Transactional
     public DriverResponse createDriver(DriverRequest request) {
         Driver driver = new Driver();
         driver.setEmail(request.getEmail());
@@ -36,6 +38,7 @@ public class DriverService {
         return toResponse(savedDriver);
     }
 
+    @Transactional
     public DriverResponse updateDriver(Long id, DriverRequest request) {
         Driver driver = driverRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Driver not found with id " + id));
         driver.setFirstName(request.getFirstName());
@@ -47,6 +50,7 @@ public class DriverService {
         return toResponse(updatedDriver);
     }
 
+    @Transactional
     public void deleteDriver(Long id) {
         if (!driverRepository.existsById(id)) {
             throw new EntityNotFoundException("Driver not found with id " + id);
