@@ -3,8 +3,12 @@ import { ref } from 'vue'
 
 import { deleteUser } from '@/api/userApi'
 import type { User } from '@/models/User'
+import { getApiErrorMessage } from '@/api/utils'
 
 import ConfirmDeleteModal from '@/components/ui/ConfirmDeleteModal.vue'
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
@@ -32,8 +36,21 @@ const confirmDelete = async () => {
 
         await deleteUser(props.user.id)
 
+        notification.success(
+            'Utilisateur supprimé',
+            `L'utilisateur « ${props.user?.firstName ?? ''} ${props.user?.lastName ?? ''} » a bien été supprimé.`
+        )
+
         emit('close')
         emit('deleted')
+    } catch (error) {
+        notification.error(
+            'Suppression impossible',
+            getApiErrorMessage(
+                error,
+                'L\'utilisateur n’a pas pu être supprimé.'
+            )
+        )
     } finally {
         deleting.value = false
     }

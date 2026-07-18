@@ -4,7 +4,13 @@ import { ref, watch } from 'vue'
 import AppModal from '@/components/ui/AppModal.vue'
 
 import { updateUser } from '@/api/userApi'
+import { getApiErrorMessage } from '@/api/utils'
+
 import type { User } from '@/models/User'
+
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
@@ -57,11 +63,21 @@ const saveUser = async () => {
             password: password.value || undefined
         })
 
+        notification.success(
+            'Utilisateur modifié',
+            `L'utilisateur « ${firstName.value} ${lastName.value} » a bien été mis à jour.`
+        )
+
         emit('updated')
         emit('close')
     } catch (e) {
-        console.error(e)
-        alert('Erreur lors de la modification')
+        notification.error(
+            'Modification impossible',
+            getApiErrorMessage(
+                e,
+                'L\'utilisateur n’a pas pu être modifié.'
+            )
+        )
     } finally {
         loading.value = false
     }

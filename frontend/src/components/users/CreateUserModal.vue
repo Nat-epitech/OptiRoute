@@ -39,7 +39,7 @@ const createUser = async () => {
         })
 
         notification.success(
-            'User enregistré',
+            'Utilisateur enregistré',
             `L'utilisateur « ${firstName.value} ${lastName.value} » a bien été ajouté.`
         )
 
@@ -61,7 +61,6 @@ const createUser = async () => {
 }
 
 const resetForm = () => {
-
     email.value = ''
     password.value = ''
     firstName.value = ''
