@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
 import AppModal from '@/components/ui/AppModal.vue'
+
 import { createVehicle } from '@/api/vehicleApi'
+import { getApiErrorMessage } from '@/api/utils'
+
 import type { CreateVehicleRequest } from '@/models/Vehicle'
+
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
@@ -14,7 +21,6 @@ const emit = defineEmits<{
 }>()
 
 const loading = ref(false)
-const errorMessage = ref('')
 
 const createEmptyForm = (): CreateVehicleRequest => ({
     externalId: null,
@@ -32,7 +38,6 @@ const form = reactive<CreateVehicleRequest>(createEmptyForm())
 
 const resetForm = () => {
     Object.assign(form, createEmptyForm())
-    errorMessage.value = ''
 }
 
 const closeModal = () => {
@@ -41,16 +46,10 @@ const closeModal = () => {
 }
 
 const submitVehicle = async () => {
-    errorMessage.value = ''
-
-    if (!form.registration.trim()) {
-        errorMessage.value = 'Registration is required.'
-        return
-    }
-
-    loading.value = true
 
     try {
+        loading.value = true
+
         await createVehicle({
             externalId: null,
             externalSource: 'MANUAL',
@@ -63,15 +62,24 @@ const submitVehicle = async () => {
             metadata: null
         })
 
-        resetForm()
+        notification.success(
+            'Véhicule enregistré',
+            `Le véhicule « ${form.registration} » a bien été ajouté.`
+        )
+
+
         emit('created')
         emit('close')
-    } catch (error: any) {
-        console.error('Unable to create vehicle:', error)
 
-        errorMessage.value =
-            error.response?.data?.message ??
-            'An error occurred while creating the vehicle.'
+        resetForm()
+    } catch (error: any) {
+        notification.error(
+            'Enregistrement impossible',
+            getApiErrorMessage(
+                error,
+                'Le véhicule n’a pas pu être ajouté.'
+            )
+        )
     } finally {
         loading.value = false
     }
@@ -174,10 +182,6 @@ watch(
                         </p>
                     </div>
                 </div>
-
-                <p v-if="errorMessage" class="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
-                    {{ errorMessage }}
-                </p>
             </div>
 
             <div class="mt-6 flex justify-end gap-3">

@@ -2,9 +2,14 @@
 import { ref } from 'vue'
 
 import { deleteVehicle } from '@/api/vehicleApi'
+import { getApiErrorMessage } from '@/api/utils'
+
 import type { Vehicle } from '@/models/Vehicle'
 
 import ConfirmDeleteModal from '@/components/ui/ConfirmDeleteModal.vue'
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
@@ -32,11 +37,21 @@ const confirmDelete = async () => {
 
         await deleteVehicle(props.vehicle.id)
 
+        notification.success(
+            'Véhicule supprimé',
+            `Le véhicule « ${props.vehicle?.registration ?? ''} » a bien été supprimé.`
+        )
+
         emit('deleted')
         emit('close')
     } catch (error) {
-        console.error(error)
-        alert('Erreur lors de la suppression du véhicule')
+        notification.error(
+            'Suppression impossible',
+            getApiErrorMessage(
+                error,
+                'Le véhicule n’a pas pu être supprimé.'
+            )
+        )
     } finally {
         deleting.value = false
     }

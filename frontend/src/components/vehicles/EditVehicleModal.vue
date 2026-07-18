@@ -4,6 +4,11 @@ import { ref, watch } from 'vue'
 import AppModal from '@/components/ui/AppModal.vue'
 
 import { updateVehicle } from '@/api/vehicleApi'
+import { getApiErrorMessage } from '@/api/utils'
+
+import { useNotification } from '@/composables/useNotification'
+
+const notification = useNotification()
 
 import type {
     Vehicle,
@@ -69,11 +74,21 @@ const saveVehicle = async () => {
 
         await updateVehicle(props.vehicle.id, request)
 
+        notification.success(
+            'Véhicule modifié',
+            `Le véhicule « ${registration.value} » a bien été mis à jour.`
+        )
+
         emit('updated')
         emit('close')
     } catch (error) {
-        console.error(error)
-        alert('Erreur lors de la modification du véhicule')
+        notification.error(
+            'Modification impossible',
+            getApiErrorMessage(
+                error,
+                'Le véhicule n’a pas pu être mis à jour.'
+            )
+        )
     } finally {
         loading.value = false
     }

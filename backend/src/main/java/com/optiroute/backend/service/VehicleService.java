@@ -60,6 +60,7 @@ public class VehicleService {
         return toDto(savedVehicle);
     }
 
+    @Transactional
     public VehicleResponse updateVehicle(Long id, VehicleRequest request) {
         Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Vehicle not found with id " + id));
 
@@ -80,6 +81,7 @@ public class VehicleService {
         return toDto(updatedVehicle);
     }
 
+    @Transactional
     public void deleteVehicle(Long id) {
         if (!vehicleRepository.existsById(id)) {
             throw new EntityNotFoundException("Vehicle not found with id " + id);

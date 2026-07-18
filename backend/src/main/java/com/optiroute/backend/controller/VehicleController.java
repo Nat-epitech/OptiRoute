@@ -27,27 +27,30 @@ public class VehicleController {
     public ResponseEntity<VehicleResponse> create(@RequestBody VehicleRequest request) {
         VehicleResponse createdVehicle = vehicleService.create(request);
 
-        return ResponseEntity.created(URI.create("/api/vehicles/" + createdVehicle.id())).body(createdVehicle);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdVehicle);
     }
 
     @GetMapping
-    public List<VehicleResponse> getAll() {
-        return vehicleService.getAll();
+    public ResponseEntity<List<VehicleResponse>> getAll() {
+        return ResponseEntity.ok(vehicleService.getAll());
     }
 
     @GetMapping("/{id}")
-    public VehicleResponse getById(@PathVariable Long id) {
-        return vehicleService.getById(id);
+    public ResponseEntity<VehicleResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(vehicleService.getById(id));
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteVehicle(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
         vehicleService.deleteVehicle(id);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public VehicleResponse updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequest request) {
-        return vehicleService.updateVehicle(id, request);
+    public ResponseEntity<VehicleResponse> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequest request) {
+        VehicleResponse updatedVehicle = vehicleService.updateVehicle(id, request);
+
+        return ResponseEntity.ok(updatedVehicle);
     }
 }
