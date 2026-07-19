@@ -5,6 +5,8 @@ export interface Driver {
     lastName: string
     phoneNumber: string
     isActive: boolean
+    monthlySalary: number
+    monthlyWorkingHours: number
     createdAt: string
     updatedAt: string
 }
@@ -14,6 +16,8 @@ export interface CreateDriverRequest {
     firstName: string
     lastName: string
     phoneNumber: string
+    monthlySalary: number
+    monthlyWorkingHours: number
 }
 
 export interface UpdateDriverRequest {
@@ -21,4 +25,6 @@ export interface UpdateDriverRequest {
     firstName: string
     lastName: string
     phoneNumber: string
+    monthlySalary: number
+    monthlyWorkingHours: number
 }

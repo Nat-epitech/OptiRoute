@@ -26,17 +26,20 @@ const email = ref('')
 const firstName = ref('')
 const lastName = ref('')
 const phoneNumber = ref('')
+const monthlySalary = ref<number | null>(null)
+const monthlyWorkingHours = ref<number | null>(null)
+
 const loading = ref(false)
+watch(() => props.driver, (driver) => {
+    if (!driver) return
 
-watch(
-    () => props.driver, (driver) => {
-        if (!driver) return
-
-        email.value = driver.email
-        firstName.value = driver.firstName
-        lastName.value = driver.lastName
-        phoneNumber.value = driver.phoneNumber
-    },
+    email.value = driver.email
+    firstName.value = driver.firstName
+    lastName.value = driver.lastName
+    phoneNumber.value = driver.phoneNumber
+    monthlySalary.value = driver.monthlySalary
+    monthlyWorkingHours.value = driver.monthlyWorkingHours
+},
     {
         immediate: true
     }
@@ -58,7 +61,9 @@ const saveDriver = async () => {
             email: email.value,
             firstName: firstName.value,
             lastName: lastName.value,
-            phoneNumber: phoneNumber.value
+            phoneNumber: phoneNumber.value,
+            monthlySalary: monthlySalary.value!,
+            monthlyWorkingHours: monthlyWorkingHours.value!
         })
 
         notification.success(
@@ -101,15 +106,6 @@ const saveDriver = async () => {
 
             <div>
                 <label class="mb-1 block text-sm font-medium text-gray-700">
-                    Numéro de téléphone
-                </label>
-
-                <input v-model="phoneNumber" type="tel" required
-                    class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
-            </div>
-
-            <div>
-                <label class="mb-1 block text-sm font-medium text-gray-700">
                     Prénom
                 </label>
 
@@ -125,7 +121,51 @@ const saveDriver = async () => {
                 <input v-model="lastName" type="text" required
                     class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
             </div>
+
+            <div>
+                <label class="mb-1 block text-sm font-medium text-gray-700">
+                    Numéro de téléphone
+                </label>
+
+                <input v-model="phoneNumber" type="tel" required
+                    class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">
+                        Salaire mensuel
+                    </label>
+
+                    <div class="relative">
+                        <input v-model.number="monthlySalary" type="number" min="0" step="1" required
+                            class="w-full rounded-xl border px-4 py-3 pr-10 outline-none focus:border-blue-500" />
+
+                        <span
+                            class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-gray-500">
+                            €
+                        </span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">
+                        Heures mensuelles contractuelles
+                    </label>
+
+                    <div class="relative">
+                        <input v-model.number="monthlyWorkingHours" type="number" min="0" step="1" required
+                            class="w-full rounded-xl border px-4 py-3 pr-10 outline-none focus:border-blue-500" />
+
+                        <span
+                            class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-gray-500">
+                            h
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
+
 
         <div class="mt-6 flex justify-end gap-3">
             <button type="button" :disabled="loading" class="rounded-xl border px-4 py-2 disabled:opacity-50"

@@ -25,6 +25,8 @@ const email = ref('')
 const firstName = ref('')
 const lastName = ref('')
 const phoneNumber = ref('')
+const monthlySalary = ref<number | null>(null)
+const monthlyWorkingHours = ref<number | null>(null)
 
 const loading = ref(false)
 
@@ -33,7 +35,9 @@ const createDriverHandler = async () => {
         email: email.value,
         firstName: firstName.value,
         lastName: lastName.value,
-        phoneNumber: phoneNumber.value
+        phoneNumber: phoneNumber.value,
+        monthlySalary: monthlySalary.value!,
+        monthlyWorkingHours: monthlyWorkingHours.value!
     }
 
     try {
@@ -69,6 +73,8 @@ const resetForm = () => {
     firstName.value = ''
     lastName.value = ''
     phoneNumber.value = ''
+    monthlySalary.value = null
+    monthlyWorkingHours.value = null
 }
 </script>
 
@@ -116,6 +122,40 @@ const resetForm = () => {
 
                 <input v-model="phoneNumber" type="tel" required
                     class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">
+                        Salaire mensuel
+                    </label>
+
+                    <div class="relative">
+                        <input v-model.number="monthlySalary" type="number" min="0" step="1" required
+                            class="w-full rounded-xl border px-4 py-3 pr-10 outline-none focus:border-blue-500" />
+
+                        <span
+                            class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-gray-500">
+                            €
+                        </span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">
+                        Heures mensuelles contractuelles
+                    </label>
+
+                    <div class="relative">
+                        <input v-model.number="monthlyWorkingHours" type="number" min="0" step="1" required
+                            class="w-full rounded-xl border px-4 py-3 pr-10 outline-none focus:border-blue-500" />
+
+                        <span
+                            class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-gray-500">
+                            h
+                        </span>
+                    </div>
+                </div>
             </div>
 
         </div>

@@ -30,6 +30,9 @@ public class Driver extends EntityUtils {
     @Column(nullable = false)
     private Boolean isActive = true;
 
-    @Column(name = "hourly_rate", precision = 8, scale = 2)
-    private BigDecimal hourlyRate;
+    @Column(name = "monthly_salary", precision = 10, scale = 2)
+    private BigDecimal monthlySalary;
+
+    @Column(name = "monthly_working_hours", precision = 6, scale = 2)
+    private BigDecimal monthlyWorkingHours;
 }

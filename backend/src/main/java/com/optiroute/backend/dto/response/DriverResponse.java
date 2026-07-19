@@ -1,5 +1,7 @@
 package com.optiroute.backend.dto.response;
 
+import java.math.BigDecimal;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,4 +13,6 @@ public class DriverResponse {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    private BigDecimal monthlySalary;
+    private BigDecimal monthlyWorkingHours;
 }

@@ -1,5 +1,7 @@
 package com.optiroute.backend.dto.request;
 
+import java.math.BigDecimal;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -20,4 +22,8 @@ public class DriverRequest {
     private String lastName;
 
     private String phoneNumber;
+
+    private BigDecimal monthlySalary;
+
+    private BigDecimal monthlyWorkingHours;
 }

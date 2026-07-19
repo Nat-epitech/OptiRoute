@@ -33,6 +33,8 @@ public class DriverService {
         driver.setFirstName(request.getFirstName());
         driver.setLastName(request.getLastName());
         driver.setPhoneNumber(request.getPhoneNumber());
+        driver.setMonthlySalary(request.getMonthlySalary());
+        driver.setMonthlyWorkingHours(request.getMonthlyWorkingHours());
 
         Driver savedDriver = driverRepository.save(driver);
         return toResponse(savedDriver);
@@ -45,6 +47,8 @@ public class DriverService {
         driver.setLastName(request.getLastName());
         driver.setEmail(request.getEmail());
         driver.setPhoneNumber(request.getPhoneNumber());
+        driver.setMonthlySalary(request.getMonthlySalary());
+        driver.setMonthlyWorkingHours(request.getMonthlyWorkingHours());
 
         Driver updatedDriver = driverRepository.save(driver);
         return toResponse(updatedDriver);
