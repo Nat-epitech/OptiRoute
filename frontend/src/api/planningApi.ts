@@ -1,15 +1,15 @@
-import type { MissionDetail } from "@/models/planning/missionDetail";
+import type { TransportDetail } from "@/models/planning/transportDetail";
 import api from "./axios";
 
 
 import type {
-    PlanningMission,
+    PlanningTransport,
     PlanningRequest,
 } from "@/models/planning/planning";
 
-export const getPlanning = async (request: PlanningRequest): Promise<PlanningMission[]> => {
-    const response = await api.get<PlanningMission[]>(
-        "/missions/planning",
+export const getPlanning = async (request: PlanningRequest): Promise<PlanningTransport[]> => {
+    const response = await api.get<PlanningTransport[]>(
+        "/transports/planning",
         {
             params: request,
         }
@@ -18,9 +18,9 @@ export const getPlanning = async (request: PlanningRequest): Promise<PlanningMis
     return response.data;
 };
 
-export const getMissionById = async (id: number): Promise<MissionDetail> => {
-    const response = await api.get<MissionDetail>(
-        `/missions/${id}`
+export const getTransportById = async (id: number): Promise<TransportDetail> => {
+    const response = await api.get<TransportDetail>(
+        `/transports/${id}`
     );
 
     return response.data;

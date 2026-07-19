@@ -3,21 +3,21 @@ import { ref } from "vue";
 import { getPlanning } from "@/api/planningApi";
 
 import type {
-    PlanningMission,
+    PlanningTransport,
     PlanningRequest
 } from "@/models/planning/planning";
 
 export function usePlanning() {
 
     const loading = ref(false);
-    const missions = ref<PlanningMission[]>([]);
+    const transports = ref<PlanningTransport[]>([]);
     const error = ref<string | null>(null);
 
     async function loadPlanning(request: PlanningRequest) {
         try {
             loading.value = true;
             error.value = null;
-            missions.value = await getPlanning(request);
+            transports.value = await getPlanning(request);
         } catch (e) {
             console.error(e);
             error.value = "Impossible de charger le planning.";
@@ -26,5 +26,5 @@ export function usePlanning() {
         }
     }
 
-    return { loading, missions, error, loadPlanning };
+    return { loading, transports, error, loadPlanning };
 }

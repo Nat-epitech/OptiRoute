@@ -1,11 +1,11 @@
 <template>
     <div class="grid min-w-0 border-b border-slate-200 bg-white" :style="gridStyle">
-        <DriverInfoCell :driver-name="driver.name" :mission-count="missionCount" />
+        <DriverInfoCell :driver-name="driver.name" :transport-count="transportCount" />
 
         <DriverCostCell :total-cost="driver.totalCost" />
 
-        <PlanningDayCell v-for="day in days" :key="day.key" :missions="driver.days[day.key] ?? []"
-            @mission-select="emit('mission-select', $event)" />
+        <PlanningDayCell v-for="day in days" :key="day.key" :transports="driver.days[day.key] ?? []"
+            @transport-select="emit('transport-select', $event)" />
     </div>
 </template>
 
@@ -22,7 +22,7 @@ import type {
 } from "@/models/planning/planning";
 
 const emit = defineEmits<{
-    "mission-select": [missionId: number];
+    "transport-select": [transportId: number];
 }>();
 
 const props = defineProps<{
@@ -30,9 +30,9 @@ const props = defineProps<{
     days: PlanningDay[];
 }>();
 
-const missionCount = computed<number>(() => {
+const transportCount = computed<number>(() => {
     return Object.values(props.driver.days).reduce(
-        (total, dayMissions) => total + dayMissions.length,
+        (total, dayTransports) => total + dayTransports.length,
         0
     );
 });

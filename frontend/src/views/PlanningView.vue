@@ -4,10 +4,10 @@
             @next-week="showNextWeek" />
 
         <PlanningGrid :drivers="planningDrivers" :days="days" :loading="loading" :error="error" @retry="loadCurrentWeek"
-            @mission-select="openMission" />
+            @transport-select="openTransport" />
 
-        <MissionDetailDrawer :open="selectedMissionId !== null" :mission-id="selectedMissionId" @close="closeMission"
-            @deleted="handleMissionDeleted" />
+        <TransportDetailDrawer :open="selectedTransportId !== null" :transport-id="selectedTransportId"
+            @close="closeTransport" @deleted="handleTransportDeleted" />
     </div>
 </template>
 
@@ -16,37 +16,37 @@ import { computed, ref, watch } from "vue";
 
 import PlanningGrid from "@/components/planning/PlanningGrid.vue";
 import PlanningToolbar from "@/components/planning/PlanningToolbar.vue";
-import MissionDetailDrawer from "@/components/missions/MissionDetailDrawer.vue";
+import TransportDetailDrawer from "@/components/transports/TransportDetailDrawer.vue";
 
 import { usePlanning } from "@/models/planning/usePlanning";
 
 import type {
     PlanningDay,
     PlanningDriver,
-    PlanningMission,
+    PlanningTransport,
 } from "@/models/planning/planning";
 
-const selectedMissionId = ref<number | null>(null);
+const selectedTransportId = ref<number | null>(null);
 
-function openMission(missionId: number): void {
-    selectedMissionId.value = missionId;
+function openTransport(transportId: number): void {
+    selectedTransportId.value = transportId;
 }
 
-function closeMission(): void {
-    selectedMissionId.value = null;
+function closeTransport(): void {
+    selectedTransportId.value = null;
 }
 
 const selectedDate = ref<Date>(new Date());
 
 const {
-    missions,
+    transports,
     loading,
     error,
     loadPlanning,
 } = usePlanning();
 
-const handleMissionDeleted = async () => {
-    closeMission()
+const handleTransportDeleted = async () => {
+    closeTransport()
     await loadCurrentWeek()
 }
 
@@ -163,44 +163,40 @@ const weekLabel = computed<string>(() => {
 /**
  * Transformation :
  *
- * PlanningMission[]
- *        ↓
- * PlanningDriver[]
+ * PlanningTransport[] -> PlanningDriver[]
  *
- * Toutes les missions sont regroupées :
- * - par chauffeur ;
- * - puis par journée.
+ * Tout les transports sont regroupés par chauffeur puis par journée.
  */
 const planningDrivers = computed<PlanningDriver[]>(() => {
     const driversMap = new Map<number, PlanningDriver>();
 
-    const sortedMissions = [...missions.value].sort((first, second) => {
+    const sortedTransports = [...transports.value].sort((first, second) => {
         return new Date(first.plannedStart).getTime()
             - new Date(second.plannedStart).getTime();
     });
 
-    sortedMissions.forEach((mission: PlanningMission) => {
-        let driver = driversMap.get(mission.driverId);
+    sortedTransports.forEach((transport: PlanningTransport) => {
+        let driver = driversMap.get(transport.driverId);
 
         if (!driver) {
             driver = {
-                id: mission.driverId,
-                name: mission.driverName,
+                id: transport.driverId,
+                name: transport.driverName,
                 totalCost: 0,
                 days: {},
             };
 
-            driversMap.set(mission.driverId, driver);
+            driversMap.set(transport.driverId, driver);
         }
 
 
-        const dayKey = mission.plannedStart.slice(0, 10);
+        const dayKey = transport.plannedStart.slice(0, 10);
         if (!driver.days[dayKey]) {
             driver.days[dayKey] = [];
         }
 
-        driver.days[dayKey].push(mission);
-        driver.totalCost += mission.estimatedTotalCost ?? 0;
+        driver.days[dayKey].push(transport);
+        driver.totalCost += transport.estimatedTotalCost ?? 0;
     });
 
     return Array.from(driversMap.values()).sort((first, second) => {

@@ -17,10 +17,9 @@ import type { RouteResponse } from '@/models/route/RouteResponse.ts'
 import type { Driver } from '@/models/Driver'
 import type { Vehicle } from '@/models/Vehicle'
 import type { Customer } from '@/models/Customer'
-import type { CreateMissionRequest } from '@/models/mission/CreateMissionRequest'
+import type { CreateTransportRequest, CreateTransportFromRouteRequest } from '@/models/transport/CreateTransportRequest.ts'
 
-import { createMissionFromRoute } from '@/api/missionApi'
-import type { CreateMissionFromRouteRequest } from '@/models/mission/CreateMissionFromRouteRequest'
+import { createTransportFromRoute } from '@/api/transportApi.ts'
 import { getDrivers } from '@/api/driverApi'
 import { getVehicles } from '@/api/vehicleApi'
 import { getCustomers } from '@/api/customerApi'
@@ -133,7 +132,7 @@ const handleAssignRoute = async (data: AssignRouteData) => {
         return
     }
 
-    const mission: CreateMissionRequest = {
+    const transport: CreateTransportRequest = {
         name: data.title,
         driverId: data.driverId,
         vehicleId: data.vehicleId,
@@ -153,26 +152,26 @@ const handleAssignRoute = async (data: AssignRouteData) => {
         destinationLng: requestValue.destination.lng
     }
 
-    const request: CreateMissionFromRouteRequest = {
-        mission,
+    const request: CreateTransportFromRouteRequest = {
+        transport,
         selectedRoute,
         routingProvider: 'HERE',
         routingMode: 'fastest'
     }
 
     try {
-        await createMissionFromRoute(request)
+        await createTransportFromRoute(request)
 
         notification.success(
             'Planning enregistré',
-            `La mission « ${data.title} » a bien été ajoutée.`
+            `Le transport « ${data.title} » a bien été ajouté.`
         )
     } catch (error) {
         notification.error(
             'Enregistrement impossible',
             getApiErrorMessage(
                 error,
-                'La mission n’a pas pu être ajoutée au planning.'
+                'Le transport n’a pas pu être ajouté au planning.'
             )
         )
     } finally {

@@ -1,13 +1,13 @@
-export type MissionStatus =
+export type TransportStatus =
     | "PLANNED"
     | "IN_PROGRESS"
     | "COMPLETED"
     | "CANCELLED";
 
-export interface MissionDetail {
+export interface TransportDetail {
     id: number;
     name: string;
-    status: MissionStatus;
+    status: TransportStatus;
 
     plannedStart: string;
     plannedEnd: string;

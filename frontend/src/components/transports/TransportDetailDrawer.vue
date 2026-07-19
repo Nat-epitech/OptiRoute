@@ -7,7 +7,7 @@
             <header class="flex items-start justify-between border-b border-slate-200 bg-white px-5 py-4">
                 <div class="min-w-0">
                     <h2 class="mt-1 truncate text-lg font-semibold text-slate-900">
-                        {{ mission?.name ?? 'Détail de la mission' }}
+                        {{ transport?.name ?? 'Détail de la transport' }}
                     </h2>
                 </div>
 
@@ -15,14 +15,14 @@
                     <AppDropdown v-slot="{ close }">
                         <button type="button"
                             class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                            @click="close(); askDeleteMission()">
+                            @click="close(); askDeleteTransport()">
                             Supprimer
                         </button>
                     </AppDropdown>
 
                     <button type="button"
                         class="flex h-9 w-9 items-center justify-center rounded-lg text-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
-                        aria-label="Fermer le détail de la mission" @click="emit('close')">
+                        aria-label="Fermer le détail de la transport" @click="emit('close')">
                         ×
                     </button>
                 </div>
@@ -31,14 +31,14 @@
             <div v-if="loading" class="flex flex-1 items-center justify-center">
                 <div class="flex items-center gap-3 text-sm text-slate-500">
                     <div class="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-slate-700" />
-                    Chargement de la mission...
+                    Chargement de la transport...
                 </div>
             </div>
 
             <div v-else-if="error" class="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
                 <div>
                     <p class="font-medium text-slate-800">
-                        Impossible de charger la mission
+                        Impossible de charger la transport
                     </p>
 
                     <p class="mt-1 text-sm text-slate-500">
@@ -48,12 +48,12 @@
 
                 <button type="button"
                     class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-                    @click="loadMission">
+                    @click="loadTransport">
                     Réessayer
                 </button>
             </div>
 
-            <div v-else-if="mission" class="flex-1 space-y-4 overflow-y-auto p-4">
+            <div v-else-if="transport" class="flex-1 space-y-4 overflow-y-auto p-4">
                 <!-- Statut et horaires -->
                 <section class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                     <div class="flex items-center justify-between gap-3">
@@ -63,13 +63,13 @@
                     </div>
 
                     <div class="mt-4 grid grid-cols-2 gap-4">
-                        <MissionDetailItem label="Début prévu" :value="formatDateTime(mission.plannedStart)" />
+                        <TransportDetailItem label="Début prévu" :value="formatDateTime(transport.plannedStart)" />
 
-                        <MissionDetailItem label="Fin prévue" :value="formatDateTime(mission.plannedEnd)" />
+                        <TransportDetailItem label="Fin prévue" :value="formatDateTime(transport.plannedEnd)" />
 
-                        <MissionDetailItem label="Début réel" :value="formatDateTime(mission.actualStart)" />
+                        <TransportDetailItem label="Début réel" :value="formatDateTime(transport.actualStart)" />
 
-                        <MissionDetailItem label="Fin réelle" :value="formatDateTime(mission.actualEnd)" />
+                        <TransportDetailItem label="Fin réelle" :value="formatDateTime(transport.actualEnd)" />
                     </div>
                 </section>
 
@@ -80,13 +80,13 @@
                     </h3>
 
                     <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                        <MissionDetailBlock title="Chauffeur" :primary="mission.driverName"
-                            :secondary="mission.driverEmail" />
+                        <TransportDetailBlock title="Chauffeur" :primary="transport.driverName"
+                            :secondary="transport.driverEmail" />
 
-                        <MissionDetailBlock title="Véhicule" :primary="mission.vehicleRegistration"
+                        <TransportDetailBlock title="Véhicule" :primary="transport.vehicleRegistration"
                             :secondary="vehicleLabel" />
 
-                        <MissionDetailBlock title="Client" :primary="mission.customerName"
+                        <TransportDetailBlock title="Client" :primary="transport.customerName"
                             :secondary="customerAddress" />
                     </div>
                 </section>
@@ -107,11 +107,11 @@
                                 </p>
 
                                 <p class="mt-0.5 text-sm font-semibold text-slate-800">
-                                    {{ mission.originName }}
+                                    {{ transport.originName }}
                                 </p>
 
                                 <p class="text-xs text-slate-500">
-                                    {{ mission.originAddress || "Adresse non renseignée" }}
+                                    {{ transport.originAddress || "Adresse non renseignée" }}
                                 </p>
                             </div>
                         </div>
@@ -127,23 +127,23 @@
                                 </p>
 
                                 <p class="mt-0.5 text-sm font-semibold text-slate-800">
-                                    {{ mission.destinationName }}
+                                    {{ transport.destinationName }}
                                 </p>
 
                                 <p class="text-xs text-slate-500">
-                                    {{ mission.destinationAddress || "Adresse non renseignée" }}
+                                    {{ transport.destinationAddress || "Adresse non renseignée" }}
                                 </p>
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-5 grid grid-cols-2 gap-3">
-                        <MissionMetricCard label="Distance" :value="formatDistance(mission.distanceMeters)" />
+                        <TransportMetricCard label="Distance" :value="formatDistance(transport.distanceMeters)" />
 
-                        <MissionMetricCard label="Durée estimée" :value="formatDuration(mission.durationSeconds)" />
+                        <TransportMetricCard label="Durée estimée" :value="formatDuration(transport.durationSeconds)" />
 
-                        <MissionMetricCard label="Durée avec trafic"
-                            :value="formatDuration(mission.trafficDurationSeconds)" />
+                        <TransportMetricCard label="Durée avec trafic"
+                            :value="formatDuration(transport.trafficDurationSeconds)" />
                     </div>
                 </section>
 
@@ -156,7 +156,7 @@
                     </div>
 
                     <div class="h-64">
-                        <MissionRouteMap :polyline="mission.polyline" />
+                        <TransportRouteMap :polyline="transport.polyline" />
                     </div>
                 </section>
 
@@ -167,11 +167,11 @@
                     </h3>
 
                     <div class="mt-4 divide-y divide-slate-100">
-                        <MissionCostRow label="Carburant" :amount="mission.estimatedFuelCost" />
+                        <TransportCostRow label="Carburant" :amount="transport.estimatedFuelCost" />
 
-                        <MissionCostRow label="Péages" :amount="mission.estimatedTollCost" />
+                        <TransportCostRow label="Péages" :amount="transport.estimatedTollCost" />
 
-                        <MissionCostRow label="Chauffeur" :amount="mission.estimatedDriverCost" />
+                        <TransportCostRow label="Chauffeur" :amount="transport.estimatedDriverCost" />
                     </div>
 
                     <div class="mt-4 flex items-center justify-between rounded-lg bg-slate-900 px-4 py-3 text-white">
@@ -180,7 +180,7 @@
                         </span>
 
                         <span class="text-xl font-semibold">
-                            {{ formatCurrency(mission.estimatedTotalCost) }}
+                            {{ formatCurrency(transport.estimatedTotalCost) }}
                         </span>
                     </div>
                 </section>
@@ -188,30 +188,30 @@
         </aside>
     </Transition>
 
-    <DeleteMissionModal :show="showDeleteModal" :mission="mission" @close="closeDeleteModal"
-        @deleted="handleMissionDeleted" />
+    <DeleteTransportModal :show="showDeleteModal" :transport="transport" @close="closeDeleteModal"
+        @deleted="handleTransportDeleted" />
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 
-import { getMissionById } from "@/api/planningApi";
+import { getTransportById } from "@/api/planningApi";
 
-import MissionCostRow from "@/components/missions/MissionCostRow.vue";
-import MissionDetailBlock from "@/components/missions/MissionDetailBlock.vue";
-import MissionDetailItem from "@/components/missions/MissionDetailItem.vue";
-import MissionMetricCard from "@/components/missions/MissionMetricCard.vue";
-import MissionRouteMap from '@/components/missions/MissionRouteMap.vue'
+import TransportCostRow from "@/components/transports/TransportCostRow.vue";
+import TransportDetailBlock from "@/components/transports/TransportDetailBlock.vue";
+import TransportDetailItem from "@/components/transports/TransportDetailItem.vue";
+import TransportMetricCard from "@/components/transports/TransportMetricCard.vue";
+import TransportRouteMap from '@/components/transports/TransportRouteMap.vue'
 
-import DeleteMissionModal from "@/components/missions/DeleteMissionModal.vue";
+import DeleteTransportModal from "@/components/transports/DeleteTransportModal.vue";
 import AppDropdown from '@/components/ui/AppDropdown.vue'
 
-import type { MissionDetail } from "@/models/planning/missionDetail";
+import type { TransportDetail } from "@/models/planning/transportDetail";
 
 const showDeleteModal = ref(false)
 
-const askDeleteMission = () => {
-    if (!mission.value) {
+const askDeleteTransport = () => {
+    if (!transport.value) {
         return
     }
 
@@ -222,7 +222,7 @@ const closeDeleteModal = () => {
     showDeleteModal.value = false
 }
 
-const handleMissionDeleted = () => {
+const handleTransportDeleted = () => {
     showDeleteModal.value = false
 
     emit('deleted')
@@ -231,7 +231,7 @@ const handleMissionDeleted = () => {
 
 const props = defineProps<{
     open: boolean;
-    missionId: number | null;
+    transportId: number | null;
 }>();
 
 const emit = defineEmits<{
@@ -239,7 +239,7 @@ const emit = defineEmits<{
     deleted: []
 }>();
 
-const mission = ref<MissionDetail | null>(null);
+const transport = ref<TransportDetail | null>(null);
 const loading = ref(false);
 const error = ref<string | null>(null);
 
@@ -251,33 +251,33 @@ const currencyFormatter = new Intl.NumberFormat("fr-FR", {
 });
 
 const vehicleLabel = computed<string | null>(() => {
-    if (!mission.value) {
+    if (!transport.value) {
         return null;
     }
 
     return [
-        mission.value.vehicleBrand,
-        mission.value.vehicleModel,
+        transport.value.vehicleBrand,
+        transport.value.vehicleModel,
     ]
         .filter((value): value is string => Boolean(value))
         .join(" ") || null;
 });
 
 const customerAddress = computed<string | null>(() => {
-    if (!mission.value) {
+    if (!transport.value) {
         return null;
     }
 
     return [
-        mission.value.customerAddress,
-        mission.value.customerCity,
+        transport.value.customerAddress,
+        transport.value.customerCity,
     ]
         .filter((value): value is string => Boolean(value))
         .join(", ") || null;
 });
 
 const statusLabel = computed<string>(() => {
-    if (!mission.value) {
+    if (!transport.value) {
         return "";
     }
 
@@ -288,11 +288,11 @@ const statusLabel = computed<string>(() => {
         CANCELLED: "Annulée",
     };
 
-    return labels[mission.value.status] ?? mission.value.status;
+    return labels[transport.value.status] ?? transport.value.status;
 });
 
 const statusClasses = computed<string>(() => {
-    if (!mission.value) {
+    if (!transport.value) {
         return "bg-slate-100 text-slate-700";
     }
 
@@ -304,14 +304,14 @@ const statusClasses = computed<string>(() => {
     };
 
     return (
-        classes[mission.value.status]
+        classes[transport.value.status]
         ?? "bg-slate-100 text-slate-700"
     );
 });
 
-async function loadMission(): Promise<void> {
-    if (props.missionId === null) {
-        mission.value = null;
+async function loadTransport(): Promise<void> {
+    if (props.transportId === null) {
+        transport.value = null;
         return;
     }
 
@@ -319,11 +319,11 @@ async function loadMission(): Promise<void> {
     error.value = null;
 
     try {
-        mission.value = await getMissionById(props.missionId);
+        transport.value = await getTransportById(props.transportId);
     } catch (exception) {
         console.error(exception);
 
-        mission.value = null;
+        transport.value = null;
         error.value = "Une erreur est survenue pendant le chargement.";
     } finally {
         loading.value = false;
@@ -380,12 +380,12 @@ function formatDuration(value: number | null): string {
 }
 
 watch(
-    () => [props.open, props.missionId] as const,
+    () => [props.open, props.transportId] as const,
     ([open]) => {
         if (open) {
-            void loadMission();
+            void loadTransport();
         } else {
-            mission.value = null;
+            transport.value = null;
             error.value = null;
         }
     },

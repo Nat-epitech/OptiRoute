@@ -1,4 +1,4 @@
-export interface PlanningMission {
+export interface PlanningTransport {
     id: number;
     name: string;
 
@@ -10,7 +10,7 @@ export interface PlanningMission {
 
     originName: string;
     destinationName: string;
-    
+
     estimatedTotalCost: number | null;
 }
 
@@ -23,7 +23,7 @@ export interface PlanningDriver {
     id: number;
     name: string;
     totalCost: number;
-    days: Record<string, PlanningMission[]>;
+    days: Record<string, PlanningTransport[]>;
 }
 
 export interface PlanningDay {

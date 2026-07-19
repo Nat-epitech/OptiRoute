@@ -31,18 +31,18 @@
     <div v-else-if="drivers.length === 0" class="flex min-h-[240px] items-center justify-center px-6 text-center">
       <div>
         <p class="font-medium text-slate-700">
-          Aucune mission planifiée
+          Aucun transport planifié
         </p>
 
         <p class="mt-1 text-sm text-slate-500">
-          Aucune mission n’est présente pour cette semaine.
+          Aucun transport n’est présent pour cette semaine.
         </p>
       </div>
     </div>
 
     <div v-else>
       <DriverRow v-for="driver in drivers" :key="driver.id" :driver="driver" :days="days"
-        @mission-select="emit('mission-select', $event)" />
+        @transport-select="emit('transport-select', $event)" />
     </div>
   </div>
 </template>
@@ -65,7 +65,7 @@ defineProps<{
 
 const emit = defineEmits<{
   retry: [];
-  "mission-select": [missionId: number];
+  "transport-select": [transportId: number];
 }>();
 
 </script>

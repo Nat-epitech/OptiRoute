@@ -1,4 +1,6 @@
-export interface CreateMissionRequest {
+import type { RoutesDto } from '@/models/route/RoutesDto'
+
+export interface CreateTransportRequest {
     name: string
     driverId: number
     vehicleId?: number
@@ -16,4 +18,11 @@ export interface CreateMissionRequest {
     destinationAddress: string
     destinationLat: number
     destinationLng: number
+}
+
+export interface CreateTransportFromRouteRequest {
+    transport: CreateTransportRequest
+    selectedRoute: RoutesDto
+    routingProvider: string
+    routingMode: string
 }

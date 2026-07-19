@@ -13,7 +13,7 @@
           </p>
 
           <p class="mt-0.5 text-xs text-slate-500">
-            {{ missionCountLabel }}
+            {{ transportCountLabel }}
           </p>
         </div>
       </div>
@@ -26,7 +26,7 @@ import { computed } from "vue";
 
 const props = defineProps<{
   driverName: string;
-  missionCount: number;
+  transportCount: number;
 }>();
 
 const initials = computed<string>(() => {
@@ -38,15 +38,15 @@ const initials = computed<string>(() => {
     .join("");
 });
 
-const missionCountLabel = computed<string>(() => {
-  if (props.missionCount === 0) {
-    return "Aucune mission";
+const transportCountLabel = computed<string>(() => {
+  if (props.transportCount === 0) {
+    return "Aucun transport";
   }
 
-  if (props.missionCount === 1) {
-    return "1 mission";
+  if (props.transportCount === 1) {
+    return "1 transport";
   }
 
-  return `${props.missionCount} missions`;
+  return `${props.transportCount} transports`;
 });
 </script>
