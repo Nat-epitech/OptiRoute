@@ -105,29 +105,31 @@ watch(
             <div class="space-y-4">
                 <div>
                     <label class="mb-1 block text-sm font-medium text-gray-700">
-                        Inscription
+                        Immatriculation
                     </label>
 
                     <input v-model="form.registration" type="text" required
                         class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
                 </div>
 
-                <div>
-                    <label class="mb-1 block text-sm font-medium text-gray-700">
-                        Marque
-                    </label>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-700">
+                            Marque
+                        </label>
 
-                    <input v-model="form.brand" type="text"
-                        class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
-                </div>
+                        <input v-model="form.brand" type="text"
+                            class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
+                    </div>
 
-                <div>
-                    <label class="mb-1 block text-sm font-medium text-gray-700">
-                        Modèle
-                    </label>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-700">
+                            Modèle
+                        </label>
 
-                    <input v-model="form.model" type="text"
-                        class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
+                        <input v-model="form.model" type="text"
+                            class="w-full rounded-xl border px-4 py-3 outline-none focus:border-blue-500" />
+                    </div>
                 </div>
 
                 <div>

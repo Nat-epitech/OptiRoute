@@ -74,6 +74,8 @@ onMounted(async () => {
                         <th class="text-left px-6 py-4">Prénom</th>
                         <th class="text-left px-6 py-4">Nom</th>
                         <th class="text-left px-6 py-4">Numéro de téléphone</th>
+                        <th class="text-left px-6 py-4">Salaire mensuel</th>
+                        <th class="text-left px-6 py-4">Heures mensuelles contractuelles</th>
                         <th class="text-right px-6 py-4">Actions</th>
                     </tr>
 
@@ -97,6 +99,14 @@ onMounted(async () => {
 
                         <td class="px-6 py-4">
                             {{ driver.phoneNumber }}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            {{ driver.monthlySalary }}€
+                        </td>
+
+                        <td class="px-6 py-4">
+                            {{ driver.monthlyWorkingHours }} heures
                         </td>
 
                         <td class="px-6 py-4 text-right">

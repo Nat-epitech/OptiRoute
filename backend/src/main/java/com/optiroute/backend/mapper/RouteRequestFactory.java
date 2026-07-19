@@ -36,9 +36,11 @@ public class RouteRequestFactory {
 		request.setMode(RouteMode.FASTEST);
 
 		// Coût horaire chauffeur
-		if (driver.getHourlyRate() != null) {
-			request.setDriverHourlyRate(driver.getHourlyRate().doubleValue());
-		}
+		/*
+		 * if (driver.getHourlyRate() != null) {
+		 * request.setDriverHourlyRate(driver.getHourlyRate().doubleValue());
+		 * }
+		 */
 
 		// Configuration camion
 		TruckConfiguration truck = new TruckConfiguration();

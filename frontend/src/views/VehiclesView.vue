@@ -71,6 +71,9 @@ onMounted(async () => {
                         <th class="text-left px-6 py-4">Immatriculation</th>
                         <th class="text-left px-6 py-4">Marque</th>
                         <th class="text-left px-6 py-4">Modèle</th>
+                        <th class="text-left px-6 py-4">Type de carburant</th>
+                        <th class="text-left px-6 py-4">Consommation moyenne</th>
+                        <th class="text-left px-6 py-4">Capacité du réservoir</th>
                         <th class="text-right px-6 py-4">Actions</th>
                     </tr>
 
@@ -90,6 +93,18 @@ onMounted(async () => {
 
                         <td class="px-6 py-4">
                             {{ vehicle.model }}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            {{ vehicle.fuelType }}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            {{ vehicle.averageConsumption }}L / 100 km
+                        </td>
+
+                        <td class="px-6 py-4">
+                            {{ vehicle.tankCapacity }} Litres
                         </td>
 
                         <td class="px-6 py-4 text-right">
