@@ -30,8 +30,8 @@ const props = defineProps<{ days: PlanningDay[]; }>();
 
 const gridStyle = computed(() => ({
   gridTemplateColumns: `240px 120px repeat(${props.days.length}, minmax(220px, 1fr))`,
-  minWidth: "100%",
-  width: "max-content",
+  minWidth: `${240 + 120 + props.days.length * 220}px`,
+  width: '100%',
 }));
 
 </script>

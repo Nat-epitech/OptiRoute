@@ -41,7 +41,11 @@ public class MissionDetailService {
 
         Mission mission = missionRepository.findById(missionId).orElseThrow(() -> new RuntimeException("Mission not found"));
         Driver driver = driverRepository.findById(mission.getDriverId()).orElseThrow(() -> new RuntimeException("Driver not found"));
-        Vehicle vehicle = vehicleRepository.findById(mission.getVehicleId()).orElseThrow(() -> new RuntimeException("Vehicle not found"));
+
+        Vehicle vehicle = null;
+        if (mission.getVehicleId() != null) {
+            vehicle = vehicleRepository.findById(mission.getVehicleId()).orElse(null);
+        }
 
         Customer customer = null;
         if (mission.getCustomerId() != null) {
@@ -66,10 +70,10 @@ public class MissionDetailService {
                 driver.getFirstName() + " " + driver.getLastName(),
                 driver.getEmail(),
 
-                vehicle.getId(),
-                vehicle.getRegistration(),
-                vehicle.getBrand(),
-                vehicle.getModel(),
+                vehicle != null ? vehicle.getId() : null,
+                vehicle != null ? vehicle.getRegistration() : null,
+                vehicle != null ? vehicle.getBrand() : null,
+                vehicle != null ? vehicle.getModel() : null,
 
                 customer != null ? customer.getId() : null,
                 customer != null ? customer.getName() : null,

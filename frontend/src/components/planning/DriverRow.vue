@@ -1,5 +1,5 @@
 <template>
-    <div class="grid border-b border-slate-200 bg-white" :style="gridStyle">
+    <div class="grid min-w-0 border-b border-slate-200 bg-white" :style="gridStyle">
         <DriverInfoCell :driver-name="driver.name" :mission-count="missionCount" />
 
         <DriverCostCell :total-cost="driver.totalCost" />
@@ -39,7 +39,7 @@ const missionCount = computed<number>(() => {
 
 const gridStyle = computed(() => ({
     gridTemplateColumns: `240px 120px repeat(${props.days.length}, minmax(220px, 1fr))`,
-    minWidth: "100%",
-    width: "max-content",
-}));
+    minWidth: `${240 + 120 + props.days.length * 220}px`,
+    width: '100%',
+}))
 </script>
