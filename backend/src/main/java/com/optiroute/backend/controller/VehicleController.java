@@ -1,6 +1,5 @@
 package com.optiroute.backend.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;

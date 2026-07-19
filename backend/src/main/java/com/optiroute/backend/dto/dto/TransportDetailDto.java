@@ -3,7 +3,7 @@ package com.optiroute.backend.dto.dto;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-public record MissionDetailDto(
+public record TransportDetailDto(
 
         Long id,
         String name,

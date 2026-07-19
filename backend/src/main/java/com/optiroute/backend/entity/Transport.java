@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "mission")
-public class Mission {
+@Table(name = "transport")
+public class Transport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

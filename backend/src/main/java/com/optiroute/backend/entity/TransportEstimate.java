@@ -5,15 +5,15 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "mission_route_estimate")
-public class MissionRouteEstimate {
+@Table(name = "transport_estimate")
+public class TransportEstimate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "mission_id", nullable = false, unique = true)
-    private Long missionId;
+    @Column(name = "transport_id", nullable = false, unique = true)
+    private Long transportId;
 
     @Column(name = "routing_provider", nullable = false, length = 50)
     private String routingProvider;
@@ -62,12 +62,12 @@ public class MissionRouteEstimate {
         return id;
     }
 
-    public Long getMissionId() {
-        return missionId;
+    public Long getTransportId() {
+        return transportId;
     }
 
-    public void setMissionId(Long missionId) {
-        this.missionId = missionId;
+    public void setTransportId(Long transportId) {
+        this.transportId = transportId;
     }
 
     public String getRoutingProvider() {

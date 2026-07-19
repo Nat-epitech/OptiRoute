@@ -1,8 +1,8 @@
 package com.optiroute.backend.service;
 
-import com.optiroute.backend.repository.MissionRouteEstimateRepository;
-import com.optiroute.backend.entity.MissionRouteEstimate;
-import com.optiroute.backend.entity.Mission;
+import com.optiroute.backend.repository.TransportEstimateRepository;
+import com.optiroute.backend.entity.TransportEstimate;
+import com.optiroute.backend.entity.Transport;
 import com.optiroute.backend.dto.dto.RoutesDto;
 import com.optiroute.backend.dto.response.RouteResponse;
 
@@ -12,24 +12,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class MissionRouteEstimateService {
+public class TransportEstimateService {
 
-	private final MissionRouteEstimateRepository repository;
+	private final TransportEstimateRepository transportEstimateRepository;
 
-	public MissionRouteEstimateService(MissionRouteEstimateRepository repository) {
-		this.repository = repository;
+	public TransportEstimateService(TransportEstimateRepository transportEstimateRepository) {
+		this.transportEstimateRepository = transportEstimateRepository;
 	}
 
 	@Transactional
-	public MissionRouteEstimate saveEstimate(Mission mission, RouteResponse response) {
+	public TransportEstimate saveEstimate(Transport transport, RouteResponse response) {
 		// TODO: Choisir route adapter selon critère (coût, distance, durée, etc.)
 		RoutesDto bestRoute = response.getRoutes().getFirst();
 
-		MissionRouteEstimate estimate = new MissionRouteEstimate();
-		estimate.setMissionId(mission.getId());
+		TransportEstimate estimate = new TransportEstimate();
+		estimate.setTransportId(transport.getId());
 		estimate.setRoutingProvider("HERE");
 		estimate.setRoutingMode("FASTEST");
-		estimate.setDepartureTime(mission.getPlannedStart());
+		estimate.setDepartureTime(transport.getPlannedStart());
 		estimate.setDistanceMeters(bestRoute.getDistanceMeters());
 		estimate.setDurationSeconds(bestRoute.getDurationSeconds());
 
@@ -42,18 +42,18 @@ public class MissionRouteEstimateService {
 		estimate.setEstimatedDriverCost(BigDecimal.valueOf(bestRoute.getCosts().getDriverCost()));
 		estimate.setEstimatedTotalCost(BigDecimal.valueOf(bestRoute.getCosts().getTotalCost()));
 
-		return repository.save(estimate);
+		return transportEstimateRepository.save(estimate);
 	}
 
 	@Transactional
-	public MissionRouteEstimate saveEstimate(Mission mission, RoutesDto route, String routingProvider, String routingMode) {
+	public TransportEstimate saveEstimate(Transport transport, RoutesDto route, String routingProvider, String routingMode) {
 
-		MissionRouteEstimate estimate = new MissionRouteEstimate();
+		TransportEstimate estimate = new TransportEstimate();
 
-		estimate.setMissionId(mission.getId());
+		estimate.setTransportId(transport.getId());
 		estimate.setRoutingProvider(routingProvider);
 		estimate.setRoutingMode(routingMode);
-		estimate.setDepartureTime(mission.getPlannedStart());
+		estimate.setDepartureTime(transport.getPlannedStart());
 
 		estimate.setDistanceMeters(route.getDistanceMeters());
 		estimate.setDurationSeconds(route.getDurationSeconds());
@@ -65,7 +65,7 @@ public class MissionRouteEstimateService {
 		estimate.setEstimatedDriverCost(BigDecimal.valueOf(route.getCosts().getDriverCost()));
 		estimate.setEstimatedTotalCost(BigDecimal.valueOf(route.getCosts().getTotalCost()));
 
-		return repository.save(estimate);
+		return transportEstimateRepository.save(estimate);
 	}
 
 }

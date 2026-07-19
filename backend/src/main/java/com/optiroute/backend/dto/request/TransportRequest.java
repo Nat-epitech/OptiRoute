@@ -2,7 +2,7 @@ package com.optiroute.backend.dto.request;
 
 import java.time.OffsetDateTime;
 
-public record MissionRequest(
+public record TransportRequest(
 
         String name,
         Long driverId,

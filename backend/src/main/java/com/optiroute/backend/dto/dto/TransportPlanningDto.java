@@ -3,7 +3,7 @@ package com.optiroute.backend.dto.dto;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-public record MissionPlanningDto(
+public record TransportPlanningDto(
 
         Long id,
         String name,
@@ -17,7 +17,5 @@ public record MissionPlanningDto(
         String originName,
         String destinationName,
 
-        BigDecimal estimatedTotalCost
-
-) {
+        BigDecimal estimatedTotalCost) {
 }

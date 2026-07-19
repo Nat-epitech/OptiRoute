@@ -2,69 +2,69 @@ package com.optiroute.backend.service;
 
 import org.springframework.stereotype.Service;
 
-import com.optiroute.backend.dto.dto.MissionDetailDto;
+import com.optiroute.backend.dto.dto.TransportDetailDto;
 import com.optiroute.backend.entity.Customer;
 import com.optiroute.backend.entity.Driver;
-import com.optiroute.backend.entity.Mission;
-import com.optiroute.backend.entity.MissionRouteEstimate;
+import com.optiroute.backend.entity.Transport;
+import com.optiroute.backend.entity.TransportEstimate;
 import com.optiroute.backend.entity.Vehicle;
 import com.optiroute.backend.repository.CustomerRepository;
 import com.optiroute.backend.repository.DriverRepository;
-import com.optiroute.backend.repository.MissionRepository;
-import com.optiroute.backend.repository.MissionRouteEstimateRepository;
+import com.optiroute.backend.repository.TransportRepository;
+import com.optiroute.backend.repository.TransportEstimateRepository;
 import com.optiroute.backend.repository.VehicleRepository;
 
 @Service
-public class MissionDetailService {
+public class TransportDetailService {
 
-    private final MissionRepository missionRepository;
+    private final TransportRepository transportRepository;
     private final DriverRepository driverRepository;
     private final VehicleRepository vehicleRepository;
     private final CustomerRepository customerRepository;
-    private final MissionRouteEstimateRepository estimateRepository;
+    private final TransportEstimateRepository transportEstimateRepository;
 
-    public MissionDetailService(
-            MissionRepository missionRepository,
+    public TransportDetailService(
+            TransportRepository transportRepository,
             DriverRepository driverRepository,
             VehicleRepository vehicleRepository,
             CustomerRepository customerRepository,
-            MissionRouteEstimateRepository estimateRepository) {
+            TransportEstimateRepository transportEstimateRepository) {
 
-        this.missionRepository = missionRepository;
+        this.transportRepository = transportRepository;
         this.driverRepository = driverRepository;
         this.vehicleRepository = vehicleRepository;
         this.customerRepository = customerRepository;
-        this.estimateRepository = estimateRepository;
+        this.transportEstimateRepository = transportEstimateRepository;
     }
 
-    public MissionDetailDto getDetail(Long missionId) {
+    public TransportDetailDto getDetail(Long transportId) {
 
-        Mission mission = missionRepository.findById(missionId).orElseThrow(() -> new RuntimeException("Mission not found"));
-        Driver driver = driverRepository.findById(mission.getDriverId()).orElseThrow(() -> new RuntimeException("Driver not found"));
+        Transport transport = transportRepository.findById(transportId).orElseThrow(() -> new RuntimeException("Transport not found"));
+        Driver driver = driverRepository.findById(transport.getDriverId()).orElseThrow(() -> new RuntimeException("Driver not found"));
 
         Vehicle vehicle = null;
-        if (mission.getVehicleId() != null) {
-            vehicle = vehicleRepository.findById(mission.getVehicleId()).orElse(null);
+        if (transport.getVehicleId() != null) {
+            vehicle = vehicleRepository.findById(transport.getVehicleId()).orElse(null);
         }
 
         Customer customer = null;
-        if (mission.getCustomerId() != null) {
-            customer = customerRepository.findById(mission.getCustomerId()).orElse(null);
+        if (transport.getCustomerId() != null) {
+            customer = customerRepository.findById(transport.getCustomerId()).orElse(null);
         }
 
-        MissionRouteEstimate estimate = estimateRepository.findByMissionId(missionId).orElse(null);
+        TransportEstimate estimate = transportEstimateRepository.findByTransportId(transportId).orElse(null);
 
-        return new MissionDetailDto(
+        return new TransportDetailDto(
 
-                mission.getId(),
-                mission.getName(),
-                mission.getStatus(),
+                transport.getId(),
+                transport.getName(),
+                transport.getStatus(),
 
-                mission.getPlannedStart(),
-                mission.getPlannedEnd(),
+                transport.getPlannedStart(),
+                transport.getPlannedEnd(),
 
-                mission.getActualStart(),
-                mission.getActualEnd(),
+                transport.getActualStart(),
+                transport.getActualEnd(),
 
                 driver.getId(),
                 driver.getFirstName() + " " + driver.getLastName(),
@@ -80,15 +80,15 @@ public class MissionDetailService {
                 customer != null ? customer.getAddress() : null,
                 customer != null ? customer.getCity() : null,
 
-                mission.getOriginName(),
-                mission.getOriginAddress(),
-                mission.getOriginLat(),
-                mission.getOriginLng(),
+                transport.getOriginName(),
+                transport.getOriginAddress(),
+                transport.getOriginLat(),
+                transport.getOriginLng(),
 
-                mission.getDestinationName(),
-                mission.getDestinationAddress(),
-                mission.getDestinationLat(),
-                mission.getDestinationLng(),
+                transport.getDestinationName(),
+                transport.getDestinationAddress(),
+                transport.getDestinationLat(),
+                transport.getDestinationLng(),
 
                 estimate != null ? estimate.getDistanceMeters() : null,
                 estimate != null ? estimate.getDurationSeconds() : null,
