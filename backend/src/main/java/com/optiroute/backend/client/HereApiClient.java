@@ -1,5 +1,7 @@
 package com.optiroute.backend.client;
 
+import java.net.URI;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -18,19 +20,19 @@ public class HereApiClient {
     }
 
     public String getRoutes(String origin, String destination, String departureTime) {
-
-        String url = UriComponentsBuilder
+        URI uri = UriComponentsBuilder
                 .fromUriString("https://router.hereapi.com/v8/routes")
-                .queryParam("transportMode", "truck")
-                .queryParam("routingMode", "fast")
-                .queryParam("alternatives", "2")
                 .queryParam("origin", origin)
                 .queryParam("destination", destination)
+                .queryParam("alternatives", 2)
+                .queryParam("return", "polyline,summary")
+                .queryParam("transportMode", "truck")
+                .queryParam("routingMode", "fast")
+                .queryParam("vehicle[grossWeight]", 44000)
                 .queryParam("departureTime", departureTime)
-                .queryParam("return", "summary,travelSummary,tolls,polyline")
                 .queryParam("apikey", properties.getApiKey())
-                .toUriString();
+                .build().encode().toUri();
 
-        return restClient.get().uri(url).retrieve().body(String.class);
+        return restClient.get().uri(uri).retrieve().body(String.class);
     }
 }
