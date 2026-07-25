@@ -100,7 +100,7 @@ onMounted(async () => {
                         <td class="px-6 py-4 text-right">
                             <AppDropdown v-slot="{ close }">
                                 <button type="button"
-                                    class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-50"
+                                    class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-100"
                                     @click="close(); openEditCustomerModal(customer)">
                                     Modifier
                                 </button>

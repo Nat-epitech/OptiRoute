@@ -130,7 +130,7 @@ onMounted(async () => {
 
                 <tbody>
                     <tr v-for="driver in drivers" :key="driver.id"
-                        class="cursor-pointer border-b transition last:border-b-0 hover:bg-gray-50" :class="{
+                        class="cursor-pointer border-b transition last:border-b-0 hover:bg-gray-100" :class="{
                             'bg-blue-50':
                                 selectedDriverId === driver.id,
                         }" tabindex="0" @click="openDriverDetails(driver)" @keydown.enter="openDriverDetails(driver)"
@@ -158,7 +158,7 @@ onMounted(async () => {
                         <td class="whitespace-nowrap px-6 py-4 text-right" @click.stop @keydown.stop>
                             <AppDropdown v-slot="{ close }">
                                 <button type="button"
-                                    class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-50" @click="
+                                    class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-100" @click="
                                         close();
                                     openEditDriverModal(driver)
                                         ">

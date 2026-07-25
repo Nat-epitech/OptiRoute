@@ -177,7 +177,7 @@ onMounted(async () => {
                         <td class="whitespace-nowrap px-6 py-4 text-right" @click.stop @keydown.stop>
                             <AppDropdown v-slot="{ close }">
                                 <button type="button"
-                                    class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-50" @click="
+                                    class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-100" @click="
                                         close(); openEditVehicleModal(vehicle)
                                         ">
                                     Modifier
