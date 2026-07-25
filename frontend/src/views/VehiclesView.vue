@@ -31,6 +31,7 @@ type VehicleAction = "edit" | "delete" | null
 
 const actionVehicle = ref<Vehicle | null>(null)
 const activeAction = ref<VehicleAction>(null)
+const vehicleDrawerRefreshKey = ref(0)
 
 const loadVehicles = async () => {
     vehicles.value = await getVehicles()
@@ -66,7 +67,6 @@ const closeVehicleAction = () => {
  * étend Vehicle.
  */
 const handleDrawerEdit = (vehicle: VehicleDetails) => {
-    closeVehicleDetails()
     openEditVehicleModal(vehicle)
 }
 
@@ -83,6 +83,7 @@ const handleVehicleCreated = async () => {
 const handleVehicleUpdated = async () => {
     closeVehicleAction()
     await loadVehicles()
+    vehicleDrawerRefreshKey.value++
 }
 
 const handleVehicleDeleted = async () => {
@@ -203,7 +204,8 @@ onMounted(async () => {
         </div>
 
         <VehicleDetailDrawer :open="selectedVehicleId !== null" :vehicle-id="selectedVehicleId"
-            @close="closeVehicleDetails" @edit="handleDrawerEdit" @delete="handleDrawerDelete" />
+            :refresh-key="vehicleDrawerRefreshKey" @close="closeVehicleDetails" @edit="handleDrawerEdit"
+            @delete="handleDrawerDelete" />
 
         <CreateVehicleModal :show="showCreateModal" @close="showCreateModal = false" @created="handleVehicleCreated" />
 

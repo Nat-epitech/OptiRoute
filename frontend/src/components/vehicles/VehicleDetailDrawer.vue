@@ -7,10 +7,16 @@ import type { VehicleDetails } from "@/models/Vehicle"
 
 import AppDetailDrawer from "@/components/ui/AppDetailDrawer.vue"
 
-const props = defineProps<{
-    open: boolean
-    vehicleId: number | null
-}>()
+const props = withDefaults(
+    defineProps<{
+        open: boolean
+        vehicleId: number | null
+        refreshKey?: number
+    }>(),
+    {
+        refreshKey: 0,
+    },
+)
 
 const emit = defineEmits<{
     close: []
@@ -143,7 +149,7 @@ const formatTankCapacity = (
 }
 
 watch(
-    [() => props.open, () => props.vehicleId],
+    [() => props.open, () => props.vehicleId, () => props.refreshKey,],
     ([open, vehicleId]) => {
         if (open && vehicleId !== null) {
             loadVehicle()

@@ -5,8 +5,12 @@ export interface Driver {
     lastName: string
     phoneNumber: string
     isActive: boolean
+}
+
+export interface DriverDetails extends Driver {
     monthlySalary: number
     monthlyWorkingHours: number
+
     createdAt: string
     updatedAt: string
 }

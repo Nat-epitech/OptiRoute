@@ -26,6 +26,13 @@ public class DriverService {
         return driverRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public DriverResponse getById(Long id) {
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Driver not found with id: " + id));
+
+        return toResponse(driver);
+    }
+
     @Transactional
     public DriverResponse createDriver(DriverRequest request) {
         Driver driver = new Driver();
