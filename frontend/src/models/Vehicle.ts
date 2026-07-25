@@ -1,18 +1,19 @@
 export interface Vehicle {
     id: number
 
-    externalId: string | null
-    externalSource: string
-
     registration: string
 
     brand: string | null
     model: string | null
+}
 
+export interface VehicleDetails extends Vehicle {
     fuelType: string | null
     averageConsumption: number | null
     tankCapacity: number | null
 
+    externalId: string | null
+    externalSource: string
     metadata: Record<string, unknown> | null
 }
 

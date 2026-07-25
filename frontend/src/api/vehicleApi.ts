@@ -1,14 +1,14 @@
 import api from "./axios";
 
-import type { Vehicle, CreateVehicleRequest, UpdateVehicleRequest } from "@/models/Vehicle";
+import type { Vehicle, VehicleDetails, CreateVehicleRequest, UpdateVehicleRequest } from "@/models/Vehicle";
 
 export const getVehicles = async (): Promise<Vehicle[]> => {
     const response = await api.get<Vehicle[]>("/vehicles");
     return response.data;
 };
 
-export const getVehicle = async (id: number): Promise<Vehicle> => {
-    const response = await api.get<Vehicle>(`/vehicles/${id}`);
+export const getVehicle = async (id: number): Promise<VehicleDetails> => {
+    const response = await api.get<VehicleDetails>(`/vehicles/${id}`);
     return response.data;
 };
 
