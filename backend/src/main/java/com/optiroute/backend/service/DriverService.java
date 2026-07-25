@@ -77,6 +77,8 @@ public class DriverService {
                 .firstName(driver.getFirstName())
                 .lastName(driver.getLastName())
                 .phoneNumber(driver.getPhoneNumber())
+                .monthlySalary(driver.getMonthlySalary())
+                .monthlyWorkingHours(driver.getMonthlyWorkingHours())
                 .build();
     }
 }
