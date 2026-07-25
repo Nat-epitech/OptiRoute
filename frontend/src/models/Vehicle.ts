@@ -5,12 +5,15 @@ export interface Vehicle {
 
     brand: string | null
     model: string | null
-}
 
-export interface VehicleDetails extends Vehicle {
+    //TMP
     fuelType: string | null
     averageConsumption: number | null
     tankCapacity: number | null
+
+}
+
+export interface VehicleDetails extends Vehicle {
 
     externalId: string | null
     externalSource: string
