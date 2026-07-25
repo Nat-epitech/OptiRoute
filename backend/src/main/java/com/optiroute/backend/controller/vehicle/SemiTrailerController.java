@@ -13,7 +13,7 @@ import com.optiroute.backend.service.vehicle.SemiTrailerService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/semiTrailer")
+@RequestMapping("/api/semiTrailers")
 public class SemiTrailerController {
 
     private final SemiTrailerService semiTrailerService;
