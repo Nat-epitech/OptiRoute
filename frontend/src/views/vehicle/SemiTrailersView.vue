@@ -10,15 +10,25 @@ import SemiTrailerDetailDrawer from "@/components/vehicles/SemiTrailerDetailDraw
 
 import AppDropdown from "@/components/ui/AppDropdown.vue"
 
-const actionSemiTrailer = ref<SemiTrailerSummary | null>(null)
-const showCreateModal = ref(false)
-const showDeleteModal = ref(false)
+//Load semi-trailers
 
 const semiTrailers = ref<SemiTrailerSummary[]>([])
-const selectedSemiTrailerId = ref<number | null>(null)
 
 const loadSemiTrailers = async () => {
     semiTrailers.value = await getSemiTrailers()
+}
+
+//Manage Modal
+
+const showCreateModal = ref(false)
+const showDeleteModal = ref(false)
+
+const actionSemiTrailer = ref<SemiTrailerSummary | null>(null)
+const selectedSemiTrailerId = ref<number | null>(null)
+
+const askDeleteSemiTrailer = (semiTrailer: SemiTrailerSummary) => {
+    actionSemiTrailer.value = semiTrailer
+    showDeleteModal.value = true
 }
 
 const openSemiTrailerDetails = (semiTrailer: SemiTrailerSummary) => {
@@ -29,15 +39,12 @@ const closeSemiTrailerDetails = () => {
     selectedSemiTrailerId.value = null
 }
 
-const askDeleteSemiTrailer = (semiTrailer: SemiTrailerSummary) => {
-    actionSemiTrailer.value = semiTrailer
-    showDeleteModal.value = true
-}
-
 const closeSemiTrailerAction = () => {
     showDeleteModal.value = false
     actionSemiTrailer.value = null
 }
+
+//Handle
 
 const handleSemiTrailerCreated = async () => {
     showCreateModal.value = false
@@ -48,14 +55,6 @@ const handleSemiTrailerDeleted = async () => {
     closeSemiTrailerAction()
     selectedSemiTrailerId.value = null
     await loadSemiTrailers()
-}
-
-const displayValue = (value: string | number | null | undefined, suffix = "") => {
-    if (value === null || value === undefined || value === "") {
-        return "—"
-    }
-
-    return `${value}${suffix}`
 }
 
 onMounted(loadSemiTrailers)
@@ -110,11 +109,11 @@ onMounted(loadSemiTrailers)
                         </td>
 
                         <td class="whitespace-nowrap px-6 py-4">
-                            {{ displayValue(semiTrailer.brand) }}
+                            {{ semiTrailer.brand }}
                         </td>
 
                         <td class="whitespace-nowrap px-6 py-4">
-                            {{ displayValue(semiTrailer.model) }}
+                            {{ semiTrailer.model }}
                         </td>
 
                         <!-- Le stop empêche le clic sur les actions d'ouvrir également le drawer. -->

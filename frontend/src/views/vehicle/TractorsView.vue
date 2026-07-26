@@ -10,15 +10,25 @@ import TractorDetailDrawer from "@/components/vehicles/TractorDetailDrawer.vue"
 
 import AppDropdown from "@/components/ui/AppDropdown.vue"
 
-const actionTractor = ref<TractorSummary | null>(null)
-const showCreateModal = ref(false)
-const showDeleteModal = ref(false)
+//Load tractors
 
 const tractors = ref<TractorSummary[]>([])
-const selectedTractorId = ref<number | null>(null)
 
 const loadTractors = async () => {
     tractors.value = await getTractors()
+}
+
+//Manage Modal
+
+const showCreateModal = ref(false)
+const showDeleteModal = ref(false)
+
+const actionTractor = ref<TractorSummary | null>(null)
+const selectedTractorId = ref<number | null>(null)
+
+const askDeleteTractor = (tractor: TractorSummary) => {
+    actionTractor.value = tractor
+    showDeleteModal.value = true
 }
 
 const openTractorDetails = (tractor: TractorSummary) => {
@@ -29,15 +39,12 @@ const closeTractorDetails = () => {
     selectedTractorId.value = null
 }
 
-const askDeleteTractor = (tractor: TractorSummary) => {
-    actionTractor.value = tractor
-    showDeleteModal.value = true
-}
-
 const closeTractorAction = () => {
     showDeleteModal.value = false
     actionTractor.value = null
 }
+
+//Handle
 
 const handleTractorCreated = async () => {
     showCreateModal.value = false
@@ -48,14 +55,6 @@ const handleTractorDeleted = async () => {
     closeTractorAction()
     selectedTractorId.value = null
     await loadTractors()
-}
-
-const displayValue = (value: string | number | null | undefined, suffix = "") => {
-    if (value === null || value === undefined || value === "") {
-        return "—"
-    }
-
-    return `${value}${suffix}`
 }
 
 onMounted(loadTractors)
@@ -110,11 +109,11 @@ onMounted(loadTractors)
                         </td>
 
                         <td class="whitespace-nowrap px-6 py-4">
-                            {{ displayValue(tractor.brand) }}
+                            {{ tractor.brand }}
                         </td>
 
                         <td class="whitespace-nowrap px-6 py-4">
-                            {{ displayValue(tractor.model) }}
+                            {{ tractor.model }}
                         </td>
 
                         <!-- Le stop empêche le clic sur les actions d'ouvrir également le drawer. -->
@@ -122,9 +121,7 @@ onMounted(loadTractors)
                             <AppDropdown v-slot="{ close }">
                                 <button type="button"
                                     class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                                    @click="
-                                        close(); askDeleteTractor(tractor)
-                                        ">
+                                    @click="close(); askDeleteTractor(tractor)">
                                     Supprimer
                                 </button>
                             </AppDropdown>
