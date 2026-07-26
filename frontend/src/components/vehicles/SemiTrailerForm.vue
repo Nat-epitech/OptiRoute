@@ -6,9 +6,7 @@ const form = defineModel<SemiTrailerFormData>({
 })
 
 withDefaults(
-    defineProps<{
-        disabled?: boolean
-    }>(),
+    defineProps<{ disabled?: boolean }>(),
     {
         disabled: false,
     },

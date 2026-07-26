@@ -118,28 +118,3 @@ export interface SemiTrailerFormData {
 
     active: boolean
 }
-
-export const createEmptySemiTrailerForm = (): SemiTrailerFormData => ({
-    registration: "",
-    brand: null,
-    model: null,
-
-    maxSpeed: null,
-
-    trailerType: null,
-
-    emptyWeightKg: null,
-    grossVehicleWeightKg: null,
-
-    heightCm: null,
-    widthCm: null,
-    lengthCm: null,
-
-    axleCount: null,
-
-    purchaseCost: null,
-    depreciationStartDate: null,
-    depreciationEndDate: null,
-
-    active: true,
-})

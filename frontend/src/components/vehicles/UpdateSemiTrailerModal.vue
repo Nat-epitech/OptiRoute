@@ -2,21 +2,21 @@
 import { reactive, ref, watch } from "vue"
 
 import { updateSemiTrailer } from "@/api/vehicle/semiTrailerApi"
-
 import { getApiErrorMessage } from "@/api/utils"
 
-import type {
-    SemiTrailerDetails, SemiTrailerFormData, UpdateSemiTrailerRequest,
-} from "@/models/vehicle/SemiTrailer"
+import type { SemiTrailerDetails, SemiTrailerFormData, UpdateSemiTrailerRequest } from "@/models/vehicle/SemiTrailer"
 
-import { createEmptySemiTrailerForm } from "@/models/vehicle/SemiTrailer"
+import { createEmptySemiTrailerForm } from "@/utils/vehicleUtils"
 
 import AppModal from "@/components/ui/AppModal.vue"
 import SemiTrailerForm from "@/components/vehicles/SemiTrailerForm.vue"
 
 import { useNotification } from "@/composables/useNotification"
 
+//Variables
+
 const notification = useNotification()
+const loading = ref(false)
 
 const props = defineProps<{
     show: boolean
@@ -28,17 +28,24 @@ const emit = defineEmits<{
     updated: []
 }>()
 
-const loading = ref(false)
+//Manage Modal
+
+const closeModal = () => {
+    if (loading.value) {
+        return
+    }
+
+    emit("close")
+}
+
+// Manage form
 
 const form = reactive<SemiTrailerFormData>(
     createEmptySemiTrailerForm(),
 )
 
 const resetForm = () => {
-    Object.assign(
-        form,
-        createEmptySemiTrailerForm(),
-    )
+    Object.assign(form, createEmptySemiTrailerForm())
 }
 
 const populateForm = () => {
@@ -49,46 +56,27 @@ const populateForm = () => {
 
     Object.assign(form, {
         registration: props.semiTrailer.registration,
-
         brand: props.semiTrailer.brand ?? null,
-
         model: props.semiTrailer.model ?? null,
 
         maxSpeed: props.semiTrailer.maxSpeed ?? null,
-
         trailerType: props.semiTrailer.trailerType ?? null,
 
         emptyWeightKg: props.semiTrailer.emptyWeightKg ?? null,
-
-        grossVehicleWeightKg:
-            props.semiTrailer.grossVehicleWeightKg ?? null,
+        grossVehicleWeightKg: props.semiTrailer.grossVehicleWeightKg ?? null,
 
         heightCm: props.semiTrailer.heightCm ?? null,
-
         widthCm: props.semiTrailer.widthCm ?? null,
-
         lengthCm: props.semiTrailer.lengthCm ?? null,
 
         axleCount: props.semiTrailer.axleCount ?? null,
 
         purchaseCost: props.semiTrailer.purchaseCost ?? null,
-
-        depreciationStartDate:
-            props.semiTrailer.depreciationStartDate ?? null,
-
-        depreciationEndDate:
-            props.semiTrailer.depreciationEndDate ?? null,
+        depreciationStartDate: props.semiTrailer.depreciationStartDate ?? null,
+        depreciationEndDate: props.semiTrailer.depreciationEndDate ?? null,
 
         active: props.semiTrailer.active,
     } satisfies SemiTrailerFormData)
-}
-
-const closeModal = () => {
-    if (loading.value) {
-        return
-    }
-
-    emit("close")
 }
 
 const submitSemiTrailer = async () => {
@@ -101,31 +89,23 @@ const submitSemiTrailer = async () => {
 
         const payload: UpdateSemiTrailerRequest = {
             registration: form.registration.trim().toUpperCase(),
-
             brand: form.brand?.trim() || null,
-
             model: form.model?.trim() || null,
 
             maxSpeed: form.maxSpeed,
-
             trailerType: form.trailerType,
 
             emptyWeightKg: form.emptyWeightKg,
-
             grossVehicleWeightKg: form.grossVehicleWeightKg,
 
             heightCm: form.heightCm,
-
             widthCm: form.widthCm,
-
             lengthCm: form.lengthCm,
 
             axleCount: form.axleCount,
 
             purchaseCost: form.purchaseCost,
-
             depreciationStartDate: form.depreciationStartDate || null,
-
             depreciationEndDate: form.depreciationEndDate || null,
 
             active: form.active,
@@ -145,21 +125,17 @@ const submitSemiTrailer = async () => {
     } catch (error: unknown) {
         notification.error(
             "Modification impossible",
-            getApiErrorMessage(
-                error,
-                "La semi-remorque n’a pas pu être modifiée.",
-            ),
+            getApiErrorMessage(error, "La semi-remorque n’a pas pu être modifiée."),
         )
     } finally {
         loading.value = false
     }
 }
 
+//Watch
+
 watch(
-    [
-        () => props.show,
-        () => props.semiTrailer,
-    ],
+    [() => props.show, () => props.semiTrailer],
     ([show, semiTrailer]) => {
         if (show && semiTrailer) {
             populateForm()

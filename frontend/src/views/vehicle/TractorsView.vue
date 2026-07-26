@@ -109,11 +109,11 @@ onMounted(loadTractors)
                 <tbody>
                     <tr v-for="tractor in tractors" :key="tractor.id"
                         class="cursor-pointer border-b transition last:border-b-0 hover:bg-gray-100" :class="{
-                            'bg-blue-50':
-                                selectedTractorId === tractor.id,
-                        }" tabindex="0" @click="openTractorDetails(tractor)"
-                        @keydown.enter="openTractorDetails(tractor)"
+                            'bg-blue-50': selectedTractorId === tractor.id
+                        }" tabindex="0"
+                        @click="openTractorDetails(tractor)" @keydown.enter="openTractorDetails(tractor)"
                         @keydown.space.prevent="openTractorDetails(tractor)">
+
                         <td class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
                             {{ tractor.registration }}
                         </td>

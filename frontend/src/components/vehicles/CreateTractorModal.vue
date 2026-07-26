@@ -4,15 +4,18 @@ import { reactive, ref, watch } from "vue"
 import { createTractor } from "@/api/vehicle/tractorApi"
 import { getApiErrorMessage } from "@/api/utils"
 
-import type { CreateTractorRequest } from "@/models/vehicle/Tractor"
-import { createEmptyTractorForm, type TractorFormData } from "@/models/vehicle/Tractor"
+import type { CreateTractorRequest, TractorFormData } from "@/models/vehicle/Tractor"
+import { createEmptyTractorForm } from "@/utils/vehicleUtils"
 
 import AppModal from "@/components/ui/AppModal.vue"
 import TractorForm from "@/components/vehicles/TractorForm.vue"
 
 import { useNotification } from "@/composables/useNotification"
 
+//Variables
+
 const notification = useNotification()
+const loading = ref(false)
 
 const props = defineProps<{
     show: boolean
@@ -23,7 +26,15 @@ const emit = defineEmits<{
     created: []
 }>()
 
-const loading = ref(false)
+//Manage Modal
+
+const closeModal = () => {
+    if (!loading.value) {
+        emit("close")
+    }
+}
+
+// Manage form
 
 const form = reactive<TractorFormData>(
     createEmptyTractorForm(),
@@ -31,12 +42,6 @@ const form = reactive<TractorFormData>(
 
 const resetForm = () => {
     Object.assign(form, createEmptyTractorForm())
-}
-
-const closeModal = () => {
-    if (!loading.value) {
-        emit("close")
-    }
 }
 
 const submitTractor = async () => {
@@ -57,8 +62,7 @@ const submitTractor = async () => {
             averageConsumption: form.averageConsumption,
 
             emptyWeightKg: form.emptyWeightKg,
-            grossCombinationWeightKg:
-                form.grossCombinationWeightKg,
+            grossCombinationWeightKg: form.grossCombinationWeightKg,
 
             heightCm: form.heightCm,
             widthCm: form.widthCm,
@@ -67,10 +71,8 @@ const submitTractor = async () => {
             axleCount: form.axleCount,
 
             purchaseCost: form.purchaseCost,
-            depreciationStartDate:
-                form.depreciationStartDate || null,
-            depreciationEndDate:
-                form.depreciationEndDate || null,
+            depreciationStartDate: form.depreciationStartDate || null,
+            depreciationEndDate: form.depreciationEndDate || null,
 
             active: form.active,
         }
@@ -86,15 +88,14 @@ const submitTractor = async () => {
     } catch (error: unknown) {
         notification.error(
             "Création impossible",
-            getApiErrorMessage(
-                error,
-                "Le tracteur n’a pas pu être créé.",
-            ),
+            getApiErrorMessage(error, "Le tracteur n’a pas pu être créé."),
         )
     } finally {
         loading.value = false
     }
 }
+
+//Watch
 
 watch(
     () => props.show,

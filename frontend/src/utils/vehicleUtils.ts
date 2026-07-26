@@ -1,4 +1,6 @@
 import type { FuelType, TrailerType } from "@/types/vehicleType"
+import type { SemiTrailerFormData } from "@/models/vehicle/SemiTrailer"
+import type { TractorFormData } from "@/models/vehicle/Tractor"
 
 const FUEL_TYPE_LABELS: Record<FuelType, string> = {
     DIESEL: "Diesel",
@@ -53,3 +55,54 @@ export const formatConsumption = (value: number | null): string => {
 
     return `${value.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} L / 100 km`
 }
+
+export const createEmptySemiTrailerForm = (): SemiTrailerFormData => ({
+    registration: "",
+    brand: null,
+    model: null,
+
+    maxSpeed: null,
+
+    trailerType: null,
+
+    emptyWeightKg: null,
+    grossVehicleWeightKg: null,
+
+    heightCm: null,
+    widthCm: null,
+    lengthCm: null,
+
+    axleCount: null,
+
+    purchaseCost: null,
+    depreciationStartDate: null,
+    depreciationEndDate: null,
+
+    active: true,
+})
+
+export const createEmptyTractorForm = (): TractorFormData => ({
+    registration: "",
+    brand: null,
+    model: null,
+
+    maxSpeed: null,
+
+    fuelType: "DIESEL",
+    averageConsumption: null,
+
+    emptyWeightKg: null,
+    grossCombinationWeightKg: null,
+
+    heightCm: null,
+    widthCm: null,
+    lengthCm: null,
+
+    axleCount: null,
+
+    purchaseCost: null,
+    depreciationStartDate: null,
+    depreciationEndDate: null,
+
+    active: true,
+})

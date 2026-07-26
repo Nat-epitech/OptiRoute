@@ -104,7 +104,7 @@ export interface TractorFormData {
 
     maxSpeed: number | null
 
-    fuelType: FuelType
+    fuelType: FuelType | null
     averageConsumption: number | null
 
     emptyWeightKg: number | null
@@ -122,29 +122,3 @@ export interface TractorFormData {
 
     active: boolean
 }
-
-export const createEmptyTractorForm = (): TractorFormData => ({
-    registration: "",
-    brand: null,
-    model: null,
-
-    maxSpeed: null,
-
-    fuelType: "DIESEL",
-    averageConsumption: null,
-
-    emptyWeightKg: null,
-    grossCombinationWeightKg: null,
-
-    heightCm: null,
-    widthCm: null,
-    lengthCm: null,
-
-    axleCount: null,
-
-    purchaseCost: null,
-    depreciationStartDate: null,
-    depreciationEndDate: null,
-
-    active: true,
-})

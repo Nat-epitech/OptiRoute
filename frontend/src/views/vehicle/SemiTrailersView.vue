@@ -109,11 +109,12 @@ onMounted(loadSemiTrailers)
                 <tbody>
                     <tr v-for="semiTrailer in semiTrailers" :key="semiTrailer.id"
                         class="cursor-pointer border-b transition last:border-b-0 hover:bg-gray-100" :class="{
-                            'bg-blue-50':
-                                selectedSemiTrailerId === semiTrailer.id,
-                        }" tabindex="0" @click="openSemiTrailerDetails(semiTrailer)"
+                            'bg-blue-50': selectedSemiTrailerId === semiTrailer.id
+                        }" tabindex="0"
+                        @click="openSemiTrailerDetails(semiTrailer)"
                         @keydown.enter="openSemiTrailerDetails(semiTrailer)"
                         @keydown.space.prevent="openSemiTrailerDetails(semiTrailer)">
+
                         <td class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
                             {{ semiTrailer.registration }}
                         </td>

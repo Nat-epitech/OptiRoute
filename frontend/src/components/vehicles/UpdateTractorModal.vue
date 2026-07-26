@@ -4,20 +4,19 @@ import { reactive, ref, watch } from "vue"
 import { updateTractor } from "@/api/vehicle/tractorApi"
 import { getApiErrorMessage } from "@/api/utils"
 
-import type {
-    TractorDetails,
-    TractorFormData,
-    UpdateTractorRequest,
-} from "@/models/vehicle/Tractor"
+import type { TractorDetails, TractorFormData, UpdateTractorRequest } from "@/models/vehicle/Tractor"
 
-import { createEmptyTractorForm } from "@/models/vehicle/Tractor"
+import { createEmptyTractorForm } from "@/utils/vehicleUtils"
 
 import AppModal from "@/components/ui/AppModal.vue"
 import TractorForm from "@/components/vehicles/TractorForm.vue"
 
 import { useNotification } from "@/composables/useNotification"
 
+//Variables
+
 const notification = useNotification()
+const loading = ref(false)
 
 const props = defineProps<{
     show: boolean
@@ -29,7 +28,15 @@ const emit = defineEmits<{
     updated: []
 }>()
 
-const loading = ref(false)
+//Manage Modal
+
+const closeModal = () => {
+    if (!loading.value) {
+        emit("close")
+    }
+}
+
+// Manage form
 
 const form = reactive<TractorFormData>(
     createEmptyTractorForm(),
@@ -47,12 +54,11 @@ const populateForm = () => {
 
         maxSpeed: props.tractor.maxSpeed,
 
-        fuelType: props.tractor.fuelType,
+        fuelType: props.tractor.fuelType ?? null,
         averageConsumption: props.tractor.averageConsumption,
 
         emptyWeightKg: props.tractor.emptyWeightKg,
-        grossCombinationWeightKg:
-            props.tractor.grossCombinationWeightKg,
+        grossCombinationWeightKg: props.tractor.grossCombinationWeightKg,
 
         heightCm: props.tractor.heightCm,
         widthCm: props.tractor.widthCm,
@@ -61,21 +67,11 @@ const populateForm = () => {
         axleCount: props.tractor.axleCount,
 
         purchaseCost: props.tractor.purchaseCost,
-
-        depreciationStartDate:
-            props.tractor.depreciationStartDate,
-
-        depreciationEndDate:
-            props.tractor.depreciationEndDate,
+        depreciationStartDate: props.tractor.depreciationStartDate,
+        depreciationEndDate: props.tractor.depreciationEndDate,
 
         active: props.tractor.active,
-    })
-}
-
-const closeModal = () => {
-    if (!loading.value) {
-        emit("close")
-    }
+    } satisfies TractorFormData)
 }
 
 const submitTractor = async () => {
@@ -97,8 +93,7 @@ const submitTractor = async () => {
             averageConsumption: form.averageConsumption,
 
             emptyWeightKg: form.emptyWeightKg,
-            grossCombinationWeightKg:
-                form.grossCombinationWeightKg,
+            grossCombinationWeightKg: form.grossCombinationWeightKg,
 
             heightCm: form.heightCm,
             widthCm: form.widthCm,
@@ -107,12 +102,8 @@ const submitTractor = async () => {
             axleCount: form.axleCount,
 
             purchaseCost: form.purchaseCost,
-
-            depreciationStartDate:
-                form.depreciationStartDate || null,
-
-            depreciationEndDate:
-                form.depreciationEndDate || null,
+            depreciationStartDate: form.depreciationStartDate || null,
+            depreciationEndDate: form.depreciationEndDate || null,
 
             active: form.active,
         }
@@ -128,21 +119,17 @@ const submitTractor = async () => {
     } catch (error: unknown) {
         notification.error(
             "Modification impossible",
-            getApiErrorMessage(
-                error,
-                "Le tracteur n’a pas pu être modifié.",
-            ),
+            getApiErrorMessage(error, "Le tracteur n’a pas pu être modifié."),
         )
     } finally {
         loading.value = false
     }
 }
 
+//Watch
+
 watch(
-    [
-        () => props.show,
-        () => props.tractor,
-    ],
+    [() => props.show, () => props.tractor],
     ([show, tractor]) => {
         if (show && tractor) {
             populateForm()
