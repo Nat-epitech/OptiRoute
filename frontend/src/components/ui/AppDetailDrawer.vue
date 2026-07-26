@@ -17,7 +17,7 @@ const emit = defineEmits<{
                 leave-active-class="transition-transform duration-200 ease-in" leave-from-class="translate-x-0"
                 leave-to-class="translate-x-full">
                 <aside v-if="open"
-                    class="pointer-events-auto absolute inset-y-0 right-0 flex w-full flex-col overflow-hidden border-l border-slate-200 bg-slate-50 shadow-2xl sm:w-[35vw] sm:min-w-[420px] sm:max-w-[620px]"
+                    class="pointer-events-auto absolute inset-y-0 right-0 flex w-full flex-col overflow-hidden border-l border-slate-200 bg-slate-50 shadow-2xl sm:w-[37vw] sm:min-w-[440px] sm:max-w-[630px]"
                     role="dialog" aria-modal="true" :aria-label="title || 'Panneau de détails'">
                     <header
                         class="flex shrink-0 items-start justify-between border-b border-slate-200 bg-white px-5 py-4">

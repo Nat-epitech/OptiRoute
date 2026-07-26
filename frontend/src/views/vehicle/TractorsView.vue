@@ -74,13 +74,13 @@ onMounted(loadTractors)
     <div>
         <div class="mb-6 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-gray-800">
-                Véhicules
+                Tracteurs
             </h1>
 
             <button type="button"
                 class="rounded-xl bg-blue-600 px-5 py-3 text-white shadow transition hover:bg-blue-700"
                 @click="showCreateModal = true">
-                Ajouter un véhicule
+                Ajouter un tracteur
             </button>
         </div>
 
@@ -142,7 +142,7 @@ onMounted(loadTractors)
 
                     <tr v-if="tractors.length === 0">
                         <td colspan="7" class="px-6 py-12 text-center text-sm text-gray-500">
-                            Aucun véhicule enregistré.
+                            Aucun tracteur enregistré.
                         </td>
                     </tr>
                 </tbody>

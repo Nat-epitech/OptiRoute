@@ -1,4 +1,4 @@
-import type { FuelType } from "@/type/vehicleType"
+import type { FuelType } from "@/types/vehicleType"
 
 export interface Tractor {
     id: number
