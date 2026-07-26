@@ -1,6 +1,6 @@
 import type { TrailerType } from "@/types/vehicleType"
 
-export interface SemiTrailer {
+export interface SemiTrailerSummary {
     id: number
 
     registration: string
@@ -9,7 +9,7 @@ export interface SemiTrailer {
     model: string | null
 }
 
-export interface SemiTrailerDetails extends SemiTrailer {
+export interface SemiTrailerDetails extends SemiTrailerSummary {
     trailerType: TrailerType | null
 
     maxSpeed: number | null

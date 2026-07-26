@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue"
 
 import { getSemiTrailers } from "@/api/vehicle/semiTrailerApi"
-import type { SemiTrailer, SemiTrailerDetails } from "@/models/vehicle/SemiTrailer"
+import type { SemiTrailerSummary } from "@/models/vehicle/SemiTrailer"
 
 import CreateSemiTrailerModal from "@/components/vehicles/CreateSemiTrailerModal.vue"
 import DeleteSemiTrailerModal from "@/components/vehicles/DeleteSemiTrailerModal.vue"
@@ -10,18 +10,18 @@ import SemiTrailerDetailDrawer from "@/components/vehicles/SemiTrailerDetailDraw
 
 import AppDropdown from "@/components/ui/AppDropdown.vue"
 
-const actionSemiTrailer = ref<SemiTrailer | null>(null)
+const actionSemiTrailer = ref<SemiTrailerSummary | null>(null)
 const showCreateModal = ref(false)
 const showDeleteModal = ref(false)
 
-const semiTrailers = ref<SemiTrailer[]>([])
+const semiTrailers = ref<SemiTrailerSummary[]>([])
 const selectedSemiTrailerId = ref<number | null>(null)
 
 const loadSemiTrailers = async () => {
     semiTrailers.value = await getSemiTrailers()
 }
 
-const openSemiTrailerDetails = (semiTrailer: SemiTrailer) => {
+const openSemiTrailerDetails = (semiTrailer: SemiTrailerSummary) => {
     selectedSemiTrailerId.value = semiTrailer.id
 }
 
@@ -29,7 +29,7 @@ const closeSemiTrailerDetails = () => {
     selectedSemiTrailerId.value = null
 }
 
-const askDeleteSemiTrailer = (semiTrailer: SemiTrailer) => {
+const askDeleteSemiTrailer = (semiTrailer: SemiTrailerSummary) => {
     actionSemiTrailer.value = semiTrailer
     showDeleteModal.value = true
 }
@@ -44,19 +44,10 @@ const handleSemiTrailerCreated = async () => {
     await loadSemiTrailers()
 }
 
-const handleSemiTrailerUpdated = async () => {
-    await loadSemiTrailers()
-}
-
 const handleSemiTrailerDeleted = async () => {
     closeSemiTrailerAction()
     selectedSemiTrailerId.value = null
     await loadSemiTrailers()
-}
-
-const handleDrawerDelete = (semiTrailer: SemiTrailerDetails) => {
-    closeSemiTrailerDetails()
-    askDeleteSemiTrailer(semiTrailer)
 }
 
 const displayValue = (value: string | number | null | undefined, suffix = "") => {
@@ -110,8 +101,7 @@ onMounted(loadSemiTrailers)
                     <tr v-for="semiTrailer in semiTrailers" :key="semiTrailer.id"
                         class="cursor-pointer border-b transition last:border-b-0 hover:bg-gray-100" :class="{
                             'bg-blue-50': selectedSemiTrailerId === semiTrailer.id
-                        }" tabindex="0"
-                        @click="openSemiTrailerDetails(semiTrailer)"
+                        }" tabindex="0" @click="openSemiTrailerDetails(semiTrailer)"
                         @keydown.enter="openSemiTrailerDetails(semiTrailer)"
                         @keydown.space.prevent="openSemiTrailerDetails(semiTrailer)">
 

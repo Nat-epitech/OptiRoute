@@ -1,6 +1,6 @@
 import type { FuelType } from "@/types/vehicleType"
 
-export interface Tractor {
+export interface TractorSummary {
     id: number
 
     registration: string
@@ -9,7 +9,7 @@ export interface Tractor {
     model: string | null
 }
 
-export interface TractorDetails extends Tractor {
+export interface TractorDetails extends TractorSummary {
     maxSpeed: number | null
 
     fuelType: FuelType | null

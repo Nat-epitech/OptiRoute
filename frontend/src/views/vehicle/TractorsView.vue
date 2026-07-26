@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue"
 
 import { getTractors } from "@/api/vehicle/tractorApi"
-import type { Tractor, TractorDetails } from "@/models/vehicle/Tractor"
+import type { TractorSummary } from "@/models/vehicle/Tractor"
 
 import CreateTractorModal from "@/components/vehicles/CreateTractorModal.vue"
 import DeleteTractorModal from "@/components/vehicles/DeleteTractorModal.vue"
@@ -10,18 +10,18 @@ import TractorDetailDrawer from "@/components/vehicles/TractorDetailDrawer.vue"
 
 import AppDropdown from "@/components/ui/AppDropdown.vue"
 
-const actionTractor = ref<Tractor | null>(null)
+const actionTractor = ref<TractorSummary | null>(null)
 const showCreateModal = ref(false)
 const showDeleteModal = ref(false)
 
-const tractors = ref<Tractor[]>([])
+const tractors = ref<TractorSummary[]>([])
 const selectedTractorId = ref<number | null>(null)
 
 const loadTractors = async () => {
     tractors.value = await getTractors()
 }
 
-const openTractorDetails = (tractor: Tractor) => {
+const openTractorDetails = (tractor: TractorSummary) => {
     selectedTractorId.value = tractor.id
 }
 
@@ -29,7 +29,7 @@ const closeTractorDetails = () => {
     selectedTractorId.value = null
 }
 
-const askDeleteTractor = (tractor: Tractor) => {
+const askDeleteTractor = (tractor: TractorSummary) => {
     actionTractor.value = tractor
     showDeleteModal.value = true
 }
@@ -44,19 +44,10 @@ const handleTractorCreated = async () => {
     await loadTractors()
 }
 
-const handleTractorUpdated = async () => {
-    await loadTractors()
-}
-
 const handleTractorDeleted = async () => {
     closeTractorAction()
     selectedTractorId.value = null
     await loadTractors()
-}
-
-const handleDrawerDelete = (tractor: TractorDetails) => {
-    closeTractorDetails()
-    askDeleteTractor(tractor)
 }
 
 const displayValue = (value: string | number | null | undefined, suffix = "") => {
@@ -110,8 +101,8 @@ onMounted(loadTractors)
                     <tr v-for="tractor in tractors" :key="tractor.id"
                         class="cursor-pointer border-b transition last:border-b-0 hover:bg-gray-100" :class="{
                             'bg-blue-50': selectedTractorId === tractor.id
-                        }" tabindex="0"
-                        @click="openTractorDetails(tractor)" @keydown.enter="openTractorDetails(tractor)"
+                        }" tabindex="0" @click="openTractorDetails(tractor)"
+                        @keydown.enter="openTractorDetails(tractor)"
                         @keydown.space.prevent="openTractorDetails(tractor)">
 
                         <td class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">

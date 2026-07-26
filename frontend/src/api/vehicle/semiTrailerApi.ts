@@ -1,14 +1,14 @@
 import api from "../axios";
 
 import type {
-    SemiTrailer,
+    SemiTrailerSummary,
     SemiTrailerDetails,
     CreateSemiTrailerRequest,
     UpdateSemiTrailerRequest,
 } from "@/models/vehicle/SemiTrailer";
 
-export const getSemiTrailers = async (): Promise<SemiTrailer[]> => {
-    const response = await api.get<SemiTrailer[]>("/semiTrailers");
+export const getSemiTrailers = async (): Promise<SemiTrailerSummary[]> => {
+    const response = await api.get<SemiTrailerSummary[]>("/semiTrailers");
 
     return response.data;
 };
@@ -19,14 +19,14 @@ export const getSemiTrailer = async (id: number): Promise<SemiTrailerDetails> =>
     return response.data;
 };
 
-export const createSemiTrailer = async (semiTrailer: CreateSemiTrailerRequest): Promise<SemiTrailer> => {
-    const response = await api.post<SemiTrailer>("/semiTrailers", semiTrailer);
+export const createSemiTrailer = async (semiTrailer: CreateSemiTrailerRequest): Promise<SemiTrailerSummary> => {
+    const response = await api.post<SemiTrailerSummary>("/semiTrailers", semiTrailer);
 
     return response.data;
 };
 
-export const updateSemiTrailer = async (id: number, semiTrailer: UpdateSemiTrailerRequest): Promise<SemiTrailer> => {
-    const response = await api.put<SemiTrailer>(`/semiTrailers/${id}`, semiTrailer);
+export const updateSemiTrailer = async (id: number, semiTrailer: UpdateSemiTrailerRequest): Promise<SemiTrailerSummary> => {
+    const response = await api.put<SemiTrailerSummary>(`/semiTrailers/${id}`, semiTrailer);
 
     return response.data;
 };

@@ -1,14 +1,14 @@
 import api from "../axios";
 
 import type {
-    Tractor,
+    TractorSummary,
     TractorDetails,
     CreateTractorRequest,
     UpdateTractorRequest,
 } from "@/models/vehicle/Tractor";
 
-export const getTractors = async (): Promise<Tractor[]> => {
-    const response = await api.get<Tractor[]>("/tractors");
+export const getTractors = async (): Promise<TractorSummary[]> => {
+    const response = await api.get<TractorSummary[]>("/tractors");
     return response.data;
 };
 
@@ -17,18 +17,13 @@ export const getTractor = async (id: number): Promise<TractorDetails> => {
     return response.data;
 };
 
-export const createTractor = async (
-    tractor: CreateTractorRequest
-): Promise<Tractor> => {
-    const response = await api.post<Tractor>("/tractors", tractor);
+export const createTractor = async (tractor: CreateTractorRequest): Promise<TractorSummary> => {
+    const response = await api.post<TractorSummary>("/tractors", tractor);
     return response.data;
 };
 
-export const updateTractor = async (
-    id: number,
-    tractor: UpdateTractorRequest
-): Promise<Tractor> => {
-    const response = await api.put<Tractor>(`/tractors/${id}`, tractor);
+export const updateTractor = async (id: number, tractor: UpdateTractorRequest): Promise<TractorSummary> => {
+    const response = await api.put<TractorSummary>(`/tractors/${id}`, tractor);
     return response.data;
 };
 
