@@ -1,10 +1,10 @@
 package com.optiroute.backend.dto.response.vehicle;
 
-import com.optiroute.backend.entity.vehicle.TrailerType;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+
+import com.optiroute.backend.type.TrailerType;
 
 public record SemiTrailerResponse(
         Long id,

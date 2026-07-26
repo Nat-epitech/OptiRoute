@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
-import com.optiroute.backend.entity.vehicle.FuelType;
+import com.optiroute.backend.type.FuelType;
 
 public record TractorRequest(
         String externalId,

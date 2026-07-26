@@ -1,4 +1,4 @@
-import type { TrailerType } from "@/type/vehiculeType"
+import type { TrailerType } from "@/type/vehicleType"
 
 export interface SemiTrailer {
     id: number

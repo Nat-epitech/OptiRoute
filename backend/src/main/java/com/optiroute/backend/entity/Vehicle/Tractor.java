@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.optiroute.backend.entity.EntityUtils;
+import com.optiroute.backend.type.FuelType;
 
 @Entity
 @Table(name = "tractor")

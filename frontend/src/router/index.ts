@@ -8,11 +8,14 @@ import MapsView from '@/views/MapsView.vue'
 import PlanningView from '@/views/PlanningView.vue'
 import VehiclesView from '@/views/VehiclesView.vue'
 import CustomersView from '@/views/CustomersView.vue'
+import TractorsView from '@/views/vehicle/TractorsView.vue'
+import SemiTrailers from '@/views/vehicle/SemiTrailersView.vue'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import MapLayout from '@/layouts/MapLayout.vue'
 
 import { useAuthStore } from '@/stores/authStore'
+
 
 const routes = [
     {
@@ -62,6 +65,16 @@ const routes = [
                         path: 'vehicles',
                         name: 'vehicles',
                         component: VehiclesView
+                    },
+                    {
+                        path: 'tractors',
+                        name: 'tractors',
+                        component: TractorsView
+                    },
+                    {
+                        path: 'semiTrailers',
+                        name: 'semiTrailers',
+                        component: SemiTrailers
                     },
                     {
                         path: 'customers',
