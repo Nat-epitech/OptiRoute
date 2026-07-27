@@ -34,6 +34,10 @@ public class TractorService {
         return toDto(tractor);
     }
 
+    public Tractor getEntityById(Long id) {
+        return tractorRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Tractor not found with id: " + id));
+    }
+
     @Transactional
     public TractorResponse create(TractorRequest request) {
 

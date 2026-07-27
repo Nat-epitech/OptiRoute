@@ -18,7 +18,8 @@ public class Transport {
     private String status = "PLANNED";
 
     private Long driverId;
-    private Long vehicleId;
+    private Long tractorId;
+    private Long semiTrailerId;
     private Long customerId;
 
     private OffsetDateTime plannedStart;
@@ -99,12 +100,20 @@ public class Transport {
         this.driverId = driverId;
     }
 
-    public Long getVehicleId() {
-        return vehicleId;
+    public Long getTractorId() {
+        return tractorId;
     }
 
-    public void setVehicleId(Long vehicleId) {
-        this.vehicleId = vehicleId;
+    public void setTractorId(Long tractorId) {
+        this.tractorId = tractorId;
+    }
+
+    public Long getSemiTrailerId() {
+        return semiTrailerId;
+    }
+
+    public void setSemiTrailerId(Long semiTrailerId) {
+        this.semiTrailerId = semiTrailerId;
     }
 
     public Long getCustomerId() {

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 public record TransportDetailDto(
-
         Long id,
         String name,
         String status,
@@ -20,11 +19,17 @@ public record TransportDetailDto(
         String driverName,
         String driverEmail,
 
-        // Vehicle
-        Long vehicleId,
-        String vehicleRegistration,
-        String vehicleBrand,
-        String vehicleModel,
+        // Tractor
+        Long tractorId,
+        String tractorRegistration,
+        String tractorBrand,
+        String tractorModel,
+
+        // Semi-trailer
+        Long semiTrailerId,
+        String semiTrailerRegistration,
+        String semiTrailerBrand,
+        String semiTrailerModel,
 
         // Customer
         Long customerId,
@@ -54,7 +59,5 @@ public record TransportDetailDto(
         BigDecimal estimatedFuelCost,
         BigDecimal estimatedTollCost,
         BigDecimal estimatedDriverCost,
-        BigDecimal estimatedTotalCost
-
-) {
+        BigDecimal estimatedTotalCost) {
 }

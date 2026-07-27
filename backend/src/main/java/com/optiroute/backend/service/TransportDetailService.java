@@ -7,44 +7,41 @@ import com.optiroute.backend.entity.Customer;
 import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.entity.Transport;
 import com.optiroute.backend.entity.TransportEstimate;
-import com.optiroute.backend.entity.Vehicle;
+import com.optiroute.backend.entity.vehicle.SemiTrailer;
+import com.optiroute.backend.entity.vehicle.Tractor;
 import com.optiroute.backend.repository.CustomerRepository;
 import com.optiroute.backend.repository.DriverRepository;
 import com.optiroute.backend.repository.TransportRepository;
 import com.optiroute.backend.repository.TransportEstimateRepository;
-import com.optiroute.backend.repository.VehicleRepository;
+import com.optiroute.backend.repository.vehicle.SemiTrailerRepository;
+import com.optiroute.backend.repository.vehicle.TractorRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class TransportDetailService {
 
     private final TransportRepository transportRepository;
     private final DriverRepository driverRepository;
-    private final VehicleRepository vehicleRepository;
+    private final TractorRepository tractorRepository;
+    private final SemiTrailerRepository semiTrailerRepository;
     private final CustomerRepository customerRepository;
     private final TransportEstimateRepository transportEstimateRepository;
-
-    public TransportDetailService(
-            TransportRepository transportRepository,
-            DriverRepository driverRepository,
-            VehicleRepository vehicleRepository,
-            CustomerRepository customerRepository,
-            TransportEstimateRepository transportEstimateRepository) {
-
-        this.transportRepository = transportRepository;
-        this.driverRepository = driverRepository;
-        this.vehicleRepository = vehicleRepository;
-        this.customerRepository = customerRepository;
-        this.transportEstimateRepository = transportEstimateRepository;
-    }
 
     public TransportDetailDto getDetail(Long transportId) {
 
         Transport transport = transportRepository.findById(transportId).orElseThrow(() -> new RuntimeException("Transport not found"));
         Driver driver = driverRepository.findById(transport.getDriverId()).orElseThrow(() -> new RuntimeException("Driver not found"));
 
-        Vehicle vehicle = null;
-        if (transport.getVehicleId() != null) {
-            vehicle = vehicleRepository.findById(transport.getVehicleId()).orElse(null);
+        Tractor tractor = null;
+        if (transport.getTractorId() != null) {
+            tractor = tractorRepository.findById(transport.getTractorId()).orElse(null);
+        }
+
+        SemiTrailer semiTrailer = null;
+        if (transport.getSemiTrailerId() != null) {
+            semiTrailer = semiTrailerRepository.findById(transport.getSemiTrailerId()).orElse(null);
         }
 
         Customer customer = null;
@@ -70,10 +67,15 @@ public class TransportDetailService {
                 driver.getFirstName() + " " + driver.getLastName(),
                 driver.getEmail(),
 
-                vehicle != null ? vehicle.getId() : null,
-                vehicle != null ? vehicle.getRegistration() : null,
-                vehicle != null ? vehicle.getBrand() : null,
-                vehicle != null ? vehicle.getModel() : null,
+                tractor != null ? tractor.getId() : null,
+                tractor != null ? tractor.getRegistration() : null,
+                tractor != null ? tractor.getBrand() : null,
+                tractor != null ? tractor.getModel() : null,
+
+                semiTrailer != null ? semiTrailer.getId() : null,
+                semiTrailer != null ? semiTrailer.getRegistration() : null,
+                semiTrailer != null ? semiTrailer.getBrand() : null,
+                semiTrailer != null ? semiTrailer.getModel() : null,
 
                 customer != null ? customer.getId() : null,
                 customer != null ? customer.getName() : null,

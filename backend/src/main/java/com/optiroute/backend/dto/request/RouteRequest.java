@@ -2,7 +2,6 @@ package com.optiroute.backend.dto.request;
 
 import com.optiroute.backend.model.Position;
 import com.optiroute.backend.model.RouteMode;
-import com.optiroute.backend.model.TruckConfiguration;
 
 import java.time.OffsetDateTime;
 
@@ -19,7 +18,8 @@ public class RouteRequest {
 
     private Double driverHourlyRate;
 
-    private TruckConfiguration truck;
+    private Long tractorId;
+    private Long semiTrailerId;
 
     public Position getOrigin() {
         return origin;
@@ -69,11 +69,20 @@ public class RouteRequest {
         this.driverHourlyRate = driverHourlyRate;
     }
 
-    public TruckConfiguration getTruck() {
-        return truck;
+    public Long getTractorId() {
+        return tractorId;
     }
 
-    public void setTruck(TruckConfiguration truck) {
-        this.truck = truck;
+    public void setTractorId(Long tractorId) {
+        this.tractorId = tractorId;
     }
+
+    public Long getSemiTrailerId() {
+        return semiTrailerId;
+    }
+
+    public void setSemiTrailerId(Long semiTrailerId) {
+        this.semiTrailerId = semiTrailerId;
+    }
+
 }

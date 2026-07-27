@@ -23,7 +23,8 @@ public class TransportService {
 
         transport.setName(req.name());
         transport.setDriverId(req.driverId());
-        transport.setVehicleId(req.vehicleId());
+        transport.setTractorId(req.tractorId());
+        transport.setSemiTrailerId(req.semiTrailerId());
         transport.setCustomerId(req.customerId());
 
         transport.setPlannedStart(req.plannedStart());

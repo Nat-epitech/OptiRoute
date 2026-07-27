@@ -7,6 +7,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.optiroute.backend.config.HereApiProperties;
+import com.optiroute.backend.model.TruckConfiguration;
 
 @Service
 public class HereApiClient {
@@ -19,7 +20,7 @@ public class HereApiClient {
         this.properties = properties;
     }
 
-    public String getRoutes(String origin, String destination, String departureTime) {
+    public String getRoutes(String origin, String destination, String departureTime, TruckConfiguration truckConfiguration) {
         URI uri = UriComponentsBuilder
                 .fromUriString("https://router.hereapi.com/v8/routes")
                 .queryParam("origin", origin)
@@ -28,7 +29,14 @@ public class HereApiClient {
                 .queryParam("return", "polyline,summary")
                 .queryParam("transportMode", "truck")
                 .queryParam("routingMode", "fast")
-                .queryParam("vehicle[grossWeight]", 44000)
+
+                .queryParam("vehicle[currentWeight]", truckConfiguration.getEmptyWeightKg())
+                .queryParam("vehicle[height]", truckConfiguration.getHeightCm())
+                .queryParam("vehicle[width]", truckConfiguration.getWidthCm())
+                .queryParam("vehicle[length]", truckConfiguration.getLengthCm())
+                .queryParam("vehicle[axleCount]", truckConfiguration.getAxleCount())
+                .queryParam("vehicle[speedCap]", truckConfiguration.getMaxSpeed())
+
                 .queryParam("departureTime", departureTime)
                 .queryParam("apikey", properties.getApiKey())
                 .build().encode().toUri();

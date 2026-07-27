@@ -3,10 +3,11 @@ package com.optiroute.backend.dto.request;
 import java.time.OffsetDateTime;
 
 public record TransportRequest(
-
         String name,
+
         Long driverId,
-        Long vehicleId,
+        Long tractorId,
+        Long semiTrailerId,
         Long customerId,
 
         OffsetDateTime plannedStart,

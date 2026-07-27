@@ -2,8 +2,20 @@ package com.optiroute.backend.service;
 
 import com.optiroute.backend.dto.dto.RouteCostDetailsDto;
 import com.optiroute.backend.dto.dto.RoutesDto;
+
 import com.optiroute.backend.dto.request.RouteRequest;
 import com.optiroute.backend.dto.response.*;
+
+import com.optiroute.backend.entity.vehicle.SemiTrailer;
+import com.optiroute.backend.entity.vehicle.Tractor;
+
+import com.optiroute.backend.service.vehicle.SemiTrailerService;
+import com.optiroute.backend.service.vehicle.TractorService;
+
+import lombok.RequiredArgsConstructor;
+
+import com.optiroute.backend.model.TruckConfiguration;
+import com.optiroute.backend.mapper.TruckConfigurationFactory;
 
 import org.springframework.stereotype.Service;
 
@@ -12,30 +24,31 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RouteOptimizationService {
 
     private final HereRoutingService hereRoutingService;
     private final HereRouteParser hereRouteParser;
     private final RouteCostService routeCostService;
     private final FuelPriceService fuelPriceService;
-
-    public RouteOptimizationService(HereRoutingService hereRoutingService, HereRouteParser hereRouteParser,
-            RouteCostService routeCostService, FuelPriceService fuelPriceService) {
-        this.hereRoutingService = hereRoutingService;
-        this.hereRouteParser = hereRouteParser;
-        this.routeCostService = routeCostService;
-        this.fuelPriceService = fuelPriceService;
-    }
+    private final TractorService tractorService;
+    private final SemiTrailerService semiTrailerService;
+    private final TruckConfigurationFactory truckConfigurationFactory;
 
     public RouteResponse calculateRoute(RouteRequest request) {
 
+        // Get Truck Configuration
+        Tractor tractor = tractorService.getEntityById(request.getTractorId());
+        SemiTrailer semiTrailer = semiTrailerService.getEntityById(request.getSemiTrailerId());
+        TruckConfiguration truckConfiguration = truckConfigurationFactory.create(tractor, semiTrailer);
+
         // HERE Routing API + Parsing
-        String raw = hereRoutingService.calculateRoutes(request);
+        String raw = hereRoutingService.calculateRoutes(request, truckConfiguration);
         List<HereRouteParser.ParsedRoute> parsedRoutes = hereRouteParser.parseRoutes(raw);
 
         // Cost calculation
         double fuelPrice = fuelPriceService.getAverageDieselPrice();
-        double consumption = request.getTruck().getFuelConsumptionLitersPer100Km();
+        double consumption = truckConfiguration.getAverageConsumption().doubleValue();
         double driverRate = request.getDriverHourlyRate();
 
         // Enriched DTOs
@@ -55,7 +68,6 @@ public class RouteOptimizationService {
             dto.setOriginLng(request.getOrigin().getLng());
             dto.setDestinationLat(request.getDestination().getLat());
             dto.setDestinationLng(request.getDestination().getLng());
-            // dto.setRawHereData(parsed.rawJson);
 
             routes.add(dto);
         }
