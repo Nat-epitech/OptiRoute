@@ -1,4 +1,4 @@
-package com.optiroute.backend.dto.dto;
+package com.optiroute.backend.dto.response.route;
 
 public class RoutesDto {
 

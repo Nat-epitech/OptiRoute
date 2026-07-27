@@ -1,7 +1,7 @@
 package com.optiroute.backend.controller;
 
-import com.optiroute.backend.dto.request.RouteRequest;
-import com.optiroute.backend.dto.response.RouteResponse;
+import com.optiroute.backend.dto.request.route.RouteRequest;
+import com.optiroute.backend.dto.response.route.RouteResponse;
 import com.optiroute.backend.service.RouteOptimizationService;
 
 import org.springframework.web.bind.annotation.*;

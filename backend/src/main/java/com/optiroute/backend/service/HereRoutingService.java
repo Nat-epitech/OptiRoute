@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 import org.springframework.stereotype.Service;
 
 import com.optiroute.backend.client.HereApiClient;
-import com.optiroute.backend.dto.request.RouteRequest;
+import com.optiroute.backend.dto.request.route.RouteRequest;
 import com.optiroute.backend.model.TruckConfiguration;
 import com.optiroute.backend.utils.CommonUtils;
 

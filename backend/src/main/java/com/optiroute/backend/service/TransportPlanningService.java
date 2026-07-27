@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
-import com.optiroute.backend.dto.dto.TransportPlanningDto;
+import com.optiroute.backend.dto.response.planning.TransportPlanningResponse;
 import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.entity.TransportEstimate;
 import com.optiroute.backend.repository.DriverRepository;
@@ -30,7 +30,7 @@ public class TransportPlanningService {
     }
 
     // Récupére le planning des transports pour une date donnée (1 jour)
-    public List<TransportPlanningDto> getPlanning(LocalDate startDate, LocalDate endDate) {
+    public List<TransportPlanningResponse> getPlanning(LocalDate startDate, LocalDate endDate) {
         if (endDate.isBefore(startDate) || endDate.isEqual(startDate)) {
             throw new IllegalArgumentException("endDate must be after startDate");
         }
@@ -43,7 +43,7 @@ public class TransportPlanningService {
             Driver driver = driverRepository.findById(transport.getDriverId()).orElseThrow();
             TransportEstimate estimate = transportEstimateRepository.findByTransportId(transport.getId()).orElse(null);
 
-            return new TransportPlanningDto(
+            return new TransportPlanningResponse(
                     transport.getId(),
                     transport.getName(),
 

@@ -1,9 +1,9 @@
-package com.optiroute.backend.dto.dto;
+package com.optiroute.backend.dto.response.planning;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-public record TransportDetailDto(
+public record TransportDetailResponse(
         Long id,
         String name,
         String status,

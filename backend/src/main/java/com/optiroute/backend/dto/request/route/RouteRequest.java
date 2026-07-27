@@ -1,4 +1,4 @@
-package com.optiroute.backend.dto.request;
+package com.optiroute.backend.dto.request.route;
 
 import com.optiroute.backend.model.Position;
 import com.optiroute.backend.model.RouteMode;

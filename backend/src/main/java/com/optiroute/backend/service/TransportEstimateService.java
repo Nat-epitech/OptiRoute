@@ -3,8 +3,8 @@ package com.optiroute.backend.service;
 import com.optiroute.backend.repository.TransportEstimateRepository;
 import com.optiroute.backend.entity.TransportEstimate;
 import com.optiroute.backend.entity.Transport;
-import com.optiroute.backend.dto.dto.RoutesDto;
-import com.optiroute.backend.dto.response.RouteResponse;
+import com.optiroute.backend.dto.response.route.RouteResponse;
+import com.optiroute.backend.dto.response.route.RoutesDto;
 
 import java.math.BigDecimal;
 

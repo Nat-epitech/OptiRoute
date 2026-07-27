@@ -1,4 +1,4 @@
-package com.optiroute.backend.dto.request;
+package com.optiroute.backend.dto.request.planning;
 
 import java.time.OffsetDateTime;
 

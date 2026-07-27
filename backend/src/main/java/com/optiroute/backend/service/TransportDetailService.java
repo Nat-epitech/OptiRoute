@@ -2,7 +2,7 @@ package com.optiroute.backend.service;
 
 import org.springframework.stereotype.Service;
 
-import com.optiroute.backend.dto.dto.TransportDetailDto;
+import com.optiroute.backend.dto.response.planning.TransportDetailResponse;
 import com.optiroute.backend.entity.Customer;
 import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.entity.Transport;
@@ -29,7 +29,7 @@ public class TransportDetailService {
     private final CustomerRepository customerRepository;
     private final TransportEstimateRepository transportEstimateRepository;
 
-    public TransportDetailDto getDetail(Long transportId) {
+    public TransportDetailResponse getDetail(Long transportId) {
 
         Transport transport = transportRepository.findById(transportId).orElseThrow(() -> new RuntimeException("Transport not found"));
         Driver driver = driverRepository.findById(transport.getDriverId()).orElseThrow(() -> new RuntimeException("Driver not found"));
@@ -51,7 +51,7 @@ public class TransportDetailService {
 
         TransportEstimate estimate = transportEstimateRepository.findByTransportId(transportId).orElse(null);
 
-        return new TransportDetailDto(
+        return new TransportDetailResponse(
 
                 transport.getId(),
                 transport.getName(),

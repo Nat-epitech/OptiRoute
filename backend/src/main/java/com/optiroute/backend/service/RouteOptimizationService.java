@@ -1,11 +1,10 @@
 package com.optiroute.backend.service;
 
-import com.optiroute.backend.dto.dto.RouteCostDetailsDto;
-import com.optiroute.backend.dto.dto.RoutesDto;
-
-import com.optiroute.backend.dto.request.RouteRequest;
+import com.optiroute.backend.dto.request.route.RouteRequest;
 import com.optiroute.backend.dto.response.*;
-
+import com.optiroute.backend.dto.response.route.RouteCostDetailsDto;
+import com.optiroute.backend.dto.response.route.RouteResponse;
+import com.optiroute.backend.dto.response.route.RoutesDto;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
 import com.optiroute.backend.entity.vehicle.Tractor;
 

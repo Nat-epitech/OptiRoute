@@ -6,10 +6,10 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.optiroute.backend.dto.dto.TransportDetailDto;
-import com.optiroute.backend.dto.dto.TransportPlanningDto;
-import com.optiroute.backend.dto.request.TransportRequest;
-import com.optiroute.backend.dto.request.CreateTransportFromRouteRequest;
+import com.optiroute.backend.dto.request.planning.CreateTransportFromRouteRequest;
+import com.optiroute.backend.dto.request.planning.TransportRequest;
+import com.optiroute.backend.dto.response.planning.TransportDetailResponse;
+import com.optiroute.backend.dto.response.planning.TransportPlanningResponse;
 import com.optiroute.backend.entity.Transport;
 import com.optiroute.backend.service.TransportDetailService;
 import com.optiroute.backend.service.TransportFacadeService;
@@ -38,12 +38,12 @@ public class TransportController {
     }
 
     @GetMapping("/planning")
-    public ResponseEntity<List<TransportPlanningDto>> getPlanning(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+    public ResponseEntity<List<TransportPlanningResponse>> getPlanning(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
         return ResponseEntity.ok(transportPlanningService.getPlanning(startDate, endDate));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TransportDetailDto> getDetail(@PathVariable Long id) {
+    public ResponseEntity<TransportDetailResponse> getDetail(@PathVariable Long id) {
         return ResponseEntity.ok(transportDetailService.getDetail(id));
     }
 

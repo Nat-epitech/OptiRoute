@@ -1,6 +1,6 @@
 package com.optiroute.backend.service;
 
-import com.optiroute.backend.dto.request.TransportRequest;
+import com.optiroute.backend.dto.request.planning.TransportRequest;
 import com.optiroute.backend.entity.Transport;
 import com.optiroute.backend.repository.TransportRepository;
 

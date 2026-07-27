@@ -1,14 +1,14 @@
 package com.optiroute.backend.service;
 
-import com.optiroute.backend.dto.request.TransportRequest;
+import com.optiroute.backend.dto.response.route.RouteResponse;
 import com.optiroute.backend.entity.Transport;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.optiroute.backend.dto.request.RouteRequest;
-import com.optiroute.backend.dto.request.CreateTransportFromRouteRequest;
-import com.optiroute.backend.dto.response.RouteResponse;
+import com.optiroute.backend.dto.request.planning.CreateTransportFromRouteRequest;
+import com.optiroute.backend.dto.request.planning.TransportRequest;
+import com.optiroute.backend.dto.request.route.RouteRequest;
 import com.optiroute.backend.repository.TransportRepository;
 
 import jakarta.persistence.EntityNotFoundException;
