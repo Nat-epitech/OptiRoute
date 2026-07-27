@@ -1,10 +1,12 @@
-import type { RoutesDto } from '@/models/route/RoutesDto'
+import type { RoutesDto } from '@/models/route/Route'
 
 export interface CreateTransportRequest {
     name: string
-    driverId: number
-    vehicleId?: number
     customerId?: number
+
+    driverId: number
+    tractorId: number
+    semiTrailerId?: number
 
     plannedStart: string
     plannedEnd: string
@@ -25,4 +27,10 @@ export interface CreateTransportFromRouteRequest {
     selectedRoute: RoutesDto
     routingProvider: string
     routingMode: string
+}
+
+export interface AssignTransport {
+    title: string
+    driverId: number
+    customerId?: number
 }

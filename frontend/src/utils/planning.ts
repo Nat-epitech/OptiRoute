@@ -2,10 +2,7 @@ import { ref } from "vue";
 
 import { getPlanning } from "@/api/planningApi";
 
-import type {
-    PlanningTransport,
-    PlanningRequest
-} from "@/models/planning/planning";
+import type { PlanningTransport, PlanningRequest } from "@/models/planning/planning";
 
 export function usePlanning() {
 
@@ -19,7 +16,6 @@ export function usePlanning() {
             error.value = null;
             transports.value = await getPlanning(request);
         } catch (e) {
-            console.error(e);
             error.value = "Impossible de charger le planning.";
         } finally {
             loading.value = false;

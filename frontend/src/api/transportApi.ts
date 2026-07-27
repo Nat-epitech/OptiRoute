@@ -1,5 +1,5 @@
 import api from '@/api/axios'
-import type { CreateTransportRequest, CreateTransportFromRouteRequest } from '@/models/transport/CreateTransportRequest'
+import type { CreateTransportRequest, CreateTransportFromRouteRequest } from '@/models/transport/TransportRequest'
 
 export const createTransport = async (request: CreateTransportRequest) => {
     const response = await api.post('/transports', request)

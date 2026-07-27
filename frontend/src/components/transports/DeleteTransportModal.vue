@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 import { deleteTransport } from '@/api/transportApi'
 import { getApiErrorMessage } from '@/api/utils'
-import type { TransportDetail } from '@/models/planning/transportDetail'
+import type { TransportDetail } from '@/models/transport/TransportDetail'
 
 import ConfirmDeleteModal from '@/components/ui/ConfirmDeleteModal.vue'
 import { useNotification } from '@/composables/useNotification'

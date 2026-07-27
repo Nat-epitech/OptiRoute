@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import HereAutocompleteInput from './HereAutocompleteInput.vue'
+
 import { calculateRoute } from '@/api/routeApi'
+import { getTractors } from "@/api/vehicle/tractorApi"
+import { getSemiTrailers } from "@/api/vehicle/semiTrailerApi"
+
 import type { Position } from '@/models/route/Position'
+import type { TractorSummary } from "@/models/vehicle/Tractor"
+import type { SemiTrailerSummary } from "@/models/vehicle/SemiTrailer"
+import { formatVehicleLabel } from "@/utils/vehicleUtils"
 
 //Variables
 const departureMode = ref('NOW')
+const tractors = ref<TractorSummary[]>([])
+const semiTrailers = ref<SemiTrailerSummary[]>([])
 
-const emit = defineEmits([
-    'route-calculated'
-])
+const emit = defineEmits(['route-calculated'])
 
 const form = reactive({
     origin: null as any,
@@ -18,16 +25,10 @@ const form = reactive({
     departureTime: null as any,
 
     mode: 'FASTEST',
-    driverHourlyRate: 0,
     maxTravelTimeMinutes: null,
 
-    truck: {
-        grossWeightKg: 32000,
-        heightCm: 400,
-        widthCm: 255,
-        lengthCm: 1800,
-        fuelConsumptionLitersPer100Km: 32
-    }
+    tractorId: null,
+    semiTrailerId: null,
 })
 
 // Functions
@@ -50,7 +51,7 @@ function toPosition(place: {
 
 async function submit() {
 
-    if (!form.origin || !form.destination) {
+    if (!form.origin || !form.destination || !form.tractorId) {
         return
     }
 
@@ -64,10 +65,10 @@ async function submit() {
             departureTime: effectiveDepartureTime,
 
             mode: form.mode,
-            driverHourlyRate: form.driverHourlyRate,
             maxTravelTimeMinutes: form.maxTravelTimeMinutes,
 
-            truck: form.truck
+            tractorId: form.tractorId,
+            semiTrailerId: form.semiTrailerId,
         }
 
         const response = await calculateRoute(payload)
@@ -87,6 +88,11 @@ function toOffsetDateTime(value: string) {
 
     return new Date(value).toISOString()
 }
+
+onMounted(async () => {
+    tractors.value = await getTractors()
+    semiTrailers.value = await getSemiTrailers()
+})
 
 </script>
 
@@ -146,17 +152,44 @@ function toOffsetDateTime(value: string) {
 
         </div>
 
-        <!-- DRIVER -->
-        <!-- <div>
+        <!-- VEHICULE -->
+        <div class="space-y-3">
 
-            <label class="block text-sm font-medium mb-2">
-                Coût chauffeur €/h
+            <label class="block text-sm font-medium">
+                Tracteur
             </label>
 
-            <input v-model="form.driverHourlyRate" type="number"
-                class="w-full rounded-xl border border-slate-300 p-3" />
+            <select v-model="form.tractorId" class="w-full rounded-xl border border-slate-300 p-3">
+                <option :value="null">
+                    Sélectionner un tracteur
+                </option>
 
-        </div> -->
+                <option v-for="tractor in tractors" :key="tractor.id" :value="tractor.id">
+                    {{ tractor.registration }}
+                    - {{ formatVehicleLabel(tractor.brand, tractor.model) }}
+                </option>
+            </select>
+
+        </div>
+
+        <div class="space-y-3">
+
+            <label class="block text-sm font-medium">
+                Semi-remorque
+            </label>
+
+            <select v-model="form.semiTrailerId" class="w-full rounded-xl border border-slate-300 p-3">
+                <option :value="null">
+                    Sélectionner une semi-remorque
+                </option>
+
+                <option v-for="semiTrailer in semiTrailers" :key="semiTrailer.id" :value="semiTrailer.id">
+                    {{ semiTrailer.registration }}
+                    - {{ formatVehicleLabel(semiTrailer.brand, semiTrailer.model) }}
+                </option>
+            </select>
+
+        </div>
 
         <!-- BUTTON -->
         <button @click="submit" class="w-full bg-slate-900 text-white rounded-xl p-3 hover:bg-slate-800 transition">

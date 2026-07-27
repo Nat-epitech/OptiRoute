@@ -44,3 +44,22 @@ export const formatDateTime = (value: string | null | undefined,): string => {
         timeStyle: "short",
     }).format(new Date(value))
 }
+
+export const formatDuration = (value: number | null): string => {
+    if (value === null) {
+        return "Non renseignée";
+    }
+
+    const hours = Math.floor(value / 3600);
+    const minutes = Math.round((value % 3600) / 60);
+
+    if (hours === 0) {
+        return `${minutes} min`;
+    }
+
+    if (minutes === 0) {
+        return `${hours} h`;
+    }
+
+    return `${hours} h ${String(minutes).padStart(2, "0")}`;
+}

@@ -1,8 +1,4 @@
-export type TransportStatus =
-    | "PLANNED"
-    | "IN_PROGRESS"
-    | "COMPLETED"
-    | "CANCELLED";
+import type { TransportStatus } from "@/types/planningType"
 
 export interface TransportDetail {
     id: number;

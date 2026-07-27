@@ -134,8 +134,8 @@ onMounted(() => {
         const zoom = map.getZoom()
         if (zoom < 6) {
             map.setZoom(6)
-        } else if (zoom > 12) {
-            map.setZoom(12)
+        } else if (zoom > 15) {
+            map.setZoom(15)
         }
     })
 

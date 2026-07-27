@@ -6,46 +6,40 @@ import {
     ChevronLeft,
     ChevronRight,
     Fuel,
-    Receipt,
-    User
+    Receipt
 } from 'lucide-vue-next'
 
-import AssignRouteModal from '@/components/ui/AssignRouteModal.vue'
+import AssignRouteModal from '@/components/maps/AssignRouteModal.vue'
 
-import type { RouteRequest } from '@/models/route/RouteRequest.ts'
-import type { RouteResponse } from '@/models/route/RouteResponse.ts'
+import type { CreateTransportRequest, CreateTransportFromRouteRequest, AssignTransport } from '@/models/transport/TransportRequest.ts'
+import type { RouteRequest, RouteResponse } from '@/models/route/Route'
 import type { Driver } from '@/models/Driver'
-import type { Vehicle } from '@/models/Vehicle'
 import type { Customer } from '@/models/Customer'
-import type { CreateTransportRequest, CreateTransportFromRouteRequest } from '@/models/transport/CreateTransportRequest.ts'
 
 import { createTransportFromRoute } from '@/api/transportApi.ts'
 import { getDrivers } from '@/api/driverApi'
-import { getVehicles } from '@/api/vehicleApi'
 import { getCustomers } from '@/api/customerApi'
 import { getApiErrorMessage } from '@/api/utils'
+
+import { formatDuration } from "@/utils/formatters"
 
 import { useNotification } from '@/composables/useNotification'
 
 const notification = useNotification()
 
 const drivers = ref<Driver[]>([])
-const vehicles = ref<Vehicle[]>([])
 const customers = ref<Customer[]>([])
 
 const loadAssignmentData = async () => {
     const [
         loadedDrivers,
-        loadedVehicles,
         loadedCustomers
     ] = await Promise.all([
         getDrivers(),
-        getVehicles(),
         getCustomers()
     ])
 
     drivers.value = loadedDrivers
-    vehicles.value = loadedVehicles
     customers.value = loadedCustomers
 }
 
@@ -93,26 +87,7 @@ function selectRoute(index: number) {
     emit('route-selected', index)
 }
 
-const formatDuration = (seconds: number) => {
-    const totalMinutes = Math.round(seconds / 60)
-    const hours = Math.floor(totalMinutes / 60)
-    const minutes = totalMinutes % 60
-
-    if (minutes === 0) {
-        return `${hours} h`
-    }
-
-    return `${hours} h ${minutes}`
-}
-
-interface AssignRouteData {
-    title: string
-    driverId: number
-    vehicleId?: number
-    customerId?: number
-}
-
-const handleAssignRoute = async (data: AssignRouteData) => {
+const handleAssignRoute = async (data: AssignTransport) => {
     const requestValue = routeRequest.value
 
     if (!requestValue || props.selectedIndex === undefined || !props.routeResponse) {
@@ -134,9 +109,11 @@ const handleAssignRoute = async (data: AssignRouteData) => {
 
     const transport: CreateTransportRequest = {
         name: data.title,
-        driverId: data.driverId,
-        vehicleId: data.vehicleId,
         customerId: data.customerId,
+
+        driverId: data.driverId,
+        tractorId: requestValue.tractorId,
+        semiTrailerId: requestValue.semiTrailerId,
 
         plannedStart,
         plannedEnd,
@@ -169,10 +146,7 @@ const handleAssignRoute = async (data: AssignRouteData) => {
     } catch (error) {
         notification.error(
             'Enregistrement impossible',
-            getApiErrorMessage(
-                error,
-                'Le transport n’a pas pu être ajouté au planning.'
-            )
+            getApiErrorMessage(error, 'Le transport n’a pas pu être ajouté au planning.')
         )
     } finally {
         showAssignModal.value = false
@@ -187,17 +161,10 @@ onMounted(async () => {
 <template>
     <div class="relative h-full">
         <div :class="[
-            'h-full w-[420px] bg-white shadow-2xl border-r',
+            'h-full w-[400px] bg-white shadow-2xl border-r',
             'transition-all duration-300 overflow-hidden',
-            open ? 'translate-x-0' : '-translate-x-full',
-        ]">
+            open ? 'translate-x-0' : '-translate-x-full']">
             <div class="h-full flex flex-col">
-                <!-- HEADER -->
-                <div class="p-4 border-b">
-                    <h1 class="text-xl font-bold">Rechercher un itinéraire</h1>
-                </div>
-
-                <!-- CONTENT -->
                 <div class="flex-1 overflow-y-auto p-4 space-y-6">
                     <!-- FORM -->
                     <RouteForm @route-calculated="onRouteCalculated" />
@@ -231,11 +198,6 @@ onMounted(async () => {
                                                 <Receipt class="h-4 w-4" />
                                                 <span>{{ route.costs.tollCost.toFixed(0) }} €</span>
                                             </div>
-
-                                            <!-- <div class="flex items-center gap-1">
-                                                <User class="h-4 w-4" />
-                                                <span>{{ route.costs.driverCost.toFixed(0) }} €</span>
-                                            </div> -->
                                         </div>
                                     </div>
 
@@ -251,7 +213,7 @@ onMounted(async () => {
                                     </div>
                                 </div>
 
-                                <!-- ✅ BOUTON UNIQUEMENT SI SELECTED -->
+                                <!-- Assign button -->
                                 <div v-if="index === selectedIndex" class="mt-4">
                                     <button
                                         class="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition"
@@ -264,24 +226,24 @@ onMounted(async () => {
                     </div>
                 </div>
             </div>
-
-            <!-- TOGGLE -->
-            <button @click="open = !open" :class="[
-                'absolute top-1/2 -translate-y-1/2 z-50',
-                'h-16 w-8 rounded-r-xl',
-                'bg-white border border-slate-200 border-l-0',
-                'shadow-lg hover:bg-slate-50',
-                'flex items-center justify-center',
-                'transition-all duration-300',
-                open ? 'left-[420px]' : 'left-0',
-            ]">
-                <ChevronLeft v-if="open" class="h-5 w-5 text-slate-600" />
-                <ChevronRight v-else class="h-5 w-5 text-slate-600" />
-            </button>
         </div>
+
+        <!-- TOGGLE -->
+        <button @click="open = !open" :class="[
+            'absolute top-1/2 -translate-y-1/2 z-50',
+            'h-16 w-8 rounded-r-xl',
+            'bg-white border border-slate-200 border-l-0',
+            'shadow-lg hover:bg-slate-50',
+            'flex items-center justify-center',
+            'transition-all duration-300',
+            open ? 'left-[400px]' : 'left-0',
+        ]">
+            <ChevronLeft v-if="open" class="h-5 w-5 text-slate-600" />
+            <ChevronRight v-else class="h-5 w-5 text-slate-600" />
+        </button>
+
     </div>
 
-    <AssignRouteModal :show="showAssignModal" :drivers="drivers" :vehicles="vehicles" :customers="customers"
-        :start-date="assignStartDate" :end-date="assignEndDate" @close="showAssignModal = false"
-        @submit="handleAssignRoute" />
+    <AssignRouteModal :show="showAssignModal" :drivers="drivers" :customers="customers" :start-date="assignStartDate"
+        :end-date="assignEndDate" @close="showAssignModal = false" @submit="handleAssignRoute" />
 </template>

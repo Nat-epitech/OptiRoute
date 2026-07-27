@@ -24,7 +24,7 @@ watch(inputValue, (value) => {
 const fetchPlaces = debounce(
     async (value: string) => {
 
-        if (!value || value.length < 4) {
+        if (!value || value.length < 3) {
             results.value = []
             return
         }
@@ -32,7 +32,6 @@ const fetchPlaces = debounce(
         loading.value = true
 
         try {
-            console.log('fetching places for', value)
             results.value = await autocompletePlaces(value)
         } catch (e) {
             console.error(e)
@@ -54,7 +53,7 @@ async function selectPlace(item: any) {
         const place = await geocodePlace(item.id)
         const label = place.address.label
 
-        // ❗ crucial : on stop le debounce en cours
+        // Important: on stop le debounce en cours
         fetchPlaces.cancel?.()
 
         inputValue.value = label
