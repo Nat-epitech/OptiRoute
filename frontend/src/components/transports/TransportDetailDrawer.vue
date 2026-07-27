@@ -1,13 +1,150 @@
+<script setup lang="ts">
+import { computed, ref, watch } from "vue";
+
+import { Trash2 } from "lucide-vue-next"
+
+import { getTransportById } from "@/api/planningApi";
+
+import type { TransportDetail } from "@/models/transport/TransportDetail";
+
+import TransportCostRow from "@/components/transports/TransportCostRow.vue";
+import TransportDetailBlock from "@/components/transports/TransportDetailBlock.vue";
+import TransportDetailItem from "@/components/transports/TransportDetailItem.vue";
+import TransportMetricCard from "@/components/transports/TransportMetricCard.vue";
+import TransportRouteMap from '@/components/transports/TransportRouteMap.vue'
+import DeleteTransportModal from "@/components/transports/DeleteTransportModal.vue";
+import AppDetailDrawer from "@/components/ui/AppDetailDrawer.vue"
+
+import { formatVehicleLabel } from "@/utils/vehicleUtils"
+import { formatDuration, formatCurrency, formatDateTime, formatDistance } from "@/utils/formatters"
+
+const showDeleteModal = ref(false)
+
+const askDeleteTransport = () => {
+    if (!transport.value) {
+        return
+    }
+
+    showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+    showDeleteModal.value = false
+}
+
+const handleTransportDeleted = () => {
+    showDeleteModal.value = false
+
+    emit('deleted')
+    emit('close')
+}
+
+const props = defineProps<{
+    open: boolean;
+    transportId: number | null;
+}>();
+
+const emit = defineEmits<{
+    close: [];
+    deleted: []
+}>();
+
+const transport = ref<TransportDetail | null>(null);
+const loading = ref(false);
+const error = ref<string | null>(null);
+
+const customerAddress = computed<string | null>(() => {
+    if (!transport.value) {
+        return null;
+    }
+
+    return [
+        transport.value.customerAddress,
+        transport.value.customerCity,
+    ].filter((value): value is string => Boolean(value)).join(", ") || null;
+});
+
+const statusLabel = computed<string>(() => {
+    if (!transport.value) {
+        return "";
+    }
+
+    const labels: Record<string, string> = {
+        PLANNED: "Planifiée",
+        IN_PROGRESS: "En cours",
+        COMPLETED: "Terminée",
+        CANCELLED: "Annulée",
+    };
+
+    return labels[transport.value.status] ?? transport.value.status;
+});
+
+const statusClasses = computed<string>(() => {
+    if (!transport.value) {
+        return "bg-slate-100 text-slate-700";
+    }
+
+    const classes: Record<string, string> = {
+        PLANNED: "bg-blue-100 text-blue-700",
+        IN_PROGRESS: "bg-amber-100 text-amber-700",
+        COMPLETED: "bg-emerald-100 text-emerald-700",
+        CANCELLED: "bg-red-100 text-red-700",
+    };
+
+    return (
+        classes[transport.value.status]
+        ?? "bg-slate-100 text-slate-700"
+    );
+});
+
+async function loadTransport(): Promise<void> {
+    if (props.transportId === null) {
+        transport.value = null;
+        return;
+    }
+
+    loading.value = true;
+    error.value = null;
+
+    try {
+        transport.value = await getTransportById(props.transportId);
+    } catch (exception) {
+        console.error(exception);
+
+        transport.value = null;
+        error.value = "Une erreur est survenue pendant le chargement.";
+    } finally {
+        loading.value = false;
+    }
+}
+
+watch(
+    () => [props.open, props.transportId] as const,
+    ([open]) => {
+        if (open) {
+            void loadTransport();
+        } else {
+            transport.value = null;
+            error.value = null;
+        }
+    },
+    {
+        immediate: true,
+    }
+);
+</script>
+
 <template>
     <AppDetailDrawer :open="open" :title="transport?.name ?? 'Détail du transport'" @close="emit('close')">
+
         <template #header>
             <div class="min-w-0">
-                <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
-                    Transport
+                <p class="text-xs font-medium uppercase tracking-wide text-blue-600">
+                    Détails de l'itinéraire
                 </p>
 
                 <h2 class="mt-1 truncate text-lg font-semibold text-slate-900">
-                    {{ transport?.name ?? "Détail du transport" }}
+                    {{ transport?.name ?? "Chargement..." }}
                 </h2>
 
                 <p v-if="transport" class="mt-0.5 truncate text-sm text-slate-500">
@@ -71,11 +208,16 @@
                     <TransportDetailBlock title="Chauffeur" :primary="transport.driverName"
                         :secondary="transport.driverEmail" />
 
-                    <TransportDetailBlock title="Véhicule" :primary="transport.vehicleRegistration"
-                        :secondary="vehicleLabel" />
-
                     <TransportDetailBlock title="Client" :primary="transport.customerName"
                         :secondary="customerAddress" />
+
+                    <TransportDetailBlock title="Tracteur" :primary="transport.tractorRegistration"
+                        :secondary="formatVehicleLabel(transport.tractorBrand, transport.tractorModel)" />
+
+                    <TransportDetailBlock title="Semi-remorque" :primary="transport.semiTrailerRegistration"
+                        :secondary="formatVehicleLabel(transport.semiTrailerBrand, transport.semiTrailerModel)" />
+
+
                 </div>
             </section>
 
@@ -174,11 +316,13 @@
             </section>
         </div>
 
+        <!-- Actions -->
         <template v-if="transport" #footer>
-            <div class="flex justify-end">
+            <div class="flex items-center justify-between gap-3">
                 <button type="button"
-                    class="rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
+                    class="inline-flex items-center gap-2 rounded-xl border border-red-200 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
                     @click="askDeleteTransport">
+                    <Trash2 class="h-4 w-4" />
                     Supprimer
                 </button>
             </div>
@@ -188,207 +332,3 @@
     <DeleteTransportModal :show="showDeleteModal" :transport="transport" @close="closeDeleteModal"
         @deleted="handleTransportDeleted" />
 </template>
-
-
-<script setup lang="ts">
-import { computed, ref, watch } from "vue";
-
-import { getTransportById } from "@/api/planningApi";
-
-import TransportCostRow from "@/components/transports/TransportCostRow.vue";
-import TransportDetailBlock from "@/components/transports/TransportDetailBlock.vue";
-import TransportDetailItem from "@/components/transports/TransportDetailItem.vue";
-import TransportMetricCard from "@/components/transports/TransportMetricCard.vue";
-import TransportRouteMap from '@/components/transports/TransportRouteMap.vue'
-
-import DeleteTransportModal from "@/components/transports/DeleteTransportModal.vue";
-import AppDetailDrawer from "@/components/ui/AppDetailDrawer.vue"
-
-import type { TransportDetail } from "@/models/planning/transportDetail";
-
-const showDeleteModal = ref(false)
-
-const askDeleteTransport = () => {
-    if (!transport.value) {
-        return
-    }
-
-    showDeleteModal.value = true
-}
-
-const closeDeleteModal = () => {
-    showDeleteModal.value = false
-}
-
-const handleTransportDeleted = () => {
-    showDeleteModal.value = false
-
-    emit('deleted')
-    emit('close')
-}
-
-const props = defineProps<{
-    open: boolean;
-    transportId: number | null;
-}>();
-
-const emit = defineEmits<{
-    close: [];
-    deleted: []
-}>();
-
-const transport = ref<TransportDetail | null>(null);
-const loading = ref(false);
-const error = ref<string | null>(null);
-
-const currencyFormatter = new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
-
-const vehicleLabel = computed<string | null>(() => {
-    if (!transport.value) {
-        return null;
-    }
-
-    return [
-        transport.value.vehicleBrand,
-        transport.value.vehicleModel,
-    ]
-        .filter((value): value is string => Boolean(value))
-        .join(" ") || null;
-});
-
-const customerAddress = computed<string | null>(() => {
-    if (!transport.value) {
-        return null;
-    }
-
-    return [
-        transport.value.customerAddress,
-        transport.value.customerCity,
-    ]
-        .filter((value): value is string => Boolean(value))
-        .join(", ") || null;
-});
-
-const statusLabel = computed<string>(() => {
-    if (!transport.value) {
-        return "";
-    }
-
-    const labels: Record<string, string> = {
-        PLANNED: "Planifiée",
-        IN_PROGRESS: "En cours",
-        COMPLETED: "Terminée",
-        CANCELLED: "Annulée",
-    };
-
-    return labels[transport.value.status] ?? transport.value.status;
-});
-
-const statusClasses = computed<string>(() => {
-    if (!transport.value) {
-        return "bg-slate-100 text-slate-700";
-    }
-
-    const classes: Record<string, string> = {
-        PLANNED: "bg-blue-100 text-blue-700",
-        IN_PROGRESS: "bg-amber-100 text-amber-700",
-        COMPLETED: "bg-emerald-100 text-emerald-700",
-        CANCELLED: "bg-red-100 text-red-700",
-    };
-
-    return (
-        classes[transport.value.status]
-        ?? "bg-slate-100 text-slate-700"
-    );
-});
-
-async function loadTransport(): Promise<void> {
-    if (props.transportId === null) {
-        transport.value = null;
-        return;
-    }
-
-    loading.value = true;
-    error.value = null;
-
-    try {
-        transport.value = await getTransportById(props.transportId);
-    } catch (exception) {
-        console.error(exception);
-
-        transport.value = null;
-        error.value = "Une erreur est survenue pendant le chargement.";
-    } finally {
-        loading.value = false;
-    }
-}
-
-function formatDateTime(value: string | null): string {
-    if (!value) {
-        return "Non renseigné";
-    }
-
-    return new Intl.DateTimeFormat("fr-FR", {
-        dateStyle: "short",
-        timeStyle: "short",
-    }).format(new Date(value));
-}
-
-function formatCurrency(value: number | null): string {
-    if (value === null) {
-        return "Non renseigné";
-    }
-
-    return currencyFormatter.format(value);
-}
-
-function formatDistance(value: number | null): string {
-    if (value === null) {
-        return "Non renseignée";
-    }
-
-    return `${(value / 1000).toLocaleString("fr-FR", {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 1,
-    })} km`;
-}
-
-function formatDuration(value: number | null): string {
-    if (value === null) {
-        return "Non renseignée";
-    }
-
-    const hours = Math.floor(value / 3600);
-    const minutes = Math.round((value % 3600) / 60);
-
-    if (hours === 0) {
-        return `${minutes} min`;
-    }
-
-    if (minutes === 0) {
-        return `${hours} h`;
-    }
-
-    return `${hours} h ${String(minutes).padStart(2, "0")}`;
-}
-
-watch(
-    () => [props.open, props.transportId] as const,
-    ([open]) => {
-        if (open) {
-            void loadTransport();
-        } else {
-            transport.value = null;
-            error.value = null;
-        }
-    },
-    {
-        immediate: true,
-    }
-);
-</script>

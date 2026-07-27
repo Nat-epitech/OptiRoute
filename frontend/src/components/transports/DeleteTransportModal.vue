@@ -48,10 +48,7 @@ const confirmDelete = async () => {
     } catch (error) {
         notification.error(
             'Suppression impossible',
-            getApiErrorMessage(
-                error,
-                'Le transport n’a pas pu être supprimé.'
-            )
+            getApiErrorMessage(error, 'Le transport n’a pas pu être supprimé.')
         )
     } finally {
         deleting.value = false

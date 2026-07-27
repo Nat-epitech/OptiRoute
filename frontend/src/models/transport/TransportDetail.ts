@@ -15,10 +15,15 @@ export interface TransportDetail {
     driverName: string | null;
     driverEmail: string | null;
 
-    vehicleId: number | null;
-    vehicleRegistration: string | null;
-    vehicleBrand: string | null;
-    vehicleModel: string | null;
+    tractorId: number | null;
+    tractorRegistration: string | null;
+    tractorBrand: string | null;
+    tractorModel: string | null;
+
+    semiTrailerId: number | null;
+    semiTrailerRegistration: string | null;
+    semiTrailerBrand: string | null;
+    semiTrailerModel: string | null;
 
     customerId: number | null;
     customerName: string | null;

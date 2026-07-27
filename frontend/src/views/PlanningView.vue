@@ -18,7 +18,7 @@ import PlanningGrid from "@/components/planning/PlanningGrid.vue";
 import PlanningToolbar from "@/components/planning/PlanningToolbar.vue";
 import TransportDetailDrawer from "@/components/transports/TransportDetailDrawer.vue";
 
-import { usePlanning } from "@/models/planning/usePlanning";
+import { usePlanning } from "@/utils/planning";
 
 import type {
     PlanningDay,

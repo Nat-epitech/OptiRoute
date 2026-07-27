@@ -6,6 +6,17 @@ export const formatNumber = (value: number | null, suffix = "", maximumFractionD
     return `${value.toLocaleString("fr-FR", { maximumFractionDigits })}${suffix}`
 }
 
+export const formatDistance = (value: number | null): string => {
+    if (value === null) {
+        return "Non renseignée";
+    }
+
+    return `${(value / 1000).toLocaleString("fr-FR", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1,
+    })} km`;
+}
+
 export const formatCurrency = (value: number | null): string => {
     if (value === null) {
         return "Non renseigné"
