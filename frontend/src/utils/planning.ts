@@ -24,3 +24,11 @@ export function usePlanning() {
 
     return { loading, transports, error, loadPlanning };
 }
+
+export function createPlanningGridStyle(dayCount: number) {
+    return {
+        gridTemplateColumns: `240px 120px repeat(${dayCount}, minmax(220px, 1fr))`,
+        minWidth: `${240 + 120 + dayCount * 220}px`,
+        width: '100%',
+    }
+}

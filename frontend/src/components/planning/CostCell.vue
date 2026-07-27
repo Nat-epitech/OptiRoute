@@ -7,7 +7,7 @@
       </p>
 
       <p class="mt-1 text-[11px] text-slate-400">
-        Semaine
+        Coûts
       </p>
     </div>
   </div>

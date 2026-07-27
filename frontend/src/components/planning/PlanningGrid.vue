@@ -41,14 +41,14 @@
     </div>
 
     <div v-else>
-      <DriverRow v-for="driver in drivers" :key="driver.id" :driver="driver" :days="days"
+      <PlanningRow v-for="driver in drivers" :key="driver.id" :driver="driver" :days="days"
         @transport-select="emit('transport-select', $event)" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import DriverRow from "@/components/planning/DriverRow.vue";
+import PlanningRow from "@/components/planning/PlanningRow.vue";
 import PlanningHeader from "@/components/planning/PlanningHeader.vue";
 
 import type {

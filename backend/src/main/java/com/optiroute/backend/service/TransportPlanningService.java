@@ -2,7 +2,7 @@ package com.optiroute.backend.service;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.List;
 
 import com.optiroute.backend.dto.response.planning.TransportPlanningResponse;
@@ -10,36 +10,33 @@ import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.entity.TransportEstimate;
 import com.optiroute.backend.repository.DriverRepository;
 import com.optiroute.backend.repository.TransportRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import com.optiroute.backend.repository.TransportEstimateRepository;
 
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class TransportPlanningService {
 
     private final TransportRepository transportRepository;
     private final DriverRepository driverRepository;
     private final TransportEstimateRepository transportEstimateRepository;
 
-    public TransportPlanningService(TransportRepository transportRepository, DriverRepository driverRepository,
-            TransportEstimateRepository transportEstimateRepository) {
+    // Récupére le planning des transports pour une plage de date
+    private static final ZoneId PLANNING_ZONE = ZoneId.of("Europe/Paris");
 
-        this.transportRepository = transportRepository;
-        this.driverRepository = driverRepository;
-        this.transportEstimateRepository = transportEstimateRepository;
-    }
-
-    // Récupére le planning des transports pour une date donnée (1 jour)
     public List<TransportPlanningResponse> getPlanning(LocalDate startDate, LocalDate endDate) {
         if (endDate.isBefore(startDate) || endDate.isEqual(startDate)) {
             throw new IllegalArgumentException("endDate must be after startDate");
         }
 
-        OffsetDateTime start = startDate.atStartOfDay().atOffset(ZoneOffset.UTC);
-        OffsetDateTime end = endDate.atStartOfDay().atOffset(ZoneOffset.UTC);
+        OffsetDateTime start = startDate.atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
+        OffsetDateTime end = endDate.atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
 
         return transportRepository.findByPlannedStartGreaterThanEqualAndPlannedStartLessThan(start, end).stream().map(transport -> {
-
             Driver driver = driverRepository.findById(transport.getDriverId()).orElseThrow();
             TransportEstimate estimate = transportEstimateRepository.findByTransportId(transport.getId()).orElse(null);
 

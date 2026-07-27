@@ -24,14 +24,14 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+
 import type { PlanningDay } from "@/models/planning/planning";
+import { createPlanningGridStyle } from "@/utils/planning";
 
 const props = defineProps<{ days: PlanningDay[]; }>();
 
-const gridStyle = computed(() => ({
-  gridTemplateColumns: `240px 120px repeat(${props.days.length}, minmax(220px, 1fr))`,
-  minWidth: `${240 + 120 + props.days.length * 220}px`,
-  width: '100%',
-}));
+const gridStyle = computed(() =>
+  createPlanningGridStyle(props.days.length)
+)
 
 </script>

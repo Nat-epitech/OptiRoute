@@ -1,10 +1,10 @@
 <template>
     <div class="relative flex h-full min-h-0 flex-col overflow-hidden bg-slate-100">
-        <PlanningToolbar :week-label="weekLabel" @previous-week="showPreviousWeek" @today="showCurrentWeek"
-            @next-week="showNextWeek" />
+        <PlanningToolbar :start-date="selectedStartDate" :end-date="selectedEndDate" @update:range="handleRangeChange"
+            @today-range="applyTodayRange" />
 
-        <PlanningGrid :drivers="planningDrivers" :days="days" :loading="loading" :error="error" @retry="loadCurrentWeek"
-            @transport-select="openTransport" />
+        <PlanningGrid :drivers="planningDrivers" :days="days" :loading="loading" :error="error"
+            @retry="loadCurrentPeriod" @transport-select="openTransport" />
 
         <TransportDetailDrawer :open="selectedTransportId !== null" :transport-id="selectedTransportId"
             @close="closeTransport" @deleted="handleTransportDeleted" />
@@ -20,73 +20,58 @@ import TransportDetailDrawer from "@/components/transports/TransportDetailDrawer
 
 import { usePlanning } from "@/utils/planning";
 
-import type {
-    PlanningDay,
-    PlanningDriver,
-    PlanningTransport,
-} from "@/models/planning/planning";
+import type { PlanningDay, PlanningDriver, PlanningTransport, } from "@/models/planning/planning";
+
 
 const selectedTransportId = ref<number | null>(null);
 
-function openTransport(transportId: number): void {
-    selectedTransportId.value = transportId;
-}
+function openTransport(transportId: number): void { selectedTransportId.value = transportId; }
 
-function closeTransport(): void {
-    selectedTransportId.value = null;
-}
+function closeTransport(): void { selectedTransportId.value = null; }
 
-const selectedDate = ref<Date>(new Date());
 
-const {
-    transports,
-    loading,
-    error,
-    loadPlanning,
-} = usePlanning();
+const { transports, loading, error, loadPlanning } = usePlanning();
 
-const handleTransportDeleted = async () => {
-    closeTransport()
-    await loadCurrentWeek()
-}
+const handleTransportDeleted = async (): Promise<void> => {
+    closeTransport();
+    await loadCurrentPeriod();
+};
 
-/**
- * Retourne une nouvelle date, sans modifier la date reçue.
+/*
+ * Utilitaires de dates.
  */
 function addDays(date: Date, numberOfDays: number): Date {
     const result = new Date(date);
+
     result.setDate(result.getDate() + numberOfDays);
 
     return result;
 }
 
-/**
- * Retourne le lundi de la semaine contenant la date reçue.
- */
-function getMonday(date: Date): Date {
+function startOfDay(date: Date): Date {
     const result = new Date(date);
+
     result.setHours(0, 0, 0, 0);
-
-    const day = result.getDay();
-    const differenceFromMonday = day === 0 ? -6 : 1 - day;
-
-    result.setDate(result.getDate() + differenceFromMonday);
 
     return result;
 }
 
-/**
- * Transforme une date locale en YYYY-MM-DD.
- *
- * On ne passe pas par toISOString(), car toISOString() transforme
- * la date en UTC et peut décaler le jour selon le fuseau horaire.
- */
 function formatDateKey(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
 
     return `${year}-${month}-${day}`;
+}
+
+function parseDateKey(value: string): Date {
+    const [year, month, day] = value.split("-").map(Number);
+
+    if (year === undefined || month === undefined || day === undefined || Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) {
+        throw new Error(`Date invalide : ${value}`);
+    }
+
+    return new Date(year, month - 1, day);
 }
 
 function capitalize(value: string): string {
@@ -97,13 +82,27 @@ function capitalize(value: string): string {
     return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-const weekStart = computed<Date>(() => {
-    return getMonday(selectedDate.value);
+const today = startOfDay(new Date());
+
+const selectedStartDate = ref<Date>(
+    new Date(today)
+);
+
+const selectedEndDate = ref<Date>(
+    addDays(today, 2)
+);
+
+const maximumEndDate = computed<Date>(() => {
+    return addDays(selectedStartDate.value, 6);
 });
 
-/* La date de fin envoyée au backend est exclusive */
-const weekEndExclusive = computed<Date>(() => {
-    return addDays(weekStart.value, 7);
+
+const numberOfDisplayedDays = computed<number>(() => {
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+
+    const difference = selectedEndDate.value.getTime() - selectedStartDate.value.getTime();
+
+    return Math.floor(difference / millisecondsPerDay) + 1;
 });
 
 const days = computed<PlanningDay[]>(() => {
@@ -113,66 +112,29 @@ const days = computed<PlanningDay[]>(() => {
         month: "2-digit",
     });
 
-    return Array.from({ length: 7 }, (_, index) => {
-        const date = addDays(weekStart.value, index);
+    return Array.from(
+        { length: numberOfDisplayedDays.value, },
+        (_, index) => {
+            const date = addDays(selectedStartDate.value, index);
 
-        return {
-            key: formatDateKey(date),
-            label: capitalize(
-                formatter
-                    .format(date)
-                    .replace(".", "")
-            ),
-            date,
-        };
-    });
+            return {
+                key: formatDateKey(date),
+                label: capitalize(
+                    formatter
+                        .format(date)
+                        .replace(".", "")
+                ),
+                date,
+            };
+        }
+    );
 });
 
-const weekLabel = computed<string>(() => {
-    const start = weekStart.value;
-    const end = addDays(start, 6);
-
-    const startDay = String(start.getDate()).padStart(2, "0");
-    const endDay = String(end.getDate()).padStart(2, "0");
-
-    const startMonth = new Intl.DateTimeFormat("fr-FR", {
-        month: "long",
-    }).format(start);
-
-    const endMonth = new Intl.DateTimeFormat("fr-FR", {
-        month: "long",
-    }).format(end);
-
-    const startYear = start.getFullYear();
-    const endYear = end.getFullYear();
-
-    if (
-        start.getMonth() === end.getMonth()
-        && startYear === endYear
-    ) {
-        return `${startDay} – ${endDay} ${endMonth} ${endYear}`;
-    }
-
-    if (startYear === endYear) {
-        return `${startDay} ${startMonth} – ${endDay} ${endMonth} ${endYear}`;
-    }
-
-    return `${startDay} ${startMonth} ${startYear} – ${endDay} ${endMonth} ${endYear}`;
-});
-
-/**
- * Transformation :
- *
- * PlanningTransport[] -> PlanningDriver[]
- *
- * Tout les transports sont regroupés par chauffeur puis par journée.
- */
 const planningDrivers = computed<PlanningDriver[]>(() => {
     const driversMap = new Map<number, PlanningDriver>();
 
     const sortedTransports = [...transports.value].sort((first, second) => {
-        return new Date(first.plannedStart).getTime()
-            - new Date(second.plannedStart).getTime();
+        return (new Date(first.plannedStart).getTime() - new Date(second.plannedStart).getTime());
     });
 
     sortedTransports.forEach((transport: PlanningTransport) => {
@@ -189,48 +151,57 @@ const planningDrivers = computed<PlanningDriver[]>(() => {
             driversMap.set(transport.driverId, driver);
         }
 
+        const dayKey = formatDateKey(new Date(transport.plannedStart));
 
-        const dayKey = transport.plannedStart.slice(0, 10);
         if (!driver.days[dayKey]) {
             driver.days[dayKey] = [];
         }
 
         driver.days[dayKey].push(transport);
+
         driver.totalCost += transport.estimatedTotalCost ?? 0;
     });
 
     return Array.from(driversMap.values()).sort((first, second) => {
-        return first.name.localeCompare(second.name, "fr", {
-            sensitivity: "base",
-        });
+        return first.name.localeCompare(second.name, "fr", { sensitivity: "base" });
     });
 });
 
-async function loadCurrentWeek(): Promise<void> {
+async function loadCurrentPeriod(): Promise<void> {
+    const endDateExclusive = addDays(selectedEndDate.value, 1);
+
     await loadPlanning({
-        startDate: formatDateKey(weekStart.value),
-        endDate: formatDateKey(weekEndExclusive.value),
+        startDate: formatDateKey(selectedStartDate.value),
+        endDate: formatDateKey(endDateExclusive),
     });
 }
 
-function showPreviousWeek(): void {
-    selectedDate.value = addDays(weekStart.value, -7);
+function handleRangeChange(range: [Date, Date]): void {
+    const [start, requestedEnd] = range;
+
+    const normalizedStart = startOfDay(start);
+    const normalizedEnd = startOfDay(requestedEnd);
+
+    const maximumEnd = addDays(
+        normalizedStart,
+        6
+    );
+
+    selectedStartDate.value = normalizedStart;
+
+    selectedEndDate.value = normalizedEnd > maximumEnd ? maximumEnd : normalizedEnd;
 }
 
-function showNextWeek(): void {
-    selectedDate.value = addDays(weekStart.value, 7);
+function applyTodayRange(additionalDays: number): void {
+    const currentToday = startOfDay(new Date());
+
+    selectedStartDate.value = currentToday;
+
+    selectedEndDate.value = addDays(currentToday, additionalDays);
 }
 
-function showCurrentWeek(): void {
-    selectedDate.value = new Date();
-}
-
-/*  Le chargement est exécuté à l'ouverture de la vue et à chaque changement de semaine. */
 watch(
-    weekStart,
-    () => {
-        void loadCurrentWeek();
-    },
+    [() => formatDateKey(selectedStartDate.value), () => formatDateKey(selectedEndDate.value),], () => { void loadCurrentPeriod(); },
     {
         immediate: true,
     }
