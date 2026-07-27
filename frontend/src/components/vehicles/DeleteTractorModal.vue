@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import { deleteTractor } from '@/api/vehicle/tractorApi'
 import { getApiErrorMessage } from '@/api/utils'
 
-import type { Tractor } from '@/models/vehicle/Tractor'
+import type { TractorSummary } from '@/models/vehicle/Tractor'
 
 import ConfirmDeleteModal from '@/components/ui/ConfirmDeleteModal.vue'
 import { useNotification } from '@/composables/useNotification'
@@ -13,7 +13,7 @@ const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
-    tractor: Tractor | null
+    tractor: TractorSummary | null
 }>()
 
 const emit = defineEmits<{

@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import { deleteSemiTrailer } from '@/api/vehicle/semiTrailerApi'
 import { getApiErrorMessage } from '@/api/utils'
 
-import type { SemiTrailer } from '@/models/vehicle/SemiTrailer'
+import type { SemiTrailerSummary } from '@/models/vehicle/SemiTrailer'
 
 import ConfirmDeleteModal from '@/components/ui/ConfirmDeleteModal.vue'
 import { useNotification } from '@/composables/useNotification'
@@ -13,7 +13,7 @@ const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
-    semiTrailer: SemiTrailer | null
+    semiTrailer: SemiTrailerSummary | null
 }>()
 
 const emit = defineEmits<{
