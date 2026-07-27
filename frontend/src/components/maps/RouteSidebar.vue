@@ -6,7 +6,8 @@ import {
     ChevronLeft,
     ChevronRight,
     Fuel,
-    Receipt
+    Receipt,
+    Car
 } from 'lucide-vue-next'
 
 import AssignRouteModal from '@/components/maps/AssignRouteModal.vue'
@@ -76,8 +77,8 @@ const assignEndDate = computed(() => {
     const start = new Date(routeRequest.value.departureTime)
     const route = props.routeResponse.routes[props.selectedIndex]
 
-    if (route != undefined && route.durationSeconds !== undefined) {
-        start.setSeconds(start.getSeconds() + route.durationSeconds)
+    if (route != undefined && route.duration !== undefined) {
+        start.setSeconds(start.getSeconds() + route.duration)
     }
 
     return start.toISOString()
@@ -198,13 +199,18 @@ onMounted(async () => {
                                                 <Receipt class="h-4 w-4" />
                                                 <span>{{ route.costs.tollCost.toFixed(0) }} €</span>
                                             </div>
+
+                                            <div class="flex items-center gap-1">
+                                                <Car class="h-4 w-4" />
+                                                <span>{{ formatDuration(route.duration - route.baseDuration) }}</span>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <!-- RIGHT -->
                                     <div class="text-right">
                                         <div class="text-lg font-semibold text-slate-800">
-                                            {{ formatDuration(route.durationSeconds) }}
+                                            {{ formatDuration(route.duration) }}
                                         </div>
 
                                         <div class="text-sm text-slate-500 mt-1">

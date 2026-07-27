@@ -271,9 +271,6 @@ watch(
                     <TransportMetricCard label="Distance" :value="formatDistance(transport.distanceMeters)" />
 
                     <TransportMetricCard label="Durée estimée" :value="formatDuration(transport.durationSeconds)" />
-
-                    <TransportMetricCard label="Durée avec trafic"
-                        :value="formatDuration(transport.trafficDurationSeconds)" />
                 </div>
             </section>
 

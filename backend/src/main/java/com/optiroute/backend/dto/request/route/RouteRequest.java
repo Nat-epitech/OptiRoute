@@ -16,8 +16,6 @@ public class RouteRequest {
 
     private Integer maxTravelTimeMinutes;
 
-    private Double driverHourlyRate;
-
     private Long tractorId;
     private Long semiTrailerId;
 
@@ -59,14 +57,6 @@ public class RouteRequest {
 
     public void setMaxTravelTimeMinutes(Integer maxTravelTimeMinutes) {
         this.maxTravelTimeMinutes = maxTravelTimeMinutes;
-    }
-
-    public Double getDriverHourlyRate() {
-        return driverHourlyRate;
-    }
-
-    public void setDriverHourlyRate(Double driverHourlyRate) {
-        this.driverHourlyRate = driverHourlyRate;
     }
 
     public Long getTractorId() {

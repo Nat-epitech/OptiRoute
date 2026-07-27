@@ -2,7 +2,8 @@ package com.optiroute.backend.dto.response.route;
 
 public class RoutesDto {
 
-    private long durationSeconds;
+    private long duration;
+    private long baseDuration;
     private long distanceMeters;
 
     private double originLat;
@@ -15,12 +16,12 @@ public class RoutesDto {
     private RouteCostDetailsDto costs;
     private String rawHereData;
 
-    public long getDurationSeconds() {
-        return durationSeconds;
+    public long getDuration() {
+        return duration;
     }
 
-    public void setDurationSeconds(long durationSeconds) {
-        this.durationSeconds = durationSeconds;
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 
     public long getDistanceMeters() {
@@ -85,5 +86,13 @@ public class RoutesDto {
 
     public void setDestinationLng(double destinationLng) {
         this.destinationLng = destinationLng;
+    }
+
+    public long getBaseDuration() {
+        return baseDuration;
+    }
+
+    public void setBaseDuration(long baseDuration) {
+        this.baseDuration = baseDuration;
     }
 }

@@ -19,7 +19,8 @@ export interface RouteResponse {
 }
 
 export interface RoutesDto {
-    durationSeconds: number
+    duration: number
+    baseDuration: number
     distanceMeters: number
 
     costs: RouteCostDetailsDto

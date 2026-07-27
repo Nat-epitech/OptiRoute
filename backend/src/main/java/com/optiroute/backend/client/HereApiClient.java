@@ -26,7 +26,7 @@ public class HereApiClient {
                 .queryParam("origin", origin)
                 .queryParam("destination", destination)
                 .queryParam("alternatives", 2)
-                .queryParam("return", "polyline,summary")
+                .queryParam("return", "polyline,summary,tolls")
                 .queryParam("transportMode", "truck")
                 .queryParam("routingMode", "fast")
 

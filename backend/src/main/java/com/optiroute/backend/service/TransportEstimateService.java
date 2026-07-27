@@ -31,7 +31,7 @@ public class TransportEstimateService {
 		estimate.setRoutingMode("FASTEST");
 		estimate.setDepartureTime(transport.getPlannedStart());
 		estimate.setDistanceMeters(bestRoute.getDistanceMeters());
-		estimate.setDurationSeconds(bestRoute.getDurationSeconds());
+		estimate.setDurationSeconds(bestRoute.getDuration());
 
 		// TODO : lorsque HERE exposera la durée avec trafic
 		estimate.setTrafficDurationSeconds(null);
@@ -56,7 +56,7 @@ public class TransportEstimateService {
 		estimate.setDepartureTime(transport.getPlannedStart());
 
 		estimate.setDistanceMeters(route.getDistanceMeters());
-		estimate.setDurationSeconds(route.getDurationSeconds());
+		estimate.setDurationSeconds(route.getDuration());
 		estimate.setTrafficDurationSeconds(null);
 		estimate.setPolyline(route.getPolyline());
 

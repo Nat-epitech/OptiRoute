@@ -1,7 +1,6 @@
 package com.optiroute.backend.service;
 
 import com.optiroute.backend.dto.request.route.RouteRequest;
-import com.optiroute.backend.dto.response.*;
 import com.optiroute.backend.dto.response.route.RouteCostDetailsDto;
 import com.optiroute.backend.dto.response.route.RouteResponse;
 import com.optiroute.backend.dto.response.route.RoutesDto;
@@ -48,18 +47,19 @@ public class RouteOptimizationService {
         // Cost calculation
         double fuelPrice = fuelPriceService.getAverageDieselPrice();
         double consumption = truckConfiguration.getAverageConsumption().doubleValue();
-        double driverRate = request.getDriverHourlyRate();
+        double driverRate = 0;
 
         // Enriched DTOs
         List<RoutesDto> routes = new ArrayList<>();
         for (HereRouteParser.ParsedRoute parsed : parsedRoutes) {
             double km = parsed.distanceMeters / 1000.0;
-            double hours = parsed.durationSeconds / 3600.0;
+            double hours = parsed.duration / 3600.0;
             RouteCostDetailsDto costs = routeCostService.calculateCosts(km, hours, consumption, fuelPrice, parsed.tollCost, driverRate);
 
             RoutesDto dto = new RoutesDto();
             dto.setDistanceMeters(parsed.distanceMeters);
-            dto.setDurationSeconds(parsed.durationSeconds);
+            dto.setDuration(parsed.duration);
+            dto.setBaseDuration(parsed.baseDuration);
             dto.setPolyline(parsed.polyline);
             dto.setCosts(costs);
 
@@ -72,8 +72,8 @@ public class RouteOptimizationService {
         }
 
         // Fastest route reference
-        RoutesDto fastestRoute = routes.stream().min(Comparator.comparingLong(RoutesDto::getDurationSeconds)).orElseThrow();
-        long fastestDuration = fastestRoute.getDurationSeconds();
+        RoutesDto fastestRoute = routes.stream().min(Comparator.comparingLong(RoutesDto::getDuration)).orElseThrow();
+        long fastestDuration = fastestRoute.getDuration();
 
         // Max duration management
         long maxDuration = (request.getMaxTravelTimeMinutes() != null)
@@ -81,7 +81,7 @@ public class RouteOptimizationService {
                 : (long) (fastestDuration * 1.10);
 
         // Filtrage
-        List<RoutesDto> validRoutes = routes.stream().filter(r -> r.getDurationSeconds() <= maxDuration).toList();
+        List<RoutesDto> validRoutes = routes.stream().filter(r -> r.getDuration() <= maxDuration).toList();
         if (validRoutes.isEmpty()) {
             validRoutes = List.of(fastestRoute); // fallback
         }

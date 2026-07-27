@@ -24,6 +24,7 @@ public class HereRouteParser {
                 JsonNode section = route.path("sections").get(0);
 
                 long duration = section.path("summary").path("duration").asLong();
+                long baseDuration = section.path("summary").path("baseDuration").asLong();
                 long distance = section.path("summary").path("length").asLong();
 
                 String polyline = section.path("polyline").asText();
@@ -32,7 +33,7 @@ public class HereRouteParser {
 
                 String rawJson = section.toString();
 
-                parsedRoutes.add(new ParsedRoute(duration, distance, polyline, tollCost, rawJson));
+                parsedRoutes.add(new ParsedRoute(duration, baseDuration, distance, polyline, tollCost, rawJson));
             }
 
             return parsedRoutes;
@@ -64,14 +65,16 @@ public class HereRouteParser {
 
     public static class ParsedRoute {
 
-        public long durationSeconds;
+        public long duration;
+        public long baseDuration;
         public long distanceMeters;
         public String polyline;
         public double tollCost;
         public String rawJson;
 
-        public ParsedRoute(long durationSeconds, long distanceMeters, String polyline, double tollCost, String rawJson) {
-            this.durationSeconds = durationSeconds;
+        public ParsedRoute(long duration, long baseDuration, long distanceMeters, String polyline, double tollCost, String rawJson) {
+            this.duration = duration;
+            this.baseDuration = baseDuration;
             this.distanceMeters = distanceMeters;
             this.polyline = polyline;
             this.tollCost = tollCost;
