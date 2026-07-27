@@ -52,7 +52,6 @@ public record TransportDetailResponse(
         // Route estimate
         Long distanceMeters,
         Long durationSeconds,
-        Long trafficDurationSeconds,
 
         String polyline,
 

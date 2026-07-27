@@ -30,9 +30,6 @@ public class TransportEstimate {
     @Column(name = "duration_seconds", nullable = false)
     private Long durationSeconds;
 
-    @Column(name = "traffic_duration_seconds")
-    private Long trafficDurationSeconds;
-
     @Column(name = "polyline", nullable = false, columnDefinition = "TEXT")
     private String polyline;
 
@@ -108,14 +105,6 @@ public class TransportEstimate {
 
     public void setDurationSeconds(Long durationSeconds) {
         this.durationSeconds = durationSeconds;
-    }
-
-    public Long getTrafficDurationSeconds() {
-        return trafficDurationSeconds;
-    }
-
-    public void setTrafficDurationSeconds(Long trafficDurationSeconds) {
-        this.trafficDurationSeconds = trafficDurationSeconds;
     }
 
     public String getPolyline() {

@@ -42,7 +42,6 @@ export interface TransportDetail {
 
     distanceMeters: number | null;
     durationSeconds: number | null;
-    trafficDurationSeconds: number | null;
 
     polyline: string | null;
 

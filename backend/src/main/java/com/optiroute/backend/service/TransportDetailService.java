@@ -94,7 +94,6 @@ public class TransportDetailService {
 
                 estimate != null ? estimate.getDistanceMeters() : null,
                 estimate != null ? estimate.getDurationSeconds() : null,
-                estimate != null ? estimate.getTrafficDurationSeconds() : null,
 
                 estimate != null ? estimate.getPolyline() : null,
 
