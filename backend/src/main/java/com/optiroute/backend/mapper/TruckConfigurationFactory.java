@@ -3,6 +3,8 @@ package com.optiroute.backend.mapper;
 import com.optiroute.backend.entity.vehicle.Tractor;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
 import com.optiroute.backend.model.TruckConfiguration;
+import com.optiroute.backend.utils.CommonUtils;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,7 +17,7 @@ public class TruckConfigurationFactory {
                 .widthCm(max(tractor.getWidthCm(), semiTrailer.getWidthCm()))
                 .lengthCm(add(tractor.getLengthCm(), semiTrailer.getLengthCm()))
                 .axleCount(add(tractor.getAxleCount(), semiTrailer.getAxleCount()))
-                .maxSpeed(min(tractor.getMaxSpeed(), semiTrailer.getMaxSpeed()))
+                .maxSpeed(CommonUtils.kmhToMs(min(tractor.getMaxSpeed(), semiTrailer.getMaxSpeed())))
                 .averageConsumption(tractor.getAverageConsumption())
                 .build();
     }
