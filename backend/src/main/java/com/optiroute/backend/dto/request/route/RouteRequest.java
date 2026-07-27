@@ -1,7 +1,7 @@
 package com.optiroute.backend.dto.request.route;
 
 import com.optiroute.backend.model.Position;
-import com.optiroute.backend.model.RouteMode;
+import com.optiroute.backend.type.GpsModeType;
 
 import java.time.OffsetDateTime;
 
@@ -10,7 +10,7 @@ public class RouteRequest {
     private Position origin;
     private Position destination;
 
-    private RouteMode mode;
+    private GpsModeType mode;
 
     private OffsetDateTime departureTime;
 
@@ -37,11 +37,11 @@ public class RouteRequest {
         this.destination = destination;
     }
 
-    public RouteMode getMode() {
+    public GpsModeType getMode() {
         return mode;
     }
 
-    public void setMode(RouteMode mode) {
+    public void setMode(GpsModeType mode) {
         this.mode = mode;
     }
 

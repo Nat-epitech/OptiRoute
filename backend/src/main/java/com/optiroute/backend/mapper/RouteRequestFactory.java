@@ -2,8 +2,8 @@ package com.optiroute.backend.mapper;
 
 import com.optiroute.backend.dto.request.route.RouteRequest;
 import com.optiroute.backend.entity.Transport;
-import com.optiroute.backend.model.RouteMode;
 import com.optiroute.backend.model.Position;
+import com.optiroute.backend.type.GpsModeType;
 
 import org.springframework.stereotype.Component;
 
@@ -30,7 +30,7 @@ public class RouteRequestFactory {
 		request.setDepartureTime(transport.getPlannedStart());
 
 		// Mode de calcul (à adapter selon ton enum)
-		request.setMode(RouteMode.FASTEST);
+		request.setMode(GpsModeType.FASTEST);
 
 		// Caractéristiques véhicule
 		request.setTractorId(transport.getTractorId());
