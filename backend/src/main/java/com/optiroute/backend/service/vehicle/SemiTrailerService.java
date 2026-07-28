@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.optiroute.backend.dto.request.vehicle.SemiTrailerRequest;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerResponse;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
-import com.optiroute.backend.entity.vehicle.Tractor;
 import com.optiroute.backend.repository.vehicle.SemiTrailerRepository;
 
 import jakarta.persistence.EntityNotFoundException;

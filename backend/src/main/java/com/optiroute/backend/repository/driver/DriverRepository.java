@@ -1,7 +1,9 @@
-package com.optiroute.backend.repository;
+package com.optiroute.backend.repository.driver;
 
-import com.optiroute.backend.entity.Driver;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.optiroute.backend.entity.driver.Driver;
+
 import java.util.Optional;
 
 public interface DriverRepository extends JpaRepository<Driver, Long> {

@@ -1,18 +1,29 @@
-package com.optiroute.backend.dto.response;
+package com.optiroute.backend.dto.request.driver;
 
 import java.math.BigDecimal;
 
-import lombok.Builder;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-@Builder
-public class DriverResponse {
-    private Long id;
+@Setter
+public class DriverRequest {
+
+    @Email
+    @NotBlank
     private String email;
+
+    @NotBlank
     private String firstName;
+
+    @NotBlank
     private String lastName;
+
     private String phoneNumber;
+
     private BigDecimal monthlySalary;
+
     private BigDecimal monthlyWorkingHours;
 }

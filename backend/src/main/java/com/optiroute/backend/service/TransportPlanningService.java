@@ -6,10 +6,10 @@ import java.time.ZoneId;
 import java.util.List;
 
 import com.optiroute.backend.dto.response.planning.TransportPlanningResponse;
-import com.optiroute.backend.entity.Driver;
 import com.optiroute.backend.entity.TransportEstimate;
-import com.optiroute.backend.repository.DriverRepository;
+import com.optiroute.backend.entity.driver.Driver;
 import com.optiroute.backend.repository.TransportRepository;
+import com.optiroute.backend.repository.driver.DriverRepository;
 
 import lombok.RequiredArgsConstructor;
 

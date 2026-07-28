@@ -1,9 +1,10 @@
-package com.optiroute.backend.controller;
+package com.optiroute.backend.controller.driver;
 
-import com.optiroute.backend.dto.request.DriverRequest;
-import com.optiroute.backend.dto.response.DriverResponse;
-import com.optiroute.backend.entity.Driver;
-import com.optiroute.backend.service.DriverService;
+import com.optiroute.backend.dto.request.driver.DriverRequest;
+import com.optiroute.backend.dto.response.driver.DriverResponse;
+import com.optiroute.backend.entity.driver.Driver;
+import com.optiroute.backend.service.driver.DriverService;
+
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;

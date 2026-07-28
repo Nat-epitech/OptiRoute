@@ -1,10 +1,12 @@
-package com.optiroute.backend.entity;
+package com.optiroute.backend.entity.driver;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+
+import com.optiroute.backend.entity.EntityUtils;
 
 @Entity
 @Table(name = "driver")
