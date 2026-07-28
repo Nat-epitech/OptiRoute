@@ -8,12 +8,16 @@ import SidebarLink from '@/components/layout/SidebarLink.vue'
 
 const route = useRoute()
 
+const isGestionSection = computed(() =>
+    route.path.startsWith('/gestion')
+)
+
 const isRoutesSection = computed(() =>
     route.path.startsWith('/routes')
 )
 
-const isPlanningSection = computed(() =>
-    route.path.startsWith('/planning')
+const isHomepageSection = computed(() =>
+    route.path.startsWith('/homepage')
 )
 
 const isAdminSection = computed(() =>
@@ -21,8 +25,7 @@ const isAdminSection = computed(() =>
 )
 
 const isVehiclesSection = computed(() =>
-    route.path.startsWith('/planning/tractors')
-    || route.path.startsWith('/planning/semiTrailers')
+    route.path.startsWith('/gestion/tractors') || route.path.startsWith('/gestion/semiTrailers')
 )
 
 const vehiclesOpen = ref(isVehiclesSection.value)
@@ -50,11 +53,17 @@ watch(isVehiclesSection, (isActive) => {
                 <SidebarLink to="/routes" label="Rechercher un itinéraire" />
             </template>
 
-            <!-- PLANNING SECTION -->
-            <template v-else-if="isPlanningSection">
-                <SidebarLink to="/planning/dashboard" label="Dashboard" />
+            <!-- HOMEPAGE SECTION -->
+            <template v-else-if="isHomepageSection">
+                <SidebarLink to="/homepage/planning" label="Planning" />
+            </template>
 
-                <SidebarLink to="/planning/drivers" label="Conducteurs" />
+
+            <!-- GESTION SECTION -->
+            <template v-else-if="isGestionSection">
+                <SidebarLink to="/gestion/dashboard" label="Dashboard" />
+
+                <SidebarLink to="/gestion/drivers" label="Conducteurs" />
 
                 <!-- VEHICLES MENU -->
                 <div>
@@ -68,15 +77,13 @@ watch(isVehiclesSection, (isActive) => {
                     </button>
 
                     <div v-show="vehiclesOpen" class="mt-1 space-y-1 border-l border-slate-700 pl-3">
-                        <SidebarLink to="/planning/tractors" label="Tracteurs" />
+                        <SidebarLink to="/gestion/tractors" label="Tracteurs" />
 
-                        <SidebarLink to="/planning/semiTrailers" label="Semi-remorques" />
+                        <SidebarLink to="/gestion/semiTrailers" label="Semi-remorques" />
                     </div>
                 </div>
 
-                <SidebarLink to="/planning/customers" label="Clients" />
-
-                <SidebarLink to="/planning/schedule" label="Planning" />
+                <SidebarLink to="/gestion/customers" label="Clients" />
             </template>
 
             <!-- ADMIN SECTION -->

@@ -13,8 +13,12 @@ const isRoutesSection = computed(() =>
     route.path.startsWith('/routes')
 )
 
-const isPlanningSection = computed(() =>
-    route.path.startsWith('/planning')
+const isHomepageSection = computed(() =>
+    route.path.startsWith('/homepage')
+)
+
+const isGestionSection = computed(() =>
+    route.path.startsWith('/gestion')
 )
 
 const isAdminSection = computed(() =>
@@ -27,8 +31,12 @@ function goToRoutes() {
     router.push('/routes')
 }
 
-function goToPlanning() {
-    router.push('/planning')
+function goToHomepage() {
+    router.push('/homepage')
+}
+
+function goToGestion() {
+    router.push('/gestion')
 }
 
 function goToAdmin() {
@@ -48,24 +56,27 @@ function handleLogout() {
         <!-- LEFT -->
         <div class="flex items-center gap-3">
 
-            <button class="px-4 py-2 rounded-xl font-medium transition" :class="isPlanningSection
+            <button class="px-4 py-2 rounded-xl font-medium transition" :class="isHomepageSection
                 ? 'bg-slate-900 text-white'
-                : 'text-slate-600 hover:bg-slate-100'" @click="goToPlanning">
+                : 'text-slate-600 hover:bg-slate-100'" @click="goToHomepage">
+                Tableau de bord
+            </button>
 
-                Planification
+            <button class="px-4 py-2 rounded-xl font-medium transition" :class="isGestionSection
+                ? 'bg-slate-900 text-white'
+                : 'text-slate-600 hover:bg-slate-100'" @click="goToGestion">
+                Gestion
             </button>
 
             <button class="px-4 py-2 rounded-xl font-medium transition" :class="isRoutesSection
                 ? 'bg-slate-900 text-white'
                 : 'text-slate-600 hover:bg-slate-100'" @click="goToRoutes">
-
                 Itinéraires
             </button>
 
             <button class="px-4 py-2 rounded-xl font-medium transition" :class="isAdminSection
                 ? 'bg-slate-900 text-white'
                 : 'text-slate-600 hover:bg-slate-100'" @click="goToAdmin">
-
                 Admin
             </button>
 

@@ -12,6 +12,7 @@ import SemiTrailers from '@/views/vehicle/SemiTrailersView.vue'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import MapLayout from '@/layouts/MapLayout.vue'
+import PlanningLayout from '@/layouts/PlanningLayout.vue'
 
 import { useAuthStore } from '@/stores/authStore'
 
@@ -24,14 +25,26 @@ const routes = [
         meta: { public: true }
     },
 
+    // REDIRECTION
+
     {
         path: '/',
-        redirect: '/planning/dashboard'
+        redirect: '/homepage/planning'
     },
 
     {
-        path: '/planning',
-        redirect: '/planning/dashboard'
+        path: '/homepage',
+        redirect: '/homepage/planning'
+    },
+
+    {
+        path: '/gestion',
+        redirect: '/gestion/dashboard'
+    },
+
+    {
+        path: '/gestion',
+        redirect: '/gestion/dashboard'
     },
 
     {
@@ -48,11 +61,11 @@ const routes = [
 
         children: [
             {
-                path: 'planning',
+                path: 'gestion',
                 children: [
                     {
                         path: 'dashboard',
-                        name: 'planning-dashboard',
+                        name: 'dashboard',
                         component: DashboardView
                     },
                     {
@@ -74,11 +87,6 @@ const routes = [
                         path: 'customers',
                         name: 'customers',
                         component: CustomersView
-                    },
-                    {
-                        path: 'schedule',
-                        name: 'schedule',
-                        component: PlanningView
                     }
                 ]
             },
@@ -112,6 +120,28 @@ const routes = [
                         path: '',
                         name: 'routes',
                         component: MapsView
+                    }
+                ]
+            }
+        ]
+    },
+
+    // PLANNING LAYOUT (full screen / no padding)
+
+    {
+
+        path: '/homepage',
+        component: PlanningLayout,
+        meta: { requiresAuth: true },
+
+        children: [
+            {
+                path: 'planning',
+                children: [
+                    {
+                        path: '',
+                        name: 'planning',
+                        component: PlanningView
                     }
                 ]
             }
