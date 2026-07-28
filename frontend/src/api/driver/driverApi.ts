@@ -1,8 +1,8 @@
-import api from './axios'
-import type { Driver, DriverDetails, CreateDriverRequest, UpdateDriverRequest } from '@/models/Driver'
+import api from '../axios'
+import type { DriverSummary, DriverDetails, CreateDriverRequest, UpdateDriverRequest } from '@/models/driver/Driver'
 
-export const getDrivers = async (): Promise<Driver[]> => {
-  const response = await api.get<Driver[]>('/drivers')
+export const getDrivers = async (): Promise<DriverSummary[]> => {
+  const response = await api.get<DriverSummary[]>('/drivers')
   return response.data
 }
 

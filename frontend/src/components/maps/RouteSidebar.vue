@@ -14,11 +14,11 @@ import AssignRouteModal from '@/components/maps/AssignRouteModal.vue'
 
 import type { CreateTransportRequest, CreateTransportFromRouteRequest, AssignTransport } from '@/models/transport/TransportRequest.ts'
 import type { RouteRequest, RouteResponse } from '@/models/route/Route'
-import type { Driver } from '@/models/Driver'
+import type { DriverSummary } from '@/models/driver/Driver.ts'
 import type { Customer } from '@/models/Customer'
 
 import { createTransportFromRoute } from '@/api/transportApi.ts'
-import { getDrivers } from '@/api/driverApi'
+import { getDrivers } from '@/api/driver/driverApi.ts'
 import { getCustomers } from '@/api/customerApi'
 import { getApiErrorMessage } from '@/api/utils'
 
@@ -28,17 +28,11 @@ import { useNotification } from '@/composables/useNotification'
 
 const notification = useNotification()
 
-const drivers = ref<Driver[]>([])
+const drivers = ref<DriverSummary[]>([])
 const customers = ref<Customer[]>([])
 
 const loadAssignmentData = async () => {
-    const [
-        loadedDrivers,
-        loadedCustomers
-    ] = await Promise.all([
-        getDrivers(),
-        getCustomers()
-    ])
+    const [loadedDrivers, loadedCustomers] = await Promise.all([getDrivers(), getCustomers()])
 
     drivers.value = loadedDrivers
     customers.value = loadedCustomers

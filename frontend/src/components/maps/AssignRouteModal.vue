@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-import type { Driver } from '@/models/Driver'
+import type { DriverSummary } from '@/models/driver/Driver'
 import type { Customer } from '@/models/Customer'
 import type { AssignTransport } from '@/models/transport/TransportRequest.ts'
 
@@ -13,7 +13,7 @@ import { formatDateTime } from "@/utils/formatters"
 
 const props = defineProps<{
     show: boolean
-    drivers: Driver[]
+    drivers: DriverSummary[]
     customers: Customer[]
     startDate: string
     endDate: string

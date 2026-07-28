@@ -1,36 +1,37 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 
-import { getDrivers } from "@/api/driverApi"
+import { getDrivers } from "@/api/driver/driverApi"
 
-import type {
-    Driver,
-    DriverDetails,
-} from "@/models/Driver"
+import type { DriverSummary } from "@/models/driver/Driver"
 
 import CreateDriverModal from "@/components/drivers/CreateDriverModal.vue"
 import DeleteDriverModal from "@/components/drivers/DeleteDriverModal.vue"
 import DriverDetailDrawer from "@/components/drivers/DriverDetailDrawer.vue"
-import EditDriverModal from "@/components/drivers/EditDriverModal.vue"
 import AppDropdown from "@/components/ui/AppDropdown.vue"
 
-const drivers = ref<Driver[]>([])
+//Load drivers
 
-const showCreateModal = ref(false)
-
-const selectedDriverId = ref<number | null>(null)
-const actionDriver = ref<Driver | null>(null)
-
-type DriverAction = "edit" | "delete" | null
-
-const activeAction = ref<DriverAction>(null)
-const driverDrawerRefreshKey = ref(0)
+const drivers = ref<DriverSummary[]>([])
 
 const loadDrivers = async () => {
     drivers.value = await getDrivers()
 }
 
-const openDriverDetails = (driver: Driver) => {
+//Manage Modal
+
+const showCreateModal = ref(false)
+const showDeleteModal = ref(false)
+
+const actionDriver = ref<DriverSummary | null>(null)
+const selectedDriverId = ref<number | null>(null)
+
+const askDeleteDriver = (driver: DriverSummary) => {
+    actionDriver.value = driver
+    showDeleteModal.value = true
+}
+
+const openDriverDetails = (driver: DriverSummary) => {
     selectedDriverId.value = driver.id
 }
 
@@ -38,39 +39,16 @@ const closeDriverDetails = () => {
     selectedDriverId.value = null
 }
 
-const openEditDriverModal = (driver: Driver) => {
-    actionDriver.value = driver
-    activeAction.value = "edit"
-}
-
-const askDeleteDriver = (driver: Driver) => {
-    actionDriver.value = driver
-    activeAction.value = "delete"
-}
-
 const closeDriverAction = () => {
+    showDeleteModal.value = false
     actionDriver.value = null
-    activeAction.value = null
 }
 
-const handleDrawerEdit = (driver: DriverDetails) => {
-    openEditDriverModal(driver)
-}
-
-const handleDrawerDelete = (driver: DriverDetails) => {
-    closeDriverDetails()
-    askDeleteDriver(driver)
-}
+// Handle
 
 const handleDriverCreated = async () => {
     showCreateModal.value = false
     await loadDrivers()
-}
-
-const handleDriverUpdated = async () => {
-    closeDriverAction()
-    await loadDrivers()
-    driverDrawerRefreshKey.value++
 }
 
 const handleDriverDeleted = async () => {
@@ -79,13 +57,7 @@ const handleDriverDeleted = async () => {
     await loadDrivers()
 }
 
-const displayValue = (value: string | null | undefined,): string => {
-    return value || "—"
-}
-
-onMounted(async () => {
-    await loadDrivers()
-})
+onMounted(loadDrivers)
 </script>
 
 <template>
@@ -107,19 +79,11 @@ onMounted(async () => {
                 <thead class="border-b bg-gray-50">
                     <tr>
                         <th class="whitespace-nowrap px-6 py-4 text-left">
-                            Email
-                        </th>
-
-                        <th class="whitespace-nowrap px-6 py-4 text-left">
-                            Prénom
-                        </th>
-
-                        <th class="whitespace-nowrap px-6 py-4 text-left">
                             Nom
                         </th>
 
                         <th class="whitespace-nowrap px-6 py-4 text-left">
-                            Numéro de téléphone
+                            Prénom
                         </th>
 
                         <th class="whitespace-nowrap px-6 py-4 text-right">
@@ -131,46 +95,24 @@ onMounted(async () => {
                 <tbody>
                     <tr v-for="driver in drivers" :key="driver.id"
                         class="cursor-pointer border-b transition last:border-b-0 hover:bg-gray-100" :class="{
-                            'bg-blue-50':
-                                selectedDriverId === driver.id,
+                            'bg-blue-50': selectedDriverId === driver.id
                         }" tabindex="0" @click="openDriverDetails(driver)" @keydown.enter="openDriverDetails(driver)"
                         @keydown.space.prevent="openDriverDetails(driver)">
-                        <td class="whitespace-nowrap px-6 py-4">
-                            {{ displayValue(driver.email) }}
-                        </td>
-
-                        <td class="whitespace-nowrap px-6 py-4">
-                            {{ displayValue(driver.firstName) }}
-                        </td>
 
                         <td class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
-                            {{ displayValue(driver.lastName) }}
+                            {{ driver.lastName }}
                         </td>
 
                         <td class="whitespace-nowrap px-6 py-4">
-                            {{ displayValue(driver.phoneNumber) }}
+                            {{ driver.firstName }}
                         </td>
 
-                        <!--
-                            Empêche le clic sur le menu d'ouvrir
-                            également le drawer.
-                        -->
+                        <!--Empêche le clic sur le menu d'ouvrir également le drawer -->
                         <td class="whitespace-nowrap px-6 py-4 text-right" @click.stop @keydown.stop>
                             <AppDropdown v-slot="{ close }">
                                 <button type="button"
-                                    class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-100" @click="
-                                        close();
-                                    openEditDriverModal(driver)
-                                        ">
-                                    Modifier
-                                </button>
-
-                                <button type="button"
                                     class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                                    @click="
-                                        close();
-                                    askDeleteDriver(driver)
-                                        ">
+                                    @click="close(); askDeleteDriver(driver)">
                                     Supprimer
                                 </button>
                             </AppDropdown>
@@ -186,16 +128,12 @@ onMounted(async () => {
             </table>
         </div>
 
-        <DriverDetailDrawer :open="selectedDriverId !== null" :driver-id="selectedDriverId"
-            :refresh-key="driverDrawerRefreshKey" @close="closeDriverDetails" @edit="handleDrawerEdit"
-            @delete="handleDrawerDelete" />
+        <DriverDetailDrawer :open="selectedDriverId !== null" :driver-id="selectedDriverId" @close="closeDriverDetails"
+            @updated="loadDrivers" @deleted="handleDriverDeleted" />
 
         <CreateDriverModal :show="showCreateModal" @close="showCreateModal = false" @created="handleDriverCreated" />
 
-        <EditDriverModal :show="activeAction === 'edit'" :driver="actionDriver" @close="closeDriverAction"
-            @updated="handleDriverUpdated" />
-
-        <DeleteDriverModal :show="activeAction === 'delete'" :driver="actionDriver" @close="closeDriverAction"
+        <DeleteDriverModal :show="showDeleteModal" :driver="actionDriver" @close="closeDriverAction"
             @deleted="handleDriverDeleted" />
     </div>
 </template>

@@ -47,10 +47,7 @@ const confirmDelete = async () => {
     } catch (error: unknown) {
         notification.error(
             'Suppression impossible',
-            getApiErrorMessage(
-                error,
-                'Le tracteur n’a pas pu être supprimé.',
-            ),
+            getApiErrorMessage(error, 'Le tracteur n’a pas pu être supprimé.'),
         )
     } finally {
         deleting.value = false

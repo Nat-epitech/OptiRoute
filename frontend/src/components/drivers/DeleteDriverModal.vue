@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { deleteDriver } from '@/api/driverApi'
+import { deleteDriver } from '@/api/driver/driverApi'
 import { getApiErrorMessage } from '@/api/utils'
 
-import type { Driver } from '@/models/Driver'
+import type { DriverSummary } from '@/models/driver/Driver'
 
 import ConfirmDeleteModal from '@/components/ui/ConfirmDeleteModal.vue'
 import { useNotification } from '@/composables/useNotification'
@@ -13,7 +13,7 @@ const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
-    driver: Driver | null
+    driver: DriverSummary | null
 }>()
 
 const emit = defineEmits<{
@@ -48,10 +48,7 @@ const confirmDelete = async () => {
         console.error(error)
         notification.error(
             'Suppression impossible',
-            getApiErrorMessage(
-                error,
-                'Le conducteur n’a pas pu être supprimé.'
-            )
+            getApiErrorMessage(error, 'Le conducteur n’a pas pu être supprimé.')
         )
     } finally {
         deleting.value = false

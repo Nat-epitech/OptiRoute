@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from "vue"
 
+import { updateDriver } from "@/api/driver/driverApi"
+import { getApiErrorMessage } from "@/api/utils"
 
-import { getApiErrorMessage } from '@/api/utils'
+import type { DriverDetails, DriverFormData, UpdateDriverRequest } from "@/models/driver/Driver"
+
 import { createEmptyDriverForm } from "@/utils/driverUtils"
-import type { CreateDriverRequest, DriverFormData } from "@/models/driver/Driver"
 
-import AppModal from '@/components/ui/AppModal.vue'
-import { useNotification } from '@/composables/useNotification'
-import { createDriver } from "@/api/driver/driverApi"
-import DriverForm from "./DriverForm.vue"
+import AppModal from "@/components/ui/AppModal.vue"
+import DriverForm from "@/components/drivers/DriverForm.vue"
+
+import { useNotification } from "@/composables/useNotification"
 
 //Variables
 
@@ -18,11 +20,12 @@ const loading = ref(false)
 
 const props = defineProps<{
     show: boolean
+    driver: DriverDetails | null
 }>()
 
 const emit = defineEmits<{
     close: []
-    created: []
+    updated: []
 }>()
 
 //Manage Modal
@@ -39,15 +42,30 @@ const form = reactive<DriverFormData>(
     createEmptyDriverForm(),
 )
 
-const resetForm = () => {
-    Object.assign(form, createEmptyDriverForm())
+const populateForm = () => {
+    if (!props.driver) {
+        return
+    }
+
+    Object.assign(form, {
+        firstName: props.driver.firstName,
+        lastName: props.driver.lastName,
+
+        phoneNumber: props.driver.phoneNumber,
+        monthlyCost: props.driver.monthlyCost,
+        monthlyWorkingHours: props.driver.monthlyWorkingHours,
+    } satisfies DriverFormData)
 }
 
 const submitDriver = async () => {
+    if (!props.driver) {
+        return
+    }
+
     try {
         loading.value = true
 
-        const payload: CreateDriverRequest = {
+        const payload: UpdateDriverRequest = {
             firstName: form.firstName,
             lastName: form.lastName,
 
@@ -56,18 +74,18 @@ const submitDriver = async () => {
             monthlyWorkingHours: form.monthlyWorkingHours,
         }
 
-        await createDriver(payload)
+        await updateDriver(props.driver.id, payload)
 
         notification.success(
-            "Conducteur créé",
-            `Le conducteur « ${form.firstName} ${form.lastName} » a bien été ajouté.`,
+            "Conducteur modifié",
+            `Le conducteur « ${form.firstName} ${form.lastName} » a bien été modifié.`,
         )
 
-        emit("created")
+        emit("updated")
     } catch (error: unknown) {
         notification.error(
-            "Création impossible",
-            getApiErrorMessage(error, "Le conducteur n’a pas pu être créé."),
+            "Modification impossible",
+            getApiErrorMessage(error, "Le conducteur n’a pas pu être modifié."),
         )
     } finally {
         loading.value = false
@@ -77,22 +95,23 @@ const submitDriver = async () => {
 //Watch
 
 watch(
-    () => props.show,
-    (show) => {
-        if (show) {
-            resetForm()
+    [() => props.show, () => props.driver],
+    ([show, driver]) => {
+        if (show && driver) {
+            populateForm()
         }
+    },
+    {
+        immediate: true,
     },
 )
 </script>
 
 <template>
-
-    <AppModal :show="props.show" @close="emit('close')">
-
+    <AppModal :show="props.show" @close="closeModal">
         <form @submit.prevent="submitDriver">
             <h2 class="mb-6 text-2xl font-bold text-slate-900">
-                Ajouter un conducteur
+                Modifier un conducteur
             </h2>
 
             <div class="max-h-[70vh] overflow-y-auto pr-2">
@@ -108,11 +127,9 @@ watch(
 
                 <button type="submit" :disabled="loading"
                     class="rounded-xl bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50">
-                    {{ loading ? "Création..." : "Enregistrer" }}
+                    {{ loading ? "Modification..." : "Enregistrer" }}
                 </button>
             </div>
         </form>
-
     </AppModal>
-
 </template>
