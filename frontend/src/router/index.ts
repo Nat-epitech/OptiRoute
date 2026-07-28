@@ -172,7 +172,7 @@ router.beforeEach((to, from, next) => {
     }
 
     if (isPublic && authStore.isAuthenticated) {
-        return next('/planning/dashboard')
+        return next('/homepage')
     }
 
     next()

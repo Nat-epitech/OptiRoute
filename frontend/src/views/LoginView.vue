@@ -14,7 +14,7 @@ const handleLogin = async () => {
     try {
         const response = await login(email.value, password.value)
         authStore.setToken(response.token)
-        router.push('/planning/dashboard')
+        router.push('/homepage')
     } catch (e) {
         alert('Invalid credentials')
     }
