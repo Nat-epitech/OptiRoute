@@ -26,7 +26,7 @@
 import { computed } from "vue";
 
 import type { PlanningDay } from "@/models/planning/planning";
-import { createPlanningGridStyle } from "@/utils/planning";
+import { createPlanningGridStyle } from "@/utils/planningUtils";
 
 const props = defineProps<{ days: PlanningDay[]; }>();
 

@@ -16,7 +16,7 @@ import CostCell from "@/components/planning/CostCell.vue";
 import InfoCell from "@/components/planning/DriverCell.vue";
 import DayCell from "@/components/planning/DayCell.vue";
 
-import { createPlanningGridStyle } from "@/utils/planning";
+import { createPlanningGridStyle } from "@/utils/planningUtils";
 
 import type { PlanningDay, PlanningDriver } from "@/models/planning/planning";
 
