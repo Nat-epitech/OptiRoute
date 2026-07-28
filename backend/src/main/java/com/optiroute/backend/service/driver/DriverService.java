@@ -1,15 +1,17 @@
 package com.optiroute.backend.service.driver;
 
-import com.optiroute.backend.dto.request.driver.DriverRequest;
-import com.optiroute.backend.dto.response.driver.DriverResponse;
-import com.optiroute.backend.entity.driver.Driver;
-import com.optiroute.backend.repository.driver.DriverRepository;
-
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.optiroute.backend.dto.request.driver.DriverRequest;
+import com.optiroute.backend.dto.response.driver.DriverResponse;
+import com.optiroute.backend.entity.driver.Driver;
+import com.optiroute.backend.repository.driver.DriverRepository;
+
+import com.optiroute.backend.utils.CommonUtils;
 
 import java.util.List;
 
@@ -22,8 +24,8 @@ public class DriverService {
         this.driverRepository = driverRepository;
     }
 
-    public List<Driver> getAllDrivers() {
-        return driverRepository.findAll();
+    public List<DriverResponse> getAll() {
+        return driverRepository.findAll().stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
@@ -36,11 +38,11 @@ public class DriverService {
     @Transactional
     public DriverResponse createDriver(DriverRequest request) {
         Driver driver = new Driver();
-        driver.setEmail(request.getEmail());
+        driver.setLogin(generateUniqueLogin(request.getFirstName(), request.getLastName()));
         driver.setFirstName(request.getFirstName());
         driver.setLastName(request.getLastName());
         driver.setPhoneNumber(request.getPhoneNumber());
-        driver.setMonthlySalary(request.getMonthlySalary());
+        driver.setMonthlyCost(request.getMonthlyCost());
         driver.setMonthlyWorkingHours(request.getMonthlyWorkingHours());
 
         Driver savedDriver = driverRepository.save(driver);
@@ -52,9 +54,9 @@ public class DriverService {
         Driver driver = driverRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Driver not found with id " + id));
         driver.setFirstName(request.getFirstName());
         driver.setLastName(request.getLastName());
-        driver.setEmail(request.getEmail());
+        driver.setLogin(generateUniqueLogin(request.getFirstName(), request.getLastName()));
         driver.setPhoneNumber(request.getPhoneNumber());
-        driver.setMonthlySalary(request.getMonthlySalary());
+        driver.setMonthlyCost(request.getMonthlyCost());
         driver.setMonthlyWorkingHours(request.getMonthlyWorkingHours());
 
         Driver updatedDriver = driverRepository.save(driver);
@@ -73,12 +75,28 @@ public class DriverService {
     private DriverResponse toResponse(Driver driver) {
         return DriverResponse.builder()
                 .id(driver.getId())
-                .email(driver.getEmail())
+                .login(driver.getLogin())
                 .firstName(driver.getFirstName())
                 .lastName(driver.getLastName())
                 .phoneNumber(driver.getPhoneNumber())
-                .monthlySalary(driver.getMonthlySalary())
+                .monthlyCost(driver.getMonthlyCost())
                 .monthlyWorkingHours(driver.getMonthlyWorkingHours())
                 .build();
+    }
+
+    private String generateUniqueLogin(String firstName, String lastName) {
+        String normalizedFirstName = CommonUtils.normalizeText(firstName).toUpperCase();
+        String normalizedLastName = CommonUtils.normalizeText(lastName).toUpperCase();
+
+        String baseLogin = normalizedFirstName.substring(0, 1) + normalizedLastName;
+        String login = baseLogin;
+        int suffix = 2;
+
+        while (driverRepository.existsByLogin(login)) {
+            login = baseLogin + suffix;
+            suffix++;
+        }
+
+        return login;
     }
 }

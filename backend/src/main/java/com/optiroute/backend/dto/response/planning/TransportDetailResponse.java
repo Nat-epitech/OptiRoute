@@ -17,7 +17,7 @@ public record TransportDetailResponse(
         // Driver
         Long driverId,
         String driverName,
-        String driverEmail,
+        String driverLogin,
 
         // Tractor
         Long tractorId,

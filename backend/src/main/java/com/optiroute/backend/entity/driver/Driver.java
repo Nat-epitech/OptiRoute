@@ -25,15 +25,15 @@ public class Driver extends EntityUtils {
     private String lastName;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String login;
 
     private String phoneNumber;
 
     @Column(nullable = false)
     private Boolean isActive = true;
 
-    @Column(name = "monthly_salary", precision = 10, scale = 2)
-    private BigDecimal monthlySalary;
+    @Column(name = "monthly_cost", precision = 10, scale = 2)
+    private BigDecimal monthlyCost;
 
     @Column(name = "monthly_working_hours", precision = 6, scale = 2)
     private BigDecimal monthlyWorkingHours;

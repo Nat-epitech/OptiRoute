@@ -65,7 +65,7 @@ public class TransportDetailService {
 
                 driver.getId(),
                 driver.getFirstName() + " " + driver.getLastName(),
-                driver.getEmail(),
+                driver.getLogin(),
 
                 tractor != null ? tractor.getId() : null,
                 tractor != null ? tractor.getRegistration() : null,
