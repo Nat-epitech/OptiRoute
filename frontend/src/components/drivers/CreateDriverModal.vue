@@ -108,7 +108,7 @@ watch(
 
                 <button type="submit" :disabled="loading"
                     class="rounded-xl bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50">
-                    {{ loading ? "Création..." : "Enregistrer" }}
+                    {{ loading ? "Enregistrerement" : "Enregistrer" }}
                 </button>
             </div>
         </form>

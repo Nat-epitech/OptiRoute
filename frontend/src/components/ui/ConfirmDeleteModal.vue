@@ -40,7 +40,7 @@ defineEmits<{
             <button type="button"
               class="rounded-xl bg-red-600 px-4 py-2 text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
               :disabled="loading" @click="$emit('confirm')">
-              {{ loading ? "Suppression..." : "Supprimer" }}
+              {{ loading ? "Suppression" : "Supprimer" }}
             </button>
           </div>
         </div>

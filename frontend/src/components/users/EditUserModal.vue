@@ -137,7 +137,7 @@ const saveUser = async () => {
             <button type="button"
                 class="rounded-xl bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:opacity-50"
                 :disabled="loading" @click="saveUser">
-                {{ loading ? 'Modification...' : 'Enregistrer' }}
+                {{ loading ? 'Enregistrerement' : 'Enregistrer' }}
             </button>
         </div>
     </AppModal>
