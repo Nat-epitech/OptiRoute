@@ -42,12 +42,12 @@ public class DriverService {
     @Transactional
     public DriverResponse createDriver(DriverRequest request) {
         Driver driver = new Driver();
-        driver.setLogin(DriverUtils.generateUniqueLogin(driverRepository, request.getFirstName(), request.getLastName()));
-        driver.setFirstName(request.getFirstName());
-        driver.setLastName(request.getLastName());
-        driver.setPhoneNumber(request.getPhoneNumber());
-        driver.setMonthlyCost(request.getMonthlyCost());
-        driver.setMonthlyWorkingHours(request.getMonthlyWorkingHours());
+        driver.setLogin(DriverUtils.generateUniqueLogin(driverRepository, request.firstName(), request.lastName()));
+        driver.setFirstName(request.firstName());
+        driver.setLastName(request.lastName());
+        driver.setPhoneNumber(request.phoneNumber());
+        driver.setMonthlyCost(request.monthlyCost());
+        driver.setMonthlyWorkingHours(request.monthlyWorkingHours());
 
         Driver savedDriver = driverRepository.save(driver);
         return DriverUtils.toDriverResponse(savedDriver);
@@ -56,12 +56,12 @@ public class DriverService {
     @Transactional
     public DriverResponse updateDriver(Long id, DriverRequest request) {
         Driver driver = driverRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Driver not found with id " + id));
-        driver.setFirstName(request.getFirstName());
-        driver.setLastName(request.getLastName());
-        driver.setLogin(DriverUtils.generateUniqueLogin(driverRepository, request.getFirstName(), request.getLastName()));
-        driver.setPhoneNumber(request.getPhoneNumber());
-        driver.setMonthlyCost(request.getMonthlyCost());
-        driver.setMonthlyWorkingHours(request.getMonthlyWorkingHours());
+        driver.setFirstName(request.firstName());
+        driver.setLastName(request.lastName());
+        driver.setLogin(DriverUtils.generateUniqueLogin(driverRepository, request.firstName(), request.lastName()));
+        driver.setPhoneNumber(request.phoneNumber());
+        driver.setMonthlyCost(request.monthlyCost());
+        driver.setMonthlyWorkingHours(request.monthlyWorkingHours());
 
         Driver updatedDriver = driverRepository.save(driver);
         return DriverUtils.toDriverResponse(updatedDriver);
