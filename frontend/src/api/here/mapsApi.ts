@@ -1,4 +1,5 @@
 import axios from 'axios'
+import api from '../axios'
 
 // Variables
 
@@ -7,7 +8,7 @@ const API_KEY = import.meta.env.VITE_HERE_API_KEY
 // Functions
 
 export async function calculateRoute(payload: any) {
-    const response = await axios.post('routes/calculate', payload)
+    const response = await api.post('routes/calculate', payload)
     return response.data
 }
 

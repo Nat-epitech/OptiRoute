@@ -71,20 +71,28 @@ public class RouteOptimizationService {
             routes.add(dto);
         }
 
-        // Fastest route reference
-        RoutesDto fastestRoute = routes.stream().min(Comparator.comparingLong(RoutesDto::getDuration)).orElseThrow();
-        long fastestDuration = fastestRoute.getDuration();
+        /*
+         * // Fastest route reference
+         * RoutesDto fastestRoute =
+         * routes.stream().min(Comparator.comparingLong(RoutesDto::getDuration)).
+         * orElseThrow();
+         * long fastestDuration = fastestRoute.getDuration();
+         * 
+         * // Max duration management
+         * long maxDuration = (request.getMaxTravelTimeMinutes() != null)
+         * ? request.getMaxTravelTimeMinutes() * 60L
+         * : (long) (fastestDuration * 1.10);
+         * 
+         * // Filtrage
+         * List<RoutesDto> validRoutes = routes.stream().filter(r -> r.getDuration() <=
+         * maxDuration).toList();
+         * if (validRoutes.isEmpty()) {
+         * validRoutes = List.of(fastestRoute); // fallback
+         * }
+         */
 
-        // Max duration management
-        long maxDuration = (request.getMaxTravelTimeMinutes() != null)
-                ? request.getMaxTravelTimeMinutes() * 60L
-                : (long) (fastestDuration * 1.10);
-
-        // Filtrage
-        List<RoutesDto> validRoutes = routes.stream().filter(r -> r.getDuration() <= maxDuration).toList();
-        if (validRoutes.isEmpty()) {
-            validRoutes = List.of(fastestRoute); // fallback
-        }
+        System.out.print("MaxTravelTimeMinutes: " + request.getMaxTravelTimeMinutes());
+        List<RoutesDto> validRoutes = routes.stream().toList();
 
         // Response
         RouteResponse response = new RouteResponse();

@@ -61,6 +61,10 @@ export const formatDuration = (value: number | null): string => {
         return "Non renseignée";
     }
 
+    if (value < 0){
+        return "1 min";
+    }
+
     const hours = Math.floor(value / 3600);
     const minutes = Math.round((value % 3600) / 60);
 
