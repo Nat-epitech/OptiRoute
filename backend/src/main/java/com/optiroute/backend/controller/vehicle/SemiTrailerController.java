@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.optiroute.backend.dto.request.vehicle.SemiTrailerRequest;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerResponse;
+import com.optiroute.backend.dto.response.vehicle.SemiTrailerLightResponse;
+
 import com.optiroute.backend.service.vehicle.SemiTrailerService;
 
 import jakarta.validation.Valid;
@@ -30,7 +32,7 @@ public class SemiTrailerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SemiTrailerResponse>> getAll() {
+    public ResponseEntity<List<SemiTrailerLightResponse>> getAll() {
         return ResponseEntity.ok(semiTrailerService.getAll());
     }
 

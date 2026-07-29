@@ -7,8 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.optiroute.backend.dto.request.vehicle.SemiTrailerRequest;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerResponse;
+import com.optiroute.backend.dto.response.vehicle.SemiTrailerLightResponse;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
 import com.optiroute.backend.repository.vehicle.SemiTrailerRepository;
+import com.optiroute.backend.utils.VehicleUtils;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -21,9 +23,8 @@ public class SemiTrailerService {
         this.semiTrailerRepository = semiTrailerRepository;
     }
 
-    @Transactional(readOnly = true)
-    public List<SemiTrailerResponse> getAll() {
-        return semiTrailerRepository.findAll().stream().map(this::toDto).toList();
+    public List<SemiTrailerLightResponse> getAll() {
+        return semiTrailerRepository.findAll().stream().map(semiTrailer -> VehicleUtils.toSemiTrailerLightResponse(semiTrailer)).toList();
     }
 
     @Transactional(readOnly = true)
@@ -31,7 +32,7 @@ public class SemiTrailerService {
         SemiTrailer semiTrailer = semiTrailerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("SemiTrailer not found with id: " + id));
 
-        return toDto(semiTrailer);
+        return VehicleUtils.toSemiTrailerResponse(semiTrailer);
     }
 
     public SemiTrailer getEntityById(Long id) {
@@ -75,7 +76,7 @@ public class SemiTrailerService {
         semiTrailer.setActive(true);
 
         SemiTrailer savedSemiTrailer = semiTrailerRepository.save(semiTrailer);
-        return toDto(savedSemiTrailer);
+        return VehicleUtils.toSemiTrailerResponse(savedSemiTrailer);
     }
 
     @Transactional
@@ -111,7 +112,7 @@ public class SemiTrailerService {
         semiTrailer.setActive(true);
 
         SemiTrailer updatedSemiTrailer = semiTrailerRepository.save(semiTrailer);
-        return toDto(updatedSemiTrailer);
+        return VehicleUtils.toSemiTrailerResponse(updatedSemiTrailer);
     }
 
     @Transactional
@@ -123,27 +124,4 @@ public class SemiTrailerService {
         semiTrailerRepository.deleteById(id);
     }
 
-    private SemiTrailerResponse toDto(SemiTrailer semiTrailer) {
-        return new SemiTrailerResponse(
-                semiTrailer.getId(),
-                semiTrailer.getExternalId(),
-                semiTrailer.getExternalSource(),
-                semiTrailer.getRegistration(),
-                semiTrailer.getBrand(),
-                semiTrailer.getModel(),
-                semiTrailer.getTrailerType(),
-                semiTrailer.getMaxSpeed(),
-                semiTrailer.getEmptyWeightKg(),
-                semiTrailer.getGrossVehicleWeightKg(),
-                semiTrailer.getHeightCm(),
-                semiTrailer.getWidthCm(),
-                semiTrailer.getLengthCm(),
-                semiTrailer.getAxleCount(),
-                semiTrailer.getPurchaseCost(),
-                semiTrailer.getDepreciationStartDate(),
-                semiTrailer.getDepreciationEndDate(),
-                semiTrailer.getActive(),
-                semiTrailer.getCreatedAt(),
-                semiTrailer.getUpdatedAt());
-    }
 }
