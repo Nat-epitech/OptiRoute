@@ -91,7 +91,6 @@ public class RouteOptimizationService {
          * }
          */
 
-        System.out.print("MaxTravelTimeMinutes: " + request.getMaxTravelTimeMinutes());
         List<RoutesDto> validRoutes = routes.stream().toList();
 
         // Response

@@ -57,36 +57,50 @@ function displayRoutes(routes: any[], selectedRoute: any) {
     if (!map) return
     clearRoutes()
 
-    routes.forEach((route, index) => {
+    const selectedIndex = routes.findIndex(route => route === selectedRoute)
+
+    const orderedRoutes = routes.map((route, index) => ({ route, index, isSelected: index === selectedIndex })).sort((a, b) => Number(a.isSelected) - Number(b.isSelected))
+
+    orderedRoutes.forEach(({ route, index, isSelected }) => {
         const lineString = H.geo.LineString.fromFlexiblePolyline(route.polyline)
-        const isSelected = route === selectedRoute
+
         const polyline = new H.map.Polyline(lineString,
             {
                 style: {
-                    lineWidth: isSelected ? 7 : 4,
-                    strokeColor: isSelected ? '#2563eb' : '#94a3b8'
+                    lineWidth: isSelected ? 8 : 5,
+                    strokeColor: isSelected
+                        ? '#2563eb'
+                        : '#38bdf8',
+                    lineCap: 'round',
+                    lineJoin: 'round'
                 }
             }
         )
 
         polyline.routeIndex = index
-        polyline.addEventListener('tap',
-            () => {
 
-                emitRouteSelected(index)
+        polyline.addEventListener('pointerenter', () => {
+            if (mapContainer.value) {
+                mapContainer.value.style.cursor = 'pointer'
             }
-        )
+        })
+
+        polyline.addEventListener('pointerleave', () => {
+            if (mapContainer.value) {
+                mapContainer.value.style.cursor = ''
+            }
+        })
+
+        polyline.addEventListener('tap', () => { emitRouteSelected(index) })
 
         routePolylines.push(polyline)
         map.addObject(polyline)
     })
 
-    if (routePolylines.length > 0) {
-        map.getViewModel().setLookAtData({
-            bounds:
-                routePolylines[0]
-                    .getBoundingBox()
-        })
+    const selectedPolyline = routePolylines[routePolylines.length - 1]
+
+    if (selectedPolyline) {
+        map.getViewModel().setLookAtData({ bounds: selectedPolyline.getBoundingBox() })
     }
 }
 
@@ -97,15 +111,11 @@ defineExpose({
 
 onMounted(() => {
 
-    const platform = new H.service.Platform({
-        apikey:
-            import.meta.env.VITE_HERE_API_KEY
-    })
+    const platform = new H.service.Platform({ apikey: import.meta.env.VITE_HERE_API_KEY })
 
     const defaultLayers = platform.createDefaultLayers()
 
-    map = new H.Map(mapContainer.value!,
-        defaultLayers.vector.normal.map,
+    map = new H.Map(mapContainer.value!, defaultLayers.vector.normal.map,
         {
             center: { lat: 46.6, lng: 2.5 },
             zoom: 7,
@@ -117,21 +127,14 @@ onMounted(() => {
         const bounds = map.getViewModel().getLookAtData().bounds
         if (!bounds) return
 
+
         const center = map.getCenter()
-
-        const lat = Math.min(
-            Math.max(center.lat, 41.0),
-            51.2
-        )
-
-        const lng = Math.min(
-            Math.max(center.lng, -5.5),
-            9.8
-        )
-
+        const lat = Math.min(Math.max(center.lat, 41.0), 51.2)
+        const lng = Math.min(Math.max(center.lng, -5.5), 9.8)
         map.setCenter({ lat, lng })
 
         const zoom = map.getZoom()
+
         if (zoom < 6) {
             map.setZoom(6)
         } else if (zoom > 15) {
@@ -139,18 +142,10 @@ onMounted(() => {
         }
     })
 
-    new H.mapevents.Behavior(
-        new H.mapevents.MapEvents(map)
-    )
+    new H.mapevents.Behavior(new H.mapevents.MapEvents(map))
 
-    H.ui.UI.createDefault(
-        map,
-        defaultLayers
-    )
+    H.ui.UI.createDefault(map, defaultLayers)
 
-    window.addEventListener(
-        'resize',
-        () => map.getViewPort().resize()
-    )
+    window.addEventListener('resize', () => map.getViewPort().resize())
 })
 </script>

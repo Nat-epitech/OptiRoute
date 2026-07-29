@@ -61,7 +61,8 @@ export const formatDuration = (value: number | null): string => {
         return "Non renseignée";
     }
 
-    if (value < 0){
+
+    if (value <= 60) {
         return "1 min";
     }
 

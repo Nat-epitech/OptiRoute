@@ -65,7 +65,7 @@ watch(
 </script>
 
 <template>
-    <AppModal :show="show" max-width="lg" @close="close">
+    <AppModal :show="show" @close="close">
         <h2 class="mb-6 text-xl font-bold">
             Attribuer l'itinéraire
         </h2>
@@ -134,15 +134,17 @@ watch(
             </div>
         </div>
 
-        <div class="mt-6 flex justify-end gap-2">
-            <button type="button" class="rounded-lg bg-slate-200 px-4 py-2" @click="close">
+        <div class="mt-6 flex justify-end gap-3">
+            <button type="button"
+                class="rounded-xl border border-slate-300 px-4 py-2 text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                @click="close">
                 Annuler
             </button>
 
             <button type="button"
-                class="rounded-lg bg-green-600 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+                class="rounded-xl bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 :disabled="!title.trim() || driverId === undefined" @click="submit">
-                Valider
+                Enregistrer
             </button>
         </div>
     </AppModal>
