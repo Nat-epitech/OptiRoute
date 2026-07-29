@@ -100,8 +100,25 @@ function displayRoutes(routes: any[], selectedRoute: any) {
     const selectedPolyline = routePolylines[routePolylines.length - 1]
 
     if (selectedPolyline) {
-        map.getViewModel().setLookAtData({ bounds: selectedPolyline.getBoundingBox() })
+        const bounds = selectedPolyline.getBoundingBox()
+
+        const latitudePadding = (bounds.getTop() - bounds.getBottom()) * 0.15
+        const longitudePadding = (bounds.getRight() - bounds.getLeft()) * 0.15
+
+        const paddedBounds = new H.geo.Rect(
+            bounds.getTop() + latitudePadding,
+            bounds.getLeft() - longitudePadding,
+            bounds.getBottom() - latitudePadding,
+            bounds.getRight() + longitudePadding
+        )
+
+        map.getViewModel().setLookAtData(
+            {
+                bounds: paddedBounds
+            }
+        )
     }
+
 }
 
 defineExpose({
