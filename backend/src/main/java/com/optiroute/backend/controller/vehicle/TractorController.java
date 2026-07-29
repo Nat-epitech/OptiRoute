@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.optiroute.backend.dto.request.vehicle.TractorRequest;
 import com.optiroute.backend.dto.response.vehicle.TractorResponse;
+import com.optiroute.backend.dto.response.vehicle.TractorLightResponse;
 import com.optiroute.backend.service.vehicle.TractorService;
 
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class TractorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TractorResponse>> getAll() {
+    public ResponseEntity<List<TractorLightResponse>> getAll() {
         return ResponseEntity.ok(tractorService.getAll());
     }
 

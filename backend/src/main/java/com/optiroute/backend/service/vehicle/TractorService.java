@@ -6,9 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.optiroute.backend.dto.request.vehicle.TractorRequest;
+
 import com.optiroute.backend.dto.response.vehicle.TractorResponse;
+import com.optiroute.backend.dto.response.vehicle.TractorLightResponse;
+
 import com.optiroute.backend.entity.vehicle.Tractor;
 import com.optiroute.backend.repository.vehicle.TractorRepository;
+import com.optiroute.backend.utils.VehicleUtils;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -22,8 +26,8 @@ public class TractorService {
     }
 
     @Transactional(readOnly = true)
-    public List<TractorResponse> getAll() {
-        return tractorRepository.findAll().stream().map(this::toDto).toList();
+    public List<TractorLightResponse> getAll() {
+        return tractorRepository.findAll().stream().map(tractor -> VehicleUtils.toTractorLightResponse(tractor)).toList();
     }
 
     @Transactional(readOnly = true)
@@ -31,7 +35,7 @@ public class TractorService {
         Tractor tractor = tractorRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Tractor not found with id: " + id));
 
-        return toDto(tractor);
+        return VehicleUtils.toTractorResponse(tractor);
     }
 
     public Tractor getEntityById(Long id) {
@@ -77,7 +81,7 @@ public class TractorService {
         tractor.setActive(true);
 
         Tractor savedTractor = tractorRepository.save(tractor);
-        return toDto(savedTractor);
+        return VehicleUtils.toTractorResponse(savedTractor);
     }
 
     @Transactional
@@ -114,7 +118,7 @@ public class TractorService {
         tractor.setActive(true);
 
         Tractor updatedTractor = tractorRepository.save(tractor);
-        return toDto(updatedTractor);
+        return VehicleUtils.toTractorResponse(updatedTractor);
     }
 
     @Transactional
@@ -124,30 +128,5 @@ public class TractorService {
         }
 
         tractorRepository.deleteById(id);
-    }
-
-    private TractorResponse toDto(Tractor tractor) {
-        return new TractorResponse(
-                tractor.getId(),
-                tractor.getExternalId(),
-                tractor.getExternalSource(),
-                tractor.getRegistration(),
-                tractor.getBrand(),
-                tractor.getModel(),
-                tractor.getMaxSpeed(),
-                tractor.getFuelType(),
-                tractor.getAverageConsumption(),
-                tractor.getEmptyWeightKg(),
-                tractor.getGrossCombinationWeightKg(),
-                tractor.getHeightCm(),
-                tractor.getWidthCm(),
-                tractor.getLengthCm(),
-                tractor.getAxleCount(),
-                tractor.getPurchaseCost(),
-                tractor.getDepreciationStartDate(),
-                tractor.getDepreciationEndDate(),
-                tractor.getActive(),
-                tractor.getCreatedAt(),
-                tractor.getUpdatedAt());
     }
 }

@@ -4,6 +4,10 @@ import com.optiroute.backend.dto.response.vehicle.SemiTrailerLightResponse;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerResponse;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
 
+import com.optiroute.backend.dto.response.vehicle.TractorResponse;
+import com.optiroute.backend.dto.response.vehicle.TractorLightResponse;
+import com.optiroute.backend.entity.vehicle.Tractor;
+
 public class VehicleUtils {
     public static SemiTrailerResponse toSemiTrailerResponse(SemiTrailer semiTrailer) {
         return new SemiTrailerResponse(
@@ -35,5 +39,38 @@ public class VehicleUtils {
                 semiTrailer.getRegistration(),
                 semiTrailer.getBrand(),
                 semiTrailer.getModel());
+    }
+
+    public static TractorResponse toTractorResponse(Tractor tractor) {
+        return new TractorResponse(
+                tractor.getId(),
+                tractor.getExternalId(),
+                tractor.getExternalSource(),
+                tractor.getRegistration(),
+                tractor.getBrand(),
+                tractor.getModel(),
+                tractor.getMaxSpeed(),
+                tractor.getFuelType(),
+                tractor.getAverageConsumption(),
+                tractor.getEmptyWeightKg(),
+                tractor.getGrossCombinationWeightKg(),
+                tractor.getHeightCm(),
+                tractor.getWidthCm(),
+                tractor.getLengthCm(),
+                tractor.getAxleCount(),
+                tractor.getPurchaseCost(),
+                tractor.getDepreciationStartDate(),
+                tractor.getDepreciationEndDate(),
+                tractor.getActive(),
+                tractor.getCreatedAt(),
+                tractor.getUpdatedAt());
+    }
+
+    public static TractorLightResponse toTractorLightResponse(Tractor tractor) {
+        return new TractorLightResponse(
+                tractor.getId(),
+                tractor.getRegistration(),
+                tractor.getBrand(),
+                tractor.getModel());
     }
 }
