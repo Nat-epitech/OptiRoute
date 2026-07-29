@@ -1,7 +1,7 @@
 package com.optiroute.backend.utils;
 
 import com.optiroute.backend.dto.response.driver.DriverResponse;
-import com.optiroute.backend.dto.response.driver.DriverSummaryResponse;
+import com.optiroute.backend.dto.response.driver.DriverLightResponse;
 import com.optiroute.backend.repository.driver.DriverRepository;
 import com.optiroute.backend.entity.driver.Driver;
 
@@ -17,8 +17,8 @@ public class DriverUtils {
                 driver.getMonthlyWorkingHours());
     }
 
-    public static DriverSummaryResponse toSummaryResponse(Driver driver) {
-        return new DriverSummaryResponse(
+    public static DriverLightResponse toSummaryResponse(Driver driver) {
+        return new DriverLightResponse(
                 driver.getId(),
                 driver.getFirstName(),
                 driver.getLastName());

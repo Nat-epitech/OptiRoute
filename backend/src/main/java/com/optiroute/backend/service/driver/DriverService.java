@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.optiroute.backend.dto.request.driver.DriverRequest;
 import com.optiroute.backend.dto.response.driver.DriverResponse;
-import com.optiroute.backend.dto.response.driver.DriverSummaryResponse;
+import com.optiroute.backend.dto.response.driver.DriverLightResponse;
 import com.optiroute.backend.entity.driver.Driver;
 import com.optiroute.backend.repository.driver.DriverRepository;
 
@@ -25,7 +25,7 @@ public class DriverService {
         this.driverRepository = driverRepository;
     }
 
-    public List<DriverSummaryResponse> getAll() {
+    public List<DriverLightResponse> getAll() {
         return driverRepository.findAll()
                 .stream()
                 .map(driver -> DriverUtils.toSummaryResponse(driver))
