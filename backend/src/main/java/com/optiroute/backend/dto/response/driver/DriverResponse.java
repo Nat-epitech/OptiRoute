@@ -2,17 +2,12 @@ package com.optiroute.backend.dto.response.driver;
 
 import java.math.BigDecimal;
 
-import lombok.Builder;
-import lombok.Getter;
-
-@Getter
-@Builder
-public class DriverResponse {
-    private Long id;
-    private String login;
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
-    private BigDecimal monthlyCost;
-    private BigDecimal monthlyWorkingHours;
+public record DriverResponse(
+        Long id,
+        String login,
+        String firstName,
+        String lastName,
+        String phoneNumber,
+        BigDecimal monthlyCost,
+        BigDecimal monthlyWorkingHours) {
 }

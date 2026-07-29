@@ -2,6 +2,7 @@ package com.optiroute.backend.controller.driver;
 
 import com.optiroute.backend.dto.request.driver.DriverRequest;
 import com.optiroute.backend.dto.response.driver.DriverResponse;
+import com.optiroute.backend.dto.response.driver.DriverSummaryResponse;
 import com.optiroute.backend.service.driver.DriverService;
 
 import jakarta.validation.Valid;
@@ -23,7 +24,7 @@ public class DriverController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DriverResponse>> getAll() {
+    public ResponseEntity<List<DriverSummaryResponse>> getAll() {
         return ResponseEntity.ok(driverService.getAll());
     }
 
