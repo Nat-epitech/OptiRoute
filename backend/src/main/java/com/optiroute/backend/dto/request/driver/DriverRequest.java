@@ -3,22 +3,18 @@ package com.optiroute.backend.dto.request.driver;
 import java.math.BigDecimal;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
-@Getter
-@Setter
-public class DriverRequest {
+public record DriverRequest(
+        @NotBlank String login,
 
-    @NotBlank
-    private String firstName;
+        @NotBlank String firstName,
+        @NotBlank String lastName,
 
-    @NotBlank
-    private String lastName;
+        String phoneNumber,
 
-    private String phoneNumber;
-
-    private BigDecimal monthlyCost;
-
-    private BigDecimal monthlyWorkingHours;
+        @NotNull @PositiveOrZero BigDecimal monthlyCost,
+        @NotNull @Positive BigDecimal monthlyWorkingHours) {
 }
