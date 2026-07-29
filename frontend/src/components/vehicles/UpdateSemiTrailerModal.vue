@@ -173,7 +173,7 @@ watch(
                 <button type="submit"
                     class="rounded-xl bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                     :disabled="loading || !semiTrailer">
-                    {{ loading ? 'Enregistrerement' : 'Enregistrer' }}
+                    {{ loading ? 'Enregistrement' : 'Enregistrer' }}
                 </button>
             </div>
         </form>
