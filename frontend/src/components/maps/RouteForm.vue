@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import HereAutocompleteInput from './HereAutocompleteInput.vue'
 
-import { calculateRoute } from '@/api/routeApi'
+import { calculateRoute } from '@/api/here/mapsApi'
 import { getTractors } from "@/api/vehicle/tractorApi"
 import { getSemiTrailers } from "@/api/vehicle/semiTrailerApi"
 

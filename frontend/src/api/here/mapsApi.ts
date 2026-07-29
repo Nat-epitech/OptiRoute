@@ -6,14 +6,18 @@ const API_KEY = import.meta.env.VITE_HERE_API_KEY
 
 // Functions
 
+export async function calculateRoute(payload: any) {
+    const response = await axios.post('routes/calculate', payload)
+    return response.data
+}
+
 export async function autocompletePlaces(query: string) {
 
     if (!query || query.length < 3) {
         return []
     }
 
-    const response = await axios.get(
-        'https://autocomplete.search.hereapi.com/v1/autocomplete',
+    const response = await axios.get('https://autocomplete.search.hereapi.com/v1/autocomplete',
         {
             params: {
                 q: query,
@@ -28,8 +32,7 @@ export async function autocompletePlaces(query: string) {
 }
 
 export async function geocodePlace(id: string) {
-    const response = await axios.get(
-        'https://lookup.search.hereapi.com/v1/lookup',
+    const response = await axios.get('https://lookup.search.hereapi.com/v1/lookup',
         {
             params: {
                 id,

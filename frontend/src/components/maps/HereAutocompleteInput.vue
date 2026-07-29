@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { debounce } from 'lodash-es'
-import { autocompletePlaces, geocodePlace } from '@/api/placeApi'
+import { autocompletePlaces, geocodePlace } from '@/api/here/mapsApi'
 
 //Variables
 
