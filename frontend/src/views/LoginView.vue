@@ -10,13 +10,19 @@ const password = ref('')
 const authStore = useAuthStore()
 const router = useRouter()
 
+const loading = ref(false)
+
 const handleLogin = async () => {
     try {
+        loading.value = true
+
         const response = await login(email.value, password.value)
         authStore.setToken(response.token)
         router.push('/homepage')
     } catch (e) {
         alert('Invalid credentials')
+    } finally {
+        loading.value = false
     }
 }
 </script>
@@ -43,9 +49,9 @@ const handleLogin = async () => {
                 <input v-model="password" type="password" placeholder="Mot de passe"
                     class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-                <button @click="handleLogin"
+                <button @click="handleLogin" :disabled="loading"
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-[1.02]">
-                    Se connecter
+                    {{ loading ? 'Connexion en cours' : 'Se connecter' }}
                 </button>
 
             </div>
