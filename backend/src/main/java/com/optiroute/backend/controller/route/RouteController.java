@@ -1,4 +1,4 @@
-package com.optiroute.backend.controller;
+package com.optiroute.backend.controller.route;
 
 import com.optiroute.backend.dto.request.route.RouteRequest;
 import com.optiroute.backend.dto.response.route.RouteResponse;

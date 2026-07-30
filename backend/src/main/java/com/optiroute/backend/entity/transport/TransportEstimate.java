@@ -1,4 +1,4 @@
-package com.optiroute.backend.entity;
+package com.optiroute.backend.entity.transport;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

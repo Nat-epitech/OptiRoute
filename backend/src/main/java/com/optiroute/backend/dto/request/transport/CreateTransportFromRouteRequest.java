@@ -1,4 +1,4 @@
-package com.optiroute.backend.dto.request.planning;
+package com.optiroute.backend.dto.request.transport;
 
 import com.optiroute.backend.dto.response.route.RoutesDto;
 

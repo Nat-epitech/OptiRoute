@@ -5,15 +5,14 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
-import com.optiroute.backend.dto.response.planning.TransportPlanningResponse;
-import com.optiroute.backend.entity.TransportEstimate;
+import com.optiroute.backend.dto.response.transport.TransportPlanningResponse;
 import com.optiroute.backend.entity.driver.Driver;
-import com.optiroute.backend.repository.TransportRepository;
+import com.optiroute.backend.entity.transport.TransportEstimate;
 import com.optiroute.backend.repository.driver.DriverRepository;
+import com.optiroute.backend.repository.transport.TransportEstimateRepository;
+import com.optiroute.backend.repository.transport.TransportRepository;
 
 import lombok.RequiredArgsConstructor;
-
-import com.optiroute.backend.repository.TransportEstimateRepository;
 
 import org.springframework.stereotype.Service;
 

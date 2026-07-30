@@ -1,11 +1,11 @@
-package com.optiroute.backend.repository;
-
-import com.optiroute.backend.entity.Transport;
+package com.optiroute.backend.repository.transport;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.optiroute.backend.entity.transport.Transport;
 
 public interface TransportRepository extends JpaRepository<Transport, Long> {
     List<Transport> findByPlannedStartGreaterThanEqualAndPlannedStartLessThan(OffsetDateTime start, OffsetDateTime end);

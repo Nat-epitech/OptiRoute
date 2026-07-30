@@ -2,17 +2,17 @@ package com.optiroute.backend.service.transport;
 
 import org.springframework.stereotype.Service;
 
-import com.optiroute.backend.dto.response.planning.TransportDetailResponse;
+import com.optiroute.backend.dto.response.transport.TransportDetailResponse;
 import com.optiroute.backend.entity.Customer;
-import com.optiroute.backend.entity.Transport;
-import com.optiroute.backend.entity.TransportEstimate;
 import com.optiroute.backend.entity.driver.Driver;
+import com.optiroute.backend.entity.transport.Transport;
+import com.optiroute.backend.entity.transport.TransportEstimate;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
 import com.optiroute.backend.entity.vehicle.Tractor;
 import com.optiroute.backend.repository.CustomerRepository;
-import com.optiroute.backend.repository.TransportRepository;
 import com.optiroute.backend.repository.driver.DriverRepository;
-import com.optiroute.backend.repository.TransportEstimateRepository;
+import com.optiroute.backend.repository.transport.TransportEstimateRepository;
+import com.optiroute.backend.repository.transport.TransportRepository;
 import com.optiroute.backend.repository.vehicle.SemiTrailerRepository;
 import com.optiroute.backend.repository.vehicle.TractorRepository;
 

@@ -1,4 +1,4 @@
-package com.optiroute.backend.controller;
+package com.optiroute.backend.controller.transport;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,11 +6,11 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.optiroute.backend.dto.request.planning.CreateTransportFromRouteRequest;
-import com.optiroute.backend.dto.request.planning.TransportRequest;
-import com.optiroute.backend.dto.response.planning.TransportDetailResponse;
-import com.optiroute.backend.dto.response.planning.TransportPlanningResponse;
-import com.optiroute.backend.entity.Transport;
+import com.optiroute.backend.dto.request.transport.CreateTransportFromRouteRequest;
+import com.optiroute.backend.dto.request.transport.TransportRequest;
+import com.optiroute.backend.dto.response.transport.TransportDetailResponse;
+import com.optiroute.backend.dto.response.transport.TransportPlanningResponse;
+import com.optiroute.backend.entity.transport.Transport;
 import com.optiroute.backend.service.transport.TransportDetailService;
 import com.optiroute.backend.service.transport.TransportFacadeService;
 import com.optiroute.backend.service.transport.TransportPlanningService;

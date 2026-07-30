@@ -1,4 +1,4 @@
-package com.optiroute.backend.dto.response.planning;
+package com.optiroute.backend.dto.response.transport;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

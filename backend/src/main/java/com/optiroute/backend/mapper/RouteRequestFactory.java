@@ -1,7 +1,7 @@
 package com.optiroute.backend.mapper;
 
 import com.optiroute.backend.dto.request.route.RouteRequest;
-import com.optiroute.backend.entity.Transport;
+import com.optiroute.backend.entity.transport.Transport;
 import com.optiroute.backend.model.Position;
 import com.optiroute.backend.type.GpsModeType;
 
