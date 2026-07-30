@@ -1,4 +1,4 @@
-package com.optiroute.backend.service;
+package com.optiroute.backend.service.route;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optiroute.backend.dto.response.FuelResponse;

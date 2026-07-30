@@ -1,4 +1,4 @@
-package com.optiroute.backend.service;
+package com.optiroute.backend.service.route;
 
 import com.optiroute.backend.dto.request.route.RouteRequest;
 import com.optiroute.backend.dto.response.route.RouteCostDetailsDto;
@@ -6,7 +6,7 @@ import com.optiroute.backend.dto.response.route.RouteResponse;
 import com.optiroute.backend.dto.response.route.RoutesDto;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
 import com.optiroute.backend.entity.vehicle.Tractor;
-
+import com.optiroute.backend.service.route.HereRouteParser.ParsedRoute;
 import com.optiroute.backend.service.vehicle.SemiTrailerService;
 import com.optiroute.backend.service.vehicle.TractorService;
 
@@ -18,7 +18,6 @@ import com.optiroute.backend.mapper.TruckConfigurationFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service

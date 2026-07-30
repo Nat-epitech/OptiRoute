@@ -11,9 +11,9 @@ import com.optiroute.backend.dto.request.planning.TransportRequest;
 import com.optiroute.backend.dto.response.planning.TransportDetailResponse;
 import com.optiroute.backend.dto.response.planning.TransportPlanningResponse;
 import com.optiroute.backend.entity.Transport;
-import com.optiroute.backend.service.TransportDetailService;
-import com.optiroute.backend.service.TransportFacadeService;
-import com.optiroute.backend.service.TransportPlanningService;
+import com.optiroute.backend.service.transport.TransportDetailService;
+import com.optiroute.backend.service.transport.TransportFacadeService;
+import com.optiroute.backend.service.transport.TransportPlanningService;
 
 @RestController
 @RequestMapping("/api/transports")

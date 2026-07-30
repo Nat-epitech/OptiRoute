@@ -1,4 +1,4 @@
-package com.optiroute.backend.service;
+package com.optiroute.backend.service.transport;
 
 import com.optiroute.backend.dto.request.planning.TransportRequest;
 import com.optiroute.backend.entity.Transport;

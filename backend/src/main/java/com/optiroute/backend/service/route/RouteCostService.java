@@ -1,4 +1,4 @@
-package com.optiroute.backend.service;
+package com.optiroute.backend.service.route;
 
 import org.springframework.stereotype.Service;
 
