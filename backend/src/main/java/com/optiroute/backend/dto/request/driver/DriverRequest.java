@@ -8,8 +8,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record DriverRequest(
-        @NotBlank String login,
-
         @NotBlank String firstName,
         @NotBlank String lastName,
 
