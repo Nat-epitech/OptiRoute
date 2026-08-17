@@ -24,7 +24,7 @@ public class CostParameter {
     private CostParameterCategoryType category;
 
     @Column(nullable = false, length = 100)
-    private String parameter;
+    private String label;
 
     @Column(nullable = false, precision = 12, scale = 4)
     private BigDecimal value;

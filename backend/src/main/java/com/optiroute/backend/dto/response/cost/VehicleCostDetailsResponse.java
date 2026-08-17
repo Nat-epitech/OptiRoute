@@ -1,4 +1,6 @@
 package com.optiroute.backend.dto.response.cost;
 
-public record VehicleCostDetailsResponse(double depreciationCost, double insuranceCost, double maintenanceCost, double totalCost) {
+import java.util.List;
+
+public record VehicleCostDetailsResponse(List<AppliedCostResponse> costs, double totalCost) {
 }

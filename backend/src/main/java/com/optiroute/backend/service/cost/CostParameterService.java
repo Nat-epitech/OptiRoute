@@ -17,13 +17,11 @@ public class CostParameterService {
         this.costParameterRepository = costParameterRepository;
     }
 
-    public CostParameter getParameter(CostParameterCategoryType category, String parameter) {
-
-        return costParameterRepository.findByCategoryAndParameter(category,parameter)
-            .orElseThrow(() -> new IllegalStateException("Cost parameter not found: " + category + "/" + parameter));
+    public CostParameter getParameter(CostParameterCategoryType category, String label) {
+        return costParameterRepository.findByCategoryAndLabel(category,label).orElseThrow(() -> new IllegalStateException("Cost parameter not found: " + category + "/" + label));
     }
 
-    public BigDecimal getValue(CostParameterCategoryType category, String parameter) {
-        return getParameter(category,parameter).getValue();
+    public BigDecimal getValue(CostParameterCategoryType category, String label) {
+        return getParameter(category,label).getValue();
     }
 }

@@ -4,11 +4,15 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
 import com.optiroute.backend.dto.response.cost.TransportCostDetailsResponse;
 import com.optiroute.backend.dto.response.cost.VehicleCostDetailsResponse;
+import com.optiroute.backend.dto.response.cost.AppliedCostResponse;
+import com.optiroute.backend.dto.response.cost.CostCategoryResponse;
 
 import com.optiroute.backend.entity.transport.Transport;
 import com.optiroute.backend.entity.transport.TransportEstimate;
@@ -29,6 +33,9 @@ public class TransportCostService {
 
     private static final ZoneId PLANNING_ZONE = ZoneId.of("Europe/Paris");
 
+    private static final String FUEL_LABEL = "Carburant";
+    private static final String TOLL_LABEL = "Péages";
+
     private final TransportEstimateRepository transportEstimateRepository;
     private final TransportRepository transportRepository;
     private final TractorService tractorService;
@@ -41,21 +48,35 @@ public class TransportCostService {
             return null;
         }
 
-        double fuelCost = estimate.getEstimatedFuelCost().doubleValue();
-        double tollCost = estimate.getEstimatedTollCost().doubleValue();
-        double distanceKm = estimate.getDistanceMeters() / 1000.0;
+        List<AppliedCostResponse> vehicleCosts = new ArrayList<>();
 
+        // Fuel
+        double fuelCost = estimate.getEstimatedFuelCost().doubleValue();
+        vehicleCosts.add(new AppliedCostResponse(FUEL_LABEL, fuelCost));
+
+        // Toll
+        double tollCost = estimate.getEstimatedTollCost().doubleValue();
+        vehicleCosts.add(new AppliedCostResponse(TOLL_LABEL, tollCost));
+
+        double distanceKm = estimate.getDistanceMeters() / 1000.0;
         LocalDate transportDate = transport.getPlannedStart().atZoneSameInstant(PLANNING_ZONE).toLocalDate();
         double dailyVehicleDistanceKm = calculateDailyVehicleDistance(transport.getTractorId(),transportDate);
 
         Tractor tractor = tractorService.getEntityById(transport.getTractorId());
         SemiTrailer semiTrailer = semiTrailerService.getEntityById(transport.getSemiTrailerId());
 
-        VehicleCostDetailsResponse vehicleCost = vehicleCostService.calculateCosts(tractor,semiTrailer,distanceKm,dailyVehicleDistanceKm,transportDate);
+        VehicleCostDetailsResponse vehicleCostDetails = vehicleCostService.calculateCosts(tractor,semiTrailer,distanceKm,dailyVehicleDistanceKm,transportDate);
+        vehicleCosts.addAll(vehicleCostDetails.costs());
 
-        double totalCost = fuelCost + tollCost + vehicleCost.totalCost();
+        double vehicleTotal = vehicleCosts.stream().mapToDouble(AppliedCostResponse::amount).sum();
 
-        return new TransportCostDetailsResponse(fuelCost, tollCost, vehicleCost, totalCost);
+        CostCategoryResponse vehicle = new CostCategoryResponse(vehicleCosts, vehicleTotal);
+        CostCategoryResponse driver = new CostCategoryResponse(List.of(), 0);
+        CostCategoryResponse structure = new CostCategoryResponse(List.of(), 0);
+
+        double totalCost = vehicle.totalCost() + driver.totalCost() + structure.totalCost();
+
+        return new TransportCostDetailsResponse(vehicle, driver, structure, totalCost);
     }
 
     private double calculateDailyVehicleDistance(Long tractorId, LocalDate date) {
@@ -64,6 +85,6 @@ public class TransportCostService {
         OffsetDateTime end = date.plusDays(1).atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
 
         return transportRepository.findByTractorIdAndPlannedStartGreaterThanEqualAndPlannedStartLessThan(tractorId,start,end).stream().map(Transport::getId)
-            .map(transportEstimateRepository::findByTransportId).flatMap(Optional::stream).mapToDouble(estimate -> estimate.getDistanceMeters() / 1000.0).sum();
+            .map(transportEstimateRepository::findByTransportId).flatMap(Optional::stream).mapToDouble(transportEstimate -> transportEstimate.getDistanceMeters() / 1000.0).sum();
     }
 }
