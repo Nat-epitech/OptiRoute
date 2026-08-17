@@ -36,8 +36,6 @@ public class TransportEstimateService {
 
 		estimate.setEstimatedFuelCost(BigDecimal.valueOf(bestRoute.getCosts().getFuelCost()));
 		estimate.setEstimatedTollCost(BigDecimal.valueOf(bestRoute.getCosts().getTollCost()));
-		estimate.setEstimatedDriverCost(BigDecimal.valueOf(bestRoute.getCosts().getDriverCost()));
-		estimate.setEstimatedTotalCost(BigDecimal.valueOf(bestRoute.getCosts().getTotalCost()));
 
 		return transportEstimateRepository.save(estimate);
 	}
@@ -58,8 +56,6 @@ public class TransportEstimateService {
 
 		estimate.setEstimatedFuelCost(BigDecimal.valueOf(route.getCosts().getFuelCost()));
 		estimate.setEstimatedTollCost(BigDecimal.valueOf(route.getCosts().getTollCost()));
-		estimate.setEstimatedDriverCost(BigDecimal.valueOf(route.getCosts().getDriverCost()));
-		estimate.setEstimatedTotalCost(BigDecimal.valueOf(route.getCosts().getTotalCost()));
 
 		return transportEstimateRepository.save(estimate);
 	}

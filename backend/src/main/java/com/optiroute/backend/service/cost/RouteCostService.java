@@ -1,4 +1,4 @@
-package com.optiroute.backend.service.route;
+package com.optiroute.backend.service.cost;
 
 import org.springframework.stereotype.Service;
 
@@ -7,8 +7,7 @@ import com.optiroute.backend.dto.response.route.RouteCostDetailsDto;
 @Service
 public class RouteCostService {
 
-    public RouteCostDetailsDto calculateCosts(double distanceKm, double durationHours, double fuelConsumptionPer100Km,
-            double fuelPrice, double tollCost, double driverHourlyRate) {
+    public RouteCostDetailsDto calculateCosts(double distanceKm, double durationHours, double fuelConsumptionPer100Km, double fuelPrice, double tollCost, double driverHourlyRate) {
 
         double fuelUsed = (distanceKm / 100.0) * fuelConsumptionPer100Km;
         double fuelCost = fuelUsed * fuelPrice;

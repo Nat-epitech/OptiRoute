@@ -1,21 +1,18 @@
 package com.optiroute.backend.dto.response.transport;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+
+import com.optiroute.backend.dto.response.cost.TransportCostDetailsResponse;
 
 public record TransportPlanningResponse(
 
-        Long id,
-        String name,
+        Long id, String name,
 
-        Long driverId,
-        String driverName,
+        Long driverId, String driverName,
 
-        OffsetDateTime plannedStart,
-        OffsetDateTime plannedEnd,
+        OffsetDateTime plannedStart, OffsetDateTime plannedEnd,
 
-        String originName,
-        String destinationName,
+        String originName, String destinationName,
 
-        BigDecimal estimatedTotalCost) {
+        TransportCostDetailsResponse costs) {
 }

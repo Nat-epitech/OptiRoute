@@ -1,0 +1,35 @@
+package com.optiroute.backend.entity.cost;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+
+import com.optiroute.backend.type.CostParameterCategoryType;
+import com.optiroute.backend.type.CostParameterUnitType;
+
+@Entity
+@Getter
+@Setter
+@Table(name = "cost_parameter")
+public class CostParameter {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private CostParameterCategoryType category;
+
+    @Column(nullable = false, length = 100)
+    private String parameter;
+
+    @Column(nullable = false, precision = 12, scale = 4)
+    private BigDecimal value;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private CostParameterUnitType unit;
+}

@@ -2,6 +2,7 @@ package com.optiroute.backend.service.transport;
 
 import org.springframework.stereotype.Service;
 
+import com.optiroute.backend.dto.response.cost.TransportCostDetailsResponse;
 import com.optiroute.backend.dto.response.transport.TransportDetailResponse;
 import com.optiroute.backend.entity.Customer;
 import com.optiroute.backend.entity.driver.Driver;
@@ -16,6 +17,8 @@ import com.optiroute.backend.repository.transport.TransportRepository;
 import com.optiroute.backend.repository.vehicle.SemiTrailerRepository;
 import com.optiroute.backend.repository.vehicle.TractorRepository;
 
+import com.optiroute.backend.service.cost.TransportCostService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,6 +31,8 @@ public class TransportDetailService {
     private final SemiTrailerRepository semiTrailerRepository;
     private final CustomerRepository customerRepository;
     private final TransportEstimateRepository transportEstimateRepository;
+
+    private final TransportCostService transportCostService;
 
     public TransportDetailResponse getDetail(Long transportId) {
 
@@ -50,56 +55,35 @@ public class TransportDetailService {
         }
 
         TransportEstimate estimate = transportEstimateRepository.findByTransportId(transportId).orElse(null);
+        TransportCostDetailsResponse costs = transportCostService.calculateCosts(transport,estimate);
 
         return new TransportDetailResponse(
 
-                transport.getId(),
-                transport.getName(),
-                transport.getStatus(),
+            transport.getId(), transport.getName(), transport.getStatus(),
 
-                transport.getPlannedStart(),
-                transport.getPlannedEnd(),
+            transport.getPlannedStart(), transport.getPlannedEnd(),
 
-                transport.getActualStart(),
-                transport.getActualEnd(),
+            transport.getActualStart(), transport.getActualEnd(),
 
-                driver.getId(),
-                driver.getFirstName() + " " + driver.getLastName(),
-                driver.getLogin(),
+            driver.getId(), driver.getFirstName() + " " + driver.getLastName(), driver.getLogin(),
 
-                tractor != null ? tractor.getId() : null,
-                tractor != null ? tractor.getRegistration() : null,
-                tractor != null ? tractor.getBrand() : null,
-                tractor != null ? tractor.getModel() : null,
+            tractor != null ? tractor.getId() : null, tractor != null ? tractor.getRegistration() : null, tractor != null ? tractor.getBrand() : null,
+            tractor != null ? tractor.getModel() : null,
 
-                semiTrailer != null ? semiTrailer.getId() : null,
-                semiTrailer != null ? semiTrailer.getRegistration() : null,
-                semiTrailer != null ? semiTrailer.getBrand() : null,
-                semiTrailer != null ? semiTrailer.getModel() : null,
+            semiTrailer != null ? semiTrailer.getId() : null, semiTrailer != null ? semiTrailer.getRegistration() : null, semiTrailer != null ? semiTrailer.getBrand() : null,
+            semiTrailer != null ? semiTrailer.getModel() : null,
 
-                customer != null ? customer.getId() : null,
-                customer != null ? customer.getName() : null,
-                customer != null ? customer.getAddress() : null,
-                customer != null ? customer.getCity() : null,
+            customer != null ? customer.getId() : null, customer != null ? customer.getName() : null, customer != null ? customer.getAddress() : null,
+            customer != null ? customer.getCity() : null,
 
-                transport.getOriginName(),
-                transport.getOriginAddress(),
-                transport.getOriginLat(),
-                transport.getOriginLng(),
+            transport.getOriginName(), transport.getOriginAddress(), transport.getOriginLat(), transport.getOriginLng(),
 
-                transport.getDestinationName(),
-                transport.getDestinationAddress(),
-                transport.getDestinationLat(),
-                transport.getDestinationLng(),
+            transport.getDestinationName(), transport.getDestinationAddress(), transport.getDestinationLat(), transport.getDestinationLng(),
 
-                estimate != null ? estimate.getDistanceMeters() : null,
-                estimate != null ? estimate.getDurationSeconds() : null,
+            estimate != null ? estimate.getDistanceMeters() : null, estimate != null ? estimate.getDurationSeconds() : null,
 
-                estimate != null ? estimate.getPolyline() : null,
+            estimate != null ? estimate.getPolyline() : null,
 
-                estimate != null ? estimate.getEstimatedFuelCost() : null,
-                estimate != null ? estimate.getEstimatedTollCost() : null,
-                estimate != null ? estimate.getEstimatedDriverCost() : null,
-                estimate != null ? estimate.getEstimatedTotalCost() : null);
+            costs);
     }
 }

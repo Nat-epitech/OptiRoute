@@ -1,10 +1,14 @@
 package com.optiroute.backend.dto.response.route;
 
+import com.optiroute.backend.dto.response.cost.VehicleCostDetailsResponse;
+
 public class RouteCostDetailsDto {
 
     private double fuelCost;
     private double tollCost;
     private double driverCost;
+
+    private VehicleCostDetailsResponse vehicleCost;
 
     private double totalCost;
 
@@ -38,5 +42,13 @@ public class RouteCostDetailsDto {
 
     public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public void setVehicleCost(VehicleCostDetailsResponse vehicleCost) {
+        this.vehicleCost = vehicleCost;
+    }
+
+    public VehicleCostDetailsResponse getVehicleCost() {
+        return vehicleCost;
     }
 }

@@ -39,12 +39,6 @@ public class TransportEstimate {
     @Column(name = "estimated_toll_cost", nullable = false, precision = 10, scale = 2)
     private BigDecimal estimatedTollCost;
 
-    @Column(name = "estimated_driver_cost", nullable = false, precision = 10, scale = 2)
-    private BigDecimal estimatedDriverCost;
-
-    @Column(name = "estimated_total_cost", nullable = false, precision = 10, scale = 2)
-    private BigDecimal estimatedTotalCost;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
@@ -129,22 +123,6 @@ public class TransportEstimate {
 
     public void setEstimatedTollCost(BigDecimal estimatedTollCost) {
         this.estimatedTollCost = estimatedTollCost;
-    }
-
-    public BigDecimal getEstimatedDriverCost() {
-        return estimatedDriverCost;
-    }
-
-    public void setEstimatedDriverCost(BigDecimal estimatedDriverCost) {
-        this.estimatedDriverCost = estimatedDriverCost;
-    }
-
-    public BigDecimal getEstimatedTotalCost() {
-        return estimatedTotalCost;
-    }
-
-    public void setEstimatedTotalCost(BigDecimal estimatedTotalCost) {
-        this.estimatedTotalCost = estimatedTotalCost;
     }
 
     public OffsetDateTime getCreatedAt() {

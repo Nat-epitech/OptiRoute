@@ -1,4 +1,4 @@
-package com.optiroute.backend.service.route;
+package com.optiroute.backend.service.cost;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optiroute.backend.dto.response.FuelResponse;
@@ -25,8 +25,7 @@ public class FuelPriceService {
 
     public synchronized double getAverageDieselPrice() {
 
-        if (cachedDieselPrice != null && lastUpdate != null
-                && Instant.now().isBefore(lastUpdate.plus(Duration.ofHours(1)))) {
+        if (cachedDieselPrice != null && lastUpdate != null && Instant.now().isBefore(lastUpdate.plus(Duration.ofHours(1)))) {
             return cachedDieselPrice;
         }
 
@@ -36,7 +35,7 @@ public class FuelPriceService {
             RestTemplate restTemplate = new RestTemplate(factory);
 
             @SuppressWarnings("null")
-            ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET, null, byte[].class);
+            ResponseEntity<byte[]> response = restTemplate.exchange(url,HttpMethod.GET,null,byte[].class);
 
             byte[] bodyBytes = response.getBody();
             if (bodyBytes == null) {
@@ -45,8 +44,7 @@ public class FuelPriceService {
 
             String json;
             if (bodyBytes.length > 2 && (bodyBytes[0] == (byte) 0x1f) && (bodyBytes[1] == (byte) 0x8b)) {
-                try (GZIPInputStream gis = new GZIPInputStream(new java.io.ByteArrayInputStream(bodyBytes));
-                        ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                try (GZIPInputStream gis = new GZIPInputStream(new java.io.ByteArrayInputStream(bodyBytes)); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
                     gis.transferTo(out);
                     json = out.toString(java.nio.charset.StandardCharsets.UTF_8);
                 }
@@ -54,13 +52,8 @@ public class FuelPriceService {
                 json = new String(bodyBytes, java.nio.charset.StandardCharsets.UTF_8);
             }
 
-            FuelResponse body = objectMapper.readValue(json, FuelResponse.class);
-            double average = body.getResults().stream()
-                    .map(FuelResponse.Result::getGazolePrix)
-                    .filter(Objects::nonNull)
-                    .mapToDouble(Double::doubleValue)
-                    .average()
-                    .orElse(1.8);
+            FuelResponse body = objectMapper.readValue(json,FuelResponse.class);
+            double average = body.getResults().stream().map(FuelResponse.Result::getGazolePrix).filter(Objects::nonNull).mapToDouble(Double::doubleValue).average().orElse(1.8);
 
             cachedDieselPrice = average;
             lastUpdate = Instant.now();
