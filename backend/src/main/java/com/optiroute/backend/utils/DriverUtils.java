@@ -7,28 +7,19 @@ import com.optiroute.backend.entity.driver.Driver;
 
 public class DriverUtils {
     public static DriverResponse toDriverResponse(Driver driver) {
-        return new DriverResponse(
-                driver.getId(),
-                driver.getLogin(),
-                driver.getFirstName(),
-                driver.getLastName(),
-                driver.getPhoneNumber(),
-                driver.getMonthlyCost(),
-                driver.getMonthlyWorkingHours());
+        return new DriverResponse(driver.getId(), driver.getLogin(), driver.getFirstName(), driver.getLastName(), driver.getPhoneNumber(), driver.getAnnualSalary(),
+            driver.getMonthlyWorkingHours());
     }
 
     public static DriverLightResponse toSummaryResponse(Driver driver) {
-        return new DriverLightResponse(
-                driver.getId(),
-                driver.getFirstName(),
-                driver.getLastName());
+        return new DriverLightResponse(driver.getId(), driver.getFirstName(), driver.getLastName());
     }
 
     public static String generateUniqueLogin(DriverRepository driverRepository, String firstName, String lastName) {
         String normalizedFirstName = CommonUtils.normalizeText(firstName).toUpperCase();
         String normalizedLastName = CommonUtils.normalizeText(lastName).toUpperCase();
 
-        String baseLogin = normalizedFirstName.substring(0, 1) + normalizedLastName;
+        String baseLogin = normalizedFirstName.substring(0,1) + normalizedLastName;
         String login = baseLogin;
         int suffix = 2;
 

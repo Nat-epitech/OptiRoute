@@ -10,6 +10,7 @@ import com.optiroute.backend.dto.request.driver.DriverRequest;
 import com.optiroute.backend.dto.response.driver.DriverResponse;
 import com.optiroute.backend.dto.response.driver.DriverLightResponse;
 import com.optiroute.backend.entity.driver.Driver;
+import com.optiroute.backend.entity.vehicle.Tractor;
 import com.optiroute.backend.repository.driver.DriverRepository;
 
 import com.optiroute.backend.utils.DriverUtils;
@@ -26,10 +27,7 @@ public class DriverService {
     }
 
     public List<DriverLightResponse> getAll() {
-        return driverRepository.findAll()
-                .stream()
-                .map(driver -> DriverUtils.toSummaryResponse(driver))
-                .toList();
+        return driverRepository.findAll().stream().map(driver -> DriverUtils.toSummaryResponse(driver)).toList();
     }
 
     @Transactional(readOnly = true)
@@ -39,14 +37,18 @@ public class DriverService {
         return DriverUtils.toDriverResponse(driver);
     }
 
+    public Driver getEntityById(Long id) {
+        return driverRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Driver not found with id: " + id));
+    }
+
     @Transactional
     public DriverResponse createDriver(DriverRequest request) {
         Driver driver = new Driver();
-        driver.setLogin(DriverUtils.generateUniqueLogin(driverRepository, request.firstName(), request.lastName()));
+        driver.setLogin(DriverUtils.generateUniqueLogin(driverRepository,request.firstName(),request.lastName()));
         driver.setFirstName(request.firstName());
         driver.setLastName(request.lastName());
         driver.setPhoneNumber(request.phoneNumber());
-        driver.setMonthlyCost(request.monthlyCost());
+        driver.setAnnualSalary(request.annualSalary());
         driver.setMonthlyWorkingHours(request.monthlyWorkingHours());
 
         Driver savedDriver = driverRepository.save(driver);
@@ -58,9 +60,9 @@ public class DriverService {
         Driver driver = driverRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Driver not found with id " + id));
         driver.setFirstName(request.firstName());
         driver.setLastName(request.lastName());
-        driver.setLogin(DriverUtils.generateUniqueLogin(driverRepository, request.firstName(), request.lastName()));
+        driver.setLogin(DriverUtils.generateUniqueLogin(driverRepository,request.firstName(),request.lastName()));
         driver.setPhoneNumber(request.phoneNumber());
-        driver.setMonthlyCost(request.monthlyCost());
+        driver.setAnnualSalary(request.annualSalary());
         driver.setMonthlyWorkingHours(request.monthlyWorkingHours());
 
         Driver updatedDriver = driverRepository.save(driver);

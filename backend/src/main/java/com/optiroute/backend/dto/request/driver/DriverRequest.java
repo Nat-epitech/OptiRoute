@@ -7,12 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
-public record DriverRequest(
-        @NotBlank String firstName,
-        @NotBlank String lastName,
-
-        String phoneNumber,
-
-        @NotNull @PositiveOrZero BigDecimal monthlyCost,
+public record DriverRequest(@NotBlank String firstName, @NotBlank String lastName, String phoneNumber, @NotNull @PositiveOrZero BigDecimal annualSalary,
         @NotNull @Positive BigDecimal monthlyWorkingHours) {
 }

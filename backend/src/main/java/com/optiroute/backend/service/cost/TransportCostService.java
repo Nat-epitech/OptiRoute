@@ -42,6 +42,7 @@ public class TransportCostService {
     private final SemiTrailerService semiTrailerService;
     private final VehicleCostService vehicleCostService;
     private final StructureCostService structureCostService;
+    private final DriverCostService driverCostService;
 
     public TransportCostDetailsResponse calculateCosts(Transport transport, TransportEstimate estimate) {
 
@@ -76,7 +77,7 @@ public class TransportCostService {
 
         // Driver costs
 
-        CostCategoryResponse driver = new CostCategoryResponse(List.of(), 0);
+        CostCategoryResponse driver = driverCostService.calculateCosts(transport,estimate);
 
         // Structure costs
         int dailyTransportCount = calculateDailyTransportCount(transportDate);
