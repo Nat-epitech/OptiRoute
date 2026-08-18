@@ -41,6 +41,7 @@ public class TransportCostService {
     private final TractorService tractorService;
     private final SemiTrailerService semiTrailerService;
     private final VehicleCostService vehicleCostService;
+    private final StructureCostService structureCostService;
 
     public TransportCostDetailsResponse calculateCosts(Transport transport, TransportEstimate estimate) {
 
@@ -58,6 +59,7 @@ public class TransportCostService {
         double tollCost = estimate.getEstimatedTollCost().doubleValue();
         vehicleCosts.add(new AppliedCostResponse(TOLL_LABEL, tollCost));
 
+        // Vehicle costs
         double distanceKm = estimate.getDistanceMeters() / 1000.0;
         LocalDate transportDate = transport.getPlannedStart().atZoneSameInstant(PLANNING_ZONE).toLocalDate();
         double dailyVehicleDistanceKm = calculateDailyVehicleDistance(transport.getTractorId(),transportDate);
@@ -71,8 +73,14 @@ public class TransportCostService {
         double vehicleTotal = vehicleCosts.stream().mapToDouble(AppliedCostResponse::amount).sum();
 
         CostCategoryResponse vehicle = new CostCategoryResponse(vehicleCosts, vehicleTotal);
+
+        // Driver costs
+
         CostCategoryResponse driver = new CostCategoryResponse(List.of(), 0);
-        CostCategoryResponse structure = new CostCategoryResponse(List.of(), 0);
+
+        // Structure costs
+        int dailyTransportCount = calculateDailyTransportCount(transportDate);
+        CostCategoryResponse structure = structureCostService.calculateCosts(transportDate,dailyTransportCount);
 
         double totalCost = vehicle.totalCost() + driver.totalCost() + structure.totalCost();
 
@@ -86,5 +94,12 @@ public class TransportCostService {
 
         return transportRepository.findByTractorIdAndPlannedStartGreaterThanEqualAndPlannedStartLessThan(tractorId,start,end).stream().map(Transport::getId)
             .map(transportEstimateRepository::findByTransportId).flatMap(Optional::stream).mapToDouble(transportEstimate -> transportEstimate.getDistanceMeters() / 1000.0).sum();
+    }
+
+    private int calculateDailyTransportCount(LocalDate date) {
+        OffsetDateTime start = date.atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
+        OffsetDateTime end = date.plusDays(1).atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
+
+        return transportRepository.findByPlannedStartGreaterThanEqualAndPlannedStartLessThan(start,end).size();
     }
 }
