@@ -1,16 +1,15 @@
 package com.optiroute.backend.service.cost;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
-import java.util.List;
-import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
 import com.optiroute.backend.dto.response.cost.TransportCostDetailsResponse;
-import com.optiroute.backend.dto.response.cost.AppliedCostResponse;
+import com.optiroute.backend.dto.request.cost.CostCalculationContext;
 import com.optiroute.backend.dto.response.cost.CostCategoryResponse;
 
 import com.optiroute.backend.entity.transport.Transport;
@@ -25,6 +24,8 @@ import com.optiroute.backend.service.vehicle.SemiTrailerService;
 import com.optiroute.backend.service.vehicle.TractorService;
 
 import lombok.RequiredArgsConstructor;
+import com.optiroute.backend.entity.driver.Driver;
+import com.optiroute.backend.repository.driver.DriverRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -32,55 +33,47 @@ public class TransportCostService {
 
     private static final ZoneId PLANNING_ZONE = ZoneId.of("Europe/Paris");
 
-    private static final String FUEL_LABEL = "Carburant";
-    private static final String TOLL_LABEL = "Péages";
-
-    private final TransportEstimateRepository transportEstimateRepository;
+    private final DriverRepository driverRepository;
     private final TransportRepository transportRepository;
+    private final TransportEstimateRepository transportEstimateRepository;
+
     private final TractorService tractorService;
     private final SemiTrailerService semiTrailerService;
+
     private final VehicleCostService vehicleCostService;
-    private final StructureCostService structureCostService;
     private final DriverCostService driverCostService;
+    private final StructureCostService structureCostService;
 
     public TransportCostDetailsResponse calculateCosts(Transport transport, TransportEstimate estimate) {
-
-        if (estimate == null) {
-            return null;
-        }
-
-        List<AppliedCostResponse> vehicleCosts = new ArrayList<>();
-
-        // Fuel
-        double fuelCost = estimate.getEstimatedFuelCost().doubleValue();
-        vehicleCosts.add(new AppliedCostResponse(FUEL_LABEL, fuelCost));
-
-        // Toll
-        double tollCost = estimate.getEstimatedTollCost().doubleValue();
-        vehicleCosts.add(new AppliedCostResponse(TOLL_LABEL, tollCost));
-
-        // Vehicle costs
         double distanceKm = estimate.getDistanceMeters() / 1000.0;
         double durationHours = estimate.getDurationSeconds() / 3600.0;
 
         LocalDate transportDate = transport.getPlannedStart().atZoneSameInstant(PLANNING_ZONE).toLocalDate();
+        LocalTime departureTime = transport.getPlannedStart().atZoneSameInstant(PLANNING_ZONE).toLocalTime();
+
         double dailyVehicleDistanceKm = calculateDailyVehicleDistance(transport.getTractorId(),transportDate);
         int dailyTransportCount = calculateDailyTransportCount(transportDate);
 
+        double dailyDriverDurationHours = calculateDailyDriverDuration(transport.getDriverId(),transportDate);
+
         Tractor tractor = tractorService.getEntityById(transport.getTractorId());
-        SemiTrailer semiTrailer = semiTrailerService.getEntityById(transport.getSemiTrailerId());
+        SemiTrailer semiTrailer = transport.getSemiTrailerId() != null ? semiTrailerService.getEntityById(transport.getSemiTrailerId()) : null;
+        String vehicleType = semiTrailer != null && semiTrailer.getTrailerType() != null ? semiTrailer.getTrailerType().name() : null;
 
-        CostCategoryResponse vehicle = vehicleCostService.calculateCosts(tractor,semiTrailer,distanceKm,dailyVehicleDistanceKm,durationHours,dailyTransportCount,transportDate);
+        CostCalculationContext context = new CostCalculationContext(transportDate, distanceKm, dailyVehicleDistanceKm, durationHours, dailyTransportCount, departureTime,
+            vehicleType, dailyDriverDurationHours);
 
-        // Driver costs
-        CostCategoryResponse driver = driverCostService.calculateCosts(transport,estimate);
+        CostCategoryResponse vehicleCost = vehicleCostService.calculateCosts(tractor,semiTrailer,context,estimate.getEstimatedFuelCost().doubleValue(),
+            estimate.getEstimatedTollCost().doubleValue());
 
-        // Structure costs
-        CostCategoryResponse structure = structureCostService.calculateCosts(transportDate,dailyTransportCount);
+        Driver driver = driverRepository.findById(transport.getDriverId()).orElseThrow(() -> new RuntimeException("Driver not found"));
+        CostCategoryResponse driverCost = driverCostService.calculateCosts(driver,context);
 
-        double totalCost = vehicle.totalCost() + driver.totalCost() + structure.totalCost();
+        CostCategoryResponse structureCost = structureCostService.calculateCosts(context);
 
-        return new TransportCostDetailsResponse(vehicle, driver, structure, totalCost);
+        double totalCost = vehicleCost.totalCost() + driverCost.totalCost() + structureCost.totalCost();
+
+        return new TransportCostDetailsResponse(vehicleCost, driverCost, structureCost, totalCost);
     }
 
     private double calculateDailyVehicleDistance(Long tractorId, LocalDate date) {
@@ -97,5 +90,15 @@ public class TransportCostService {
         OffsetDateTime end = date.plusDays(1).atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
 
         return transportRepository.findByPlannedStartGreaterThanEqualAndPlannedStartLessThan(start,end).size();
+    }
+
+    private double calculateDailyDriverDuration(Long driverId, LocalDate date) {
+
+        OffsetDateTime start = date.atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
+
+        OffsetDateTime end = date.plusDays(1).atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
+
+        return transportRepository.findByDriverIdAndPlannedStartGreaterThanEqualAndPlannedStartLessThan(driverId,start,end).stream().map(Transport::getId)
+            .map(transportEstimateRepository::findByTransportId).flatMap(Optional::stream).mapToDouble(estimate -> estimate.getDurationSeconds() / 3600.0).sum();
     }
 }

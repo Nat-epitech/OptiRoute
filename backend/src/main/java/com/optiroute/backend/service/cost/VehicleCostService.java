@@ -7,15 +7,18 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.optiroute.backend.dto.request.cost.CostCalculationContext;
 import com.optiroute.backend.dto.response.cost.AppliedCostResponse;
 import com.optiroute.backend.dto.response.cost.CostCategoryResponse;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
 import com.optiroute.backend.entity.vehicle.Tractor;
-import com.optiroute.backend.type.CostParameterCategoryType;
+import com.optiroute.backend.type.cost.CostParameterCategoryType;
 
 @Service
 public class VehicleCostService {
-	private static final String DEPRECIATION_LABEL = "Amortissement";
+	private static final String DEPRECIATION_LABEL = "Amortissement du véhicule";
+	private static final String TOLL_LABEL = "Péages";
+	private static final String FUEL_LABEL = "Carburant";
 
 	private final CostParameterEngine costParameterEngine;
 	private final WorkingDaysService workingDaysService;
@@ -25,17 +28,22 @@ public class VehicleCostService {
 		this.workingDaysService = workingDaysService;
 	}
 
-	public CostCategoryResponse calculateCosts(Tractor tractor, SemiTrailer semiTrailer, double distanceKm, double dailyVehicleDistanceKm, double durationHours,
-		int dailyTransportCount, LocalDate date) {
+	public CostCategoryResponse calculateCosts(Tractor tractor, SemiTrailer semiTrailer, CostCalculationContext context, double fuelCost, double tollCost) {
 
 		List<AppliedCostResponse> costs = new ArrayList<>();
 
-		// Amortissement spécifique au véhicule
-		double depreciationCost = calculateDepreciation(tractor,semiTrailer,distanceKm,dailyVehicleDistanceKm,date);
+		// HERE - Carburant
+		costs.add(new AppliedCostResponse(FUEL_LABEL, fuelCost));
+
+		// HERE - Péages
+		costs.add(new AppliedCostResponse(TOLL_LABEL, tollCost));
+
+		// Amortissement
+		double depreciationCost = calculateDepreciation(tractor,semiTrailer,context.distanceKm(),context.dailyVehicleDistanceKm(),context.date());
 		costs.add(new AppliedCostResponse(DEPRECIATION_LABEL, depreciationCost));
 
-		// Paramètres génériques véhicule
-		costs.addAll(costParameterEngine.calculateCosts(CostParameterCategoryType.VEHICLE,date,distanceKm,dailyVehicleDistanceKm,durationHours,dailyTransportCount));
+		// CostParameters VEHICLE
+		costs.addAll(costParameterEngine.calculateCosts(CostParameterCategoryType.VEHICLE,context));
 
 		double totalCost = costs.stream().mapToDouble(AppliedCostResponse::amount).sum();
 

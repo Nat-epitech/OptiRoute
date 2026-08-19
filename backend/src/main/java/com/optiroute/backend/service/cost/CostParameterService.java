@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.optiroute.backend.entity.cost.CostParameter;
 import com.optiroute.backend.repository.cost.CostParameterRepository;
-import com.optiroute.backend.type.CostParameterCategoryType;
+import com.optiroute.backend.type.cost.CostParameterCategoryType;
 
 @Service
 public class CostParameterService {

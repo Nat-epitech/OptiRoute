@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import com.optiroute.backend.type.cost.CostRuleLogicalOperatorType;
+
 @Entity
 @Table(name = "cost_rule")
 @Getter
@@ -17,6 +19,10 @@ public class CostRule {
 
     @Column(name = "cost_parameter_id", nullable = false)
     private Long costParameterId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "logical_operator", nullable = false, length = 10)
+    private CostRuleLogicalOperatorType logicalOperator;
 
     @Column(nullable = false)
     private boolean active = true;

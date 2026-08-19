@@ -3,16 +3,12 @@ package com.optiroute.backend.service.cost;
 import org.springframework.stereotype.Service;
 
 import com.optiroute.backend.entity.cost.CostParameter;
-import com.optiroute.backend.entity.cost.CostRule;
-
 import com.optiroute.backend.repository.cost.CostParameterRepository;
-import com.optiroute.backend.repository.cost.CostRuleRepository;
-
-import com.optiroute.backend.type.CostParameterCategoryType;
+import com.optiroute.backend.type.cost.CostParameterCategoryType;
 
 import com.optiroute.backend.dto.response.cost.AppliedCostResponse;
+import com.optiroute.backend.dto.request.cost.CostCalculationContext;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,73 +17,67 @@ import java.util.List;
 public class CostParameterEngine {
 
     private final CostParameterRepository costParameterRepository;
-    private final CostRuleRepository costRuleRepository;
+    private final CostRuleService costRuleService;
     private final WorkingDaysService workingDaysService;
 
-    public CostParameterEngine(CostParameterRepository costParameterRepository, CostRuleRepository costRuleRepository, WorkingDaysService workingDaysService) {
+    public CostParameterEngine(CostParameterRepository costParameterRepository, CostRuleService costRuleService, WorkingDaysService workingDaysService) {
         this.costParameterRepository = costParameterRepository;
-        this.costRuleRepository = costRuleRepository;
+        this.costRuleService = costRuleService;
         this.workingDaysService = workingDaysService;
     }
 
-    public List<AppliedCostResponse> calculateCosts(CostParameterCategoryType category, LocalDate date, double distanceKm, double dailyVehicleDistanceKm, double durationHours,
-        int dailyTransportCount) {
+    public List<AppliedCostResponse> calculateCosts(CostParameterCategoryType category, CostCalculationContext context) {
 
         List<AppliedCostResponse> costs = new ArrayList<>();
 
         for (CostParameter parameter : costParameterRepository.findByCategory(category)) {
-            List<CostRule> rules = costRuleRepository.findByCostParameterIdAndActiveTrue(parameter.getId());
-
-            if (rules.isEmpty()) {
+            if (!costRuleService.isApplicable(parameter,context)) {
                 continue;
             }
 
-            // V1 : aucune condition à évaluer.
-            // Une règle active sans condition = toujours applicable.
-
-            double amount = calculateAmount(parameter,date,distanceKm,dailyVehicleDistanceKm,durationHours,dailyTransportCount);
+            double amount = calculateAmount(parameter,context);
             costs.add(new AppliedCostResponse(parameter.getLabel(), amount));
         }
 
         return costs;
     }
 
-    private double calculateAmount(CostParameter parameter, LocalDate date, double distanceKm, double dailyVehicleDistanceKm, double durationHours, int dailyTransportCount) {
+    private double calculateAmount(CostParameter parameter, CostCalculationContext context) {
         return switch (parameter.getUnit()) {
-            case EUR_PER_KM -> distanceKm * parameter.getValue().doubleValue();
+
+            case EUR_PER_KM -> context.distanceKm() * parameter.getValue().doubleValue();
 
             case EUR_PER_TRIP -> parameter.getValue().doubleValue();
 
-            case EUR_PER_HOUR -> durationHours * parameter.getValue().doubleValue();
+            case EUR_PER_HOUR -> context.durationHours() * parameter.getValue().doubleValue();
 
             case EUR_PER_DAY -> parameter.getValue().doubleValue();
 
-            case EUR_PER_MONTH -> calculateMonthlyCost(parameter,date,distanceKm,dailyVehicleDistanceKm);
+            case EUR_PER_MONTH -> calculateMonthlyCost(parameter,context);
 
-            case EUR_PER_YEAR -> calculateYearlyCost(parameter,date,dailyTransportCount);
+            case EUR_PER_YEAR -> calculateYearlyCost(parameter,context);
         };
     }
 
-    private double calculateMonthlyCost(CostParameter parameter, LocalDate date, double distanceKm, double dailyVehicleDistanceKm) {
-        int workingDays = workingDaysService.getWorkingDaysInMonth(YearMonth.from(date));
+    private double calculateMonthlyCost(CostParameter parameter, CostCalculationContext context) {
+        int workingDays = workingDaysService.getWorkingDaysInMonth(YearMonth.from(context.date()));
 
-        if (workingDays <= 0 || dailyVehicleDistanceKm <= 0) {
+        if (workingDays <= 0 || context.dailyVehicleDistanceKm() <= 0) {
             return 0;
         }
 
         double dailyCost = parameter.getValue().doubleValue() / workingDays;
-        return dailyCost * (distanceKm / dailyVehicleDistanceKm);
+        return dailyCost * (context.distanceKm() / context.dailyVehicleDistanceKm());
     }
 
-    private double calculateYearlyCost(CostParameter parameter, LocalDate date, int dailyTransportCount) {
+    private double calculateYearlyCost(CostParameter parameter, CostCalculationContext context) {
+        int workingDays = workingDaysService.getWorkingDaysInYear(context.date().getYear());
 
-        int workingDays = workingDaysService.getWorkingDaysInYear(date.getYear());
-
-        if (workingDays <= 0 || dailyTransportCount <= 0) {
+        if (workingDays <= 0 || context.dailyTransportCount() <= 0) {
             return 0;
         }
 
         double dailyCost = parameter.getValue().doubleValue() / workingDays;
-        return dailyCost / dailyTransportCount;
+        return dailyCost / context.dailyTransportCount();
     }
 }

@@ -3,7 +3,7 @@ package com.optiroute.backend.repository.cost;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.optiroute.backend.entity.cost.CostParameter;
-import com.optiroute.backend.type.CostParameterCategoryType;
+import com.optiroute.backend.type.cost.CostParameterCategoryType;
 
 import java.util.Optional;
 import java.util.List;

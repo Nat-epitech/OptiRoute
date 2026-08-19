@@ -6,8 +6,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
-import com.optiroute.backend.type.CostParameterCategoryType;
-import com.optiroute.backend.type.CostParameterUnitType;
+import com.optiroute.backend.type.cost.CostParameterCategoryType;
+import com.optiroute.backend.type.cost.CostParameterUnitType;
 
 @Entity
 @Getter
