@@ -61,20 +61,21 @@ public class TransportCostService {
 
         // Vehicle costs
         double distanceKm = estimate.getDistanceMeters() / 1000.0;
+        double durationHours = estimate.getDurationSeconds() / 3600.0;
+
         LocalDate transportDate = transport.getPlannedStart().atZoneSameInstant(PLANNING_ZONE).toLocalDate();
         double dailyVehicleDistanceKm = calculateDailyVehicleDistance(transport.getTractorId(),transportDate);
+        int dailyTransportCount = calculateDailyTransportCount(transportDate);
 
         Tractor tractor = tractorService.getEntityById(transport.getTractorId());
         SemiTrailer semiTrailer = semiTrailerService.getEntityById(transport.getSemiTrailerId());
 
-        CostCategoryResponse vehicle = vehicleCostService.calculateCosts(tractor,semiTrailer,distanceKm,dailyVehicleDistanceKm,transportDate);
+        CostCategoryResponse vehicle = vehicleCostService.calculateCosts(tractor,semiTrailer,distanceKm,dailyVehicleDistanceKm,durationHours,dailyTransportCount,transportDate);
 
         // Driver costs
-
         CostCategoryResponse driver = driverCostService.calculateCosts(transport,estimate);
 
         // Structure costs
-        int dailyTransportCount = calculateDailyTransportCount(transportDate);
         CostCategoryResponse structure = structureCostService.calculateCosts(transportDate,dailyTransportCount);
 
         double totalCost = vehicle.totalCost() + driver.totalCost() + structure.totalCost();
