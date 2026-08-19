@@ -1,6 +1,6 @@
 package com.optiroute.backend.service.transport;
 
-import com.optiroute.backend.dto.response.route.RouteResponse;
+import com.optiroute.backend.dto.response.route.RoutesResponse;
 import com.optiroute.backend.entity.transport.Transport;
 
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class TransportFacadeService {
         RouteRequest routeRequest = routeRequestFactory.fromTransport(transport);
 
         // Calcul de la route
-        RouteResponse routeResponse = routeOptimizationService.calculateRoute(routeRequest);
+        RoutesResponse routeResponse = routeOptimizationService.calculateRoute(routeRequest);
 
         // Sauvegarde de l'estimation
         transportEstimateService.saveEstimate(transport,routeResponse);

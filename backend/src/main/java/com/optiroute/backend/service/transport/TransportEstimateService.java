@@ -1,7 +1,7 @@
 package com.optiroute.backend.service.transport;
 
-import com.optiroute.backend.dto.response.route.RouteResponse;
-import com.optiroute.backend.dto.response.route.RoutesDto;
+import com.optiroute.backend.dto.response.route.RoutesResponse;
+import com.optiroute.backend.dto.response.route.RouteDto;
 import com.optiroute.backend.entity.transport.Transport;
 import com.optiroute.backend.entity.transport.TransportEstimate;
 import com.optiroute.backend.repository.transport.TransportEstimateRepository;
@@ -21,9 +21,9 @@ public class TransportEstimateService {
 	}
 
 	@Transactional
-	public TransportEstimate saveEstimate(Transport transport, RouteResponse response) {
+	public TransportEstimate saveEstimate(Transport transport, RoutesResponse response) {
 		// TODO: Choisir route adapter selon critère (coût, distance, durée, etc.)
-		RoutesDto bestRoute = response.getRoutes().getFirst();
+		RouteDto bestRoute = response.getRoutes().getFirst();
 
 		TransportEstimate estimate = new TransportEstimate();
 		estimate.setTransportId(transport.getId());
@@ -39,7 +39,7 @@ public class TransportEstimateService {
 	}
 
 	@Transactional
-	public TransportEstimate saveEstimate(Transport transport, RoutesDto route) {
+	public TransportEstimate saveEstimate(Transport transport, RouteDto route) {
 
 		TransportEstimate estimate = new TransportEstimate();
 

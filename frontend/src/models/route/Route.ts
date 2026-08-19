@@ -15,10 +15,10 @@ export interface RouteRequest {
 }
 
 export interface RouteResponse {
-    routes: RoutesDto[]
+    routes: RouteDto[]
 }
 
-export interface RoutesDto {
+export interface RouteDto {
     duration: number
     baseDuration: number
     distanceMeters: number

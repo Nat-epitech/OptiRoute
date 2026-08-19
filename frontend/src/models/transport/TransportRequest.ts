@@ -1,4 +1,4 @@
-import type { RoutesDto } from '@/models/route/Route'
+import type { RouteDto } from '@/models/route/Route'
 
 export interface CreateTransportRequest {
     name: string
@@ -24,7 +24,7 @@ export interface CreateTransportRequest {
 
 export interface CreateTransportFromRouteRequest {
     transport: CreateTransportRequest
-    selectedRoute: RoutesDto
+    selectedRoute: RouteDto
 }
 
 export interface AssignTransport {

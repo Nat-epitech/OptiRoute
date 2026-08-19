@@ -1,6 +1,6 @@
 package com.optiroute.backend.dto.request.transport;
 
-import com.optiroute.backend.dto.response.route.RoutesDto;
+import com.optiroute.backend.dto.response.route.RouteDto;
 
-public record TransportFromRouteRequest(TransportRequest transport, RoutesDto selectedRoute) {
+public record TransportFromRouteRequest(TransportRequest transport, RouteDto selectedRoute) {
 }

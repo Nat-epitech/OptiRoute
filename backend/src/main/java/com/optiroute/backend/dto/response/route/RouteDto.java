@@ -1,6 +1,6 @@
 package com.optiroute.backend.dto.response.route;
 
-public class RoutesDto {
+public class RouteDto {
 
     private long duration;
     private long baseDuration;

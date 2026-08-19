@@ -1,7 +1,7 @@
 package com.optiroute.backend.controller.route;
 
 import com.optiroute.backend.dto.request.route.RouteRequest;
-import com.optiroute.backend.dto.response.route.RouteResponse;
+import com.optiroute.backend.dto.response.route.RoutesResponse;
 import com.optiroute.backend.service.route.RouteOptimizationService;
 
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ public class RouteController {
     }
 
     @PostMapping("/calculate")
-    public RouteResponse calculateRoute(@RequestBody RouteRequest request) {
+    public RoutesResponse calculateRoute(@RequestBody RouteRequest request) {
         return routeOptimizationService.calculateRoute(request);
     }
 }

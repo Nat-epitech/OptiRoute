@@ -1,4 +1,4 @@
-package com.optiroute.backend.service.cost;
+package com.optiroute.backend.service.route;
 
 import org.springframework.stereotype.Service;
 

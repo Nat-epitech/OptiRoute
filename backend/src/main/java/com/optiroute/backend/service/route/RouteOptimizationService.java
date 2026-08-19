@@ -2,12 +2,11 @@ package com.optiroute.backend.service.route;
 
 import com.optiroute.backend.dto.request.route.RouteRequest;
 import com.optiroute.backend.dto.response.route.RouteCostDetailsDto;
-import com.optiroute.backend.dto.response.route.RouteResponse;
-import com.optiroute.backend.dto.response.route.RoutesDto;
+import com.optiroute.backend.dto.response.route.RoutesResponse;
+import com.optiroute.backend.dto.response.route.RouteDto;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
 import com.optiroute.backend.entity.vehicle.Tractor;
 import com.optiroute.backend.service.cost.FuelPriceService;
-import com.optiroute.backend.service.cost.RouteCostService;
 import com.optiroute.backend.service.vehicle.SemiTrailerService;
 import com.optiroute.backend.service.vehicle.TractorService;
 
@@ -33,7 +32,7 @@ public class RouteOptimizationService {
     private final SemiTrailerService semiTrailerService;
     private final TruckConfigurationFactory truckConfigurationFactory;
 
-    public RouteResponse calculateRoute(RouteRequest request) {
+    public RoutesResponse calculateRoute(RouteRequest request) {
 
         // Get Truck Configuration
         Tractor tractor = tractorService.getEntityById(request.getTractorId());
@@ -49,12 +48,12 @@ public class RouteOptimizationService {
         double consumption = truckConfiguration.getAverageConsumption().doubleValue();
 
         // Enriched DTOs
-        List<RoutesDto> routes = new ArrayList<>();
+        List<RouteDto> routes = new ArrayList<>();
         for (RouteHereParser.ParsedRoute parsed : parsedRoutes) {
             double km = parsed.distanceMeters / 1000.0;
             RouteCostDetailsDto costs = routeCostService.calculateCosts(km,consumption,fuelPrice,parsed.tollCost);
 
-            RoutesDto dto = new RoutesDto();
+            RouteDto dto = new RouteDto();
             dto.setDistanceMeters(parsed.distanceMeters);
             dto.setDuration(parsed.duration);
             dto.setBaseDuration(parsed.baseDuration);
@@ -71,8 +70,8 @@ public class RouteOptimizationService {
 
         /*
          * // Fastest route reference
-         * RoutesDto fastestRoute =
-         * routes.stream().min(Comparator.comparingLong(RoutesDto::getDuration)).
+         * RouteDto fastestRoute =
+         * routes.stream().min(Comparator.comparingLong(RouteDto::getDuration)).
          * orElseThrow();
          * long fastestDuration = fastestRoute.getDuration();
          * 
@@ -82,17 +81,17 @@ public class RouteOptimizationService {
          * : (long) (fastestDuration * 1.10);
          * 
          * // Filtrage
-         * List<RoutesDto> validRoutes = routes.stream().filter(r -> r.getDuration() <=
+         * List<RouteDto> validRoutes = routes.stream().filter(r -> r.getDuration() <=
          * maxDuration).toList();
          * if (validRoutes.isEmpty()) {
          * validRoutes = List.of(fastestRoute); // fallback
          * }
          */
 
-        List<RoutesDto> validRoutes = routes.stream().toList();
+        List<RouteDto> validRoutes = routes.stream().toList();
 
         // Response
-        RouteResponse response = new RouteResponse();
+        RoutesResponse response = new RoutesResponse();
         response.setRoutes(validRoutes);
 
         return response;
