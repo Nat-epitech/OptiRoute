@@ -9,7 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.optiroute.backend.dto.response.cost.AppliedCostResponse;
-import com.optiroute.backend.dto.response.cost.VehicleCostDetailsResponse;
+import com.optiroute.backend.dto.response.cost.CostCategoryResponse;
 import com.optiroute.backend.entity.cost.CostParameter;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
 import com.optiroute.backend.entity.vehicle.Tractor;
@@ -32,25 +32,21 @@ public class VehicleCostService {
 		this.workingDaysService = workingDaysService;
 	}
 
-	public VehicleCostDetailsResponse calculateCosts(Tractor tractor, SemiTrailer semiTrailer, double distanceKm, double dailyVehicleDistanceKm, LocalDate date) {
-
+	public CostCategoryResponse calculateCosts(Tractor tractor, SemiTrailer semiTrailer, double distanceKm, double dailyVehicleDistanceKm, LocalDate date) {
 		List<AppliedCostResponse> costs = new ArrayList<>();
 
 		double depreciationCost = calculateDepreciation(tractor,semiTrailer,distanceKm,dailyVehicleDistanceKm,date);
-
 		costs.add(new AppliedCostResponse(DEPRECIATION_LABEL, depreciationCost));
 
 		double insuranceCost = calculateInsurance(distanceKm,dailyVehicleDistanceKm,date);
-
 		costs.add(new AppliedCostResponse(INSURANCE_LABEL, insuranceCost));
 
 		double maintenanceCost = calculateMaintenance(distanceKm);
-
 		costs.add(new AppliedCostResponse(MAINTENANCE_LABEL, maintenanceCost));
 
 		double totalCost = costs.stream().mapToDouble(AppliedCostResponse::amount).sum();
 
-		return new VehicleCostDetailsResponse(costs, totalCost);
+		return new CostCategoryResponse(costs, totalCost);
 	}
 
 	private double calculateDepreciation(Tractor tractor, SemiTrailer semiTrailer, double distanceKm, double dailyVehicleDistanceKm, LocalDate date) {

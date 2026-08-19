@@ -1,7 +1,7 @@
 package com.optiroute.backend.service.cost;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.optiroute.backend.dto.response.FuelResponse;
+import com.optiroute.backend.dto.response.cost.FuelResponse;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;

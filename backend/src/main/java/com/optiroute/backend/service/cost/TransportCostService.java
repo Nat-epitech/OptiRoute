@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 
 import com.optiroute.backend.dto.response.cost.TransportCostDetailsResponse;
-import com.optiroute.backend.dto.response.cost.VehicleCostDetailsResponse;
 import com.optiroute.backend.dto.response.cost.AppliedCostResponse;
 import com.optiroute.backend.dto.response.cost.CostCategoryResponse;
 
@@ -68,12 +67,7 @@ public class TransportCostService {
         Tractor tractor = tractorService.getEntityById(transport.getTractorId());
         SemiTrailer semiTrailer = semiTrailerService.getEntityById(transport.getSemiTrailerId());
 
-        VehicleCostDetailsResponse vehicleCostDetails = vehicleCostService.calculateCosts(tractor,semiTrailer,distanceKm,dailyVehicleDistanceKm,transportDate);
-        vehicleCosts.addAll(vehicleCostDetails.costs());
-
-        double vehicleTotal = vehicleCosts.stream().mapToDouble(AppliedCostResponse::amount).sum();
-
-        CostCategoryResponse vehicle = new CostCategoryResponse(vehicleCosts, vehicleTotal);
+        CostCategoryResponse vehicle = vehicleCostService.calculateCosts(tractor,semiTrailer,distanceKm,dailyVehicleDistanceKm,transportDate);
 
         // Driver costs
 
