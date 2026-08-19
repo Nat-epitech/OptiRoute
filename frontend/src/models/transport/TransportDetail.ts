@@ -1,5 +1,22 @@
 import type { TransportStatus } from "@/types/planningType"
 
+export interface TransportCostItem {
+    label: string;
+    amount: number;
+}
+
+export interface TransportCostCategory {
+    costs: TransportCostItem[];
+    totalCost: number;
+}
+
+export interface TransportCosts {
+    vehicle: TransportCostCategory;
+    driver: TransportCostCategory;
+    structure: TransportCostCategory;
+    totalCost: number;
+}
+
 export interface TransportDetail {
     id: number;
     name: string;
@@ -45,8 +62,5 @@ export interface TransportDetail {
 
     polyline: string | null;
 
-    estimatedFuelCost: number | null;
-    estimatedTollCost: number | null;
-    estimatedDriverCost: number | null;
-    estimatedTotalCost: number | null;
+    costs: TransportCosts;
 }

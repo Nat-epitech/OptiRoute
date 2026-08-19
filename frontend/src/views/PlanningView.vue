@@ -159,7 +159,7 @@ const planningDrivers = computed<PlanningDriver[]>(() => {
 
         driver.days[dayKey].push(transport);
 
-        driver.totalCost += transport.estimatedTotalCost ?? 0;
+        driver.totalCost += transport.costs.totalCost;
     });
 
     return Array.from(driversMap.values()).sort((first, second) => {

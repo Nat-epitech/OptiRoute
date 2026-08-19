@@ -11,7 +11,9 @@ export interface PlanningTransport {
     originName: string;
     destinationName: string;
 
-    estimatedTotalCost: number | null;
+    costs: {
+        totalCost: number;
+    };
 }
 
 export interface PlanningRequest {

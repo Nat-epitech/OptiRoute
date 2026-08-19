@@ -293,21 +293,118 @@ watch(
                     Estimation des coûts
                 </h3>
 
-                <div class="mt-4 divide-y divide-slate-100">
-                    <TransportCostRow label="Carburant" :amount="transport.estimatedFuelCost" />
+                <div class="mt-4 space-y-2">
+                    <!-- Véhicule -->
+                    <details class="group rounded-lg border border-slate-200">
+                        <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-3">
+                            <div>
+                                <p class="text-sm font-medium text-slate-800">
+                                    Véhicule
+                                </p>
 
-                    <TransportCostRow label="Péages" :amount="transport.estimatedTollCost" />
+                                <p class="mt-0.5 text-xs text-slate-500">
+                                    {{ transport.costs.vehicle.costs.length }}
+                                    {{ transport.costs.vehicle.costs.length > 1 ? "Coûts" : "Coût" }}
+                                </p>
+                            </div>
 
-                    <TransportCostRow label="Chauffeur" :amount="transport.estimatedDriverCost" />
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-semibold text-slate-900">
+                                    {{ formatCurrency(transport.costs.vehicle.totalCost) }}
+                                </span>
+
+                                <svg class="h-4 w-4 text-slate-400 transition-transform group-open:rotate-180"
+                                    viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </summary>
+
+                        <div class="border-t border-slate-100 px-4">
+                            <div class="divide-y divide-slate-100">
+                                <TransportCostRow v-for="cost in transport.costs.vehicle.costs"
+                                    :key="`vehicle-${cost.label}`" :label="cost.label" :amount="cost.amount" />
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Chauffeur -->
+                    <details class="group rounded-lg border border-slate-200">
+                        <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-3">
+                            <div>
+                                <p class="text-sm font-medium text-slate-800">
+                                    Chauffeur
+                                </p>
+
+                                <p class="mt-0.5 text-xs text-slate-500">
+                                    {{ transport.costs.driver.costs.length }}
+                                    {{ transport.costs.driver.costs.length > 1 ? "Coûts" : "Coût" }}
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-semibold text-slate-900">
+                                    {{ formatCurrency(transport.costs.driver.totalCost) }}
+                                </span>
+
+                                <svg class="h-4 w-4 text-slate-400 transition-transform group-open:rotate-180"
+                                    viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </summary>
+
+                        <div class="border-t border-slate-100 px-4">
+                            <div class="divide-y divide-slate-100">
+                                <TransportCostRow v-for="cost in transport.costs.driver.costs"
+                                    :key="`driver-${cost.label}`" :label="cost.label" :amount="cost.amount" />
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Structure -->
+                    <details class="group rounded-lg border border-slate-200">
+                        <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-3">
+                            <div>
+                                <p class="text-sm font-medium text-slate-800">
+                                    Structure
+                                </p>
+
+                                <p class="mt-0.5 text-xs text-slate-500">
+                                    {{ transport.costs.structure.costs.length }}
+                                    {{ transport.costs.structure.costs.length > 1 ? "Coûts" : "Coût" }}
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-semibold text-slate-900">
+                                    {{ formatCurrency(transport.costs.structure.totalCost) }}
+                                </span>
+
+                                <svg class="h-4 w-4 text-slate-400 transition-transform group-open:rotate-180"
+                                    viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </summary>
+
+                        <div class="border-t border-slate-100 px-4">
+                            <div class="divide-y divide-slate-100">
+                                <TransportCostRow v-for="cost in transport.costs.structure.costs"
+                                    :key="`structure-${cost.label}`" :label="cost.label" :amount="cost.amount" />
+                            </div>
+                        </div>
+                    </details>
                 </div>
 
+                <!-- Total général -->
                 <div class="mt-4 flex items-center justify-between rounded-lg bg-slate-900 px-4 py-3 text-white">
                     <span class="text-sm font-medium">
                         Coût total estimé
                     </span>
 
                     <span class="text-xl font-semibold">
-                        {{ formatCurrency(transport.estimatedTotalCost) }}
+                        {{ formatCurrency(transport.costs.totalCost) }}
                     </span>
                 </div>
             </section>

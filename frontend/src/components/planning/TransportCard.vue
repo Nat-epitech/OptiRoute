@@ -52,13 +52,15 @@ const endTime = computed(() => {
 });
 
 const formattedCost = computed(() => {
-    if (props.transport.estimatedTotalCost === null) {
+    const totalCost = props.transport.costs?.totalCost;
+
+    if (totalCost === null || totalCost === undefined) {
         return "Coût indisponible";
     }
 
     return new Intl.NumberFormat("fr-FR", {
         style: "currency",
         currency: "EUR",
-    }).format(props.transport.estimatedTotalCost);
+    }).format(totalCost);
 });
 </script>
