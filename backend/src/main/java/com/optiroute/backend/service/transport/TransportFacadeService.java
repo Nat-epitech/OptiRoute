@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.optiroute.backend.dto.request.route.RouteRequest;
-import com.optiroute.backend.dto.request.transport.CreateTransportFromRouteRequest;
+import com.optiroute.backend.dto.request.transport.TransportFromRouteRequest;
 import com.optiroute.backend.dto.request.transport.TransportRequest;
 import com.optiroute.backend.service.route.RouteOptimizationService;
 
@@ -48,7 +48,7 @@ public class TransportFacadeService {
     }
 
     @Transactional
-    public Transport createFromRoute(CreateTransportFromRouteRequest request) {
+    public Transport createFromRoute(TransportFromRouteRequest request) {
         Transport transport = transportService.create(request.transport());
         transportEstimateService.saveEstimate(transport,request.selectedRoute());
 

@@ -14,7 +14,6 @@ public class RoutesDto {
 
     private String polyline;
     private RouteCostDetailsDto costs;
-    private String rawHereData;
 
     public long getDuration() {
         return duration;
@@ -46,14 +45,6 @@ public class RoutesDto {
 
     public void setCosts(RouteCostDetailsDto costs) {
         this.costs = costs;
-    }
-
-    public String getRawHereData() {
-        return rawHereData;
-    }
-
-    public void setRawHereData(String rawHereData) {
-        this.rawHereData = rawHereData;
     }
 
     public double getOriginLat() {

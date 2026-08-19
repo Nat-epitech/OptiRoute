@@ -25,8 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RouteOptimizationService {
 
-    private final HereRoutingService hereRoutingService;
-    private final HereRouteParser hereRouteParser;
+    private final RoutingService hereRoutingService;
+    private final RouteHereParser hereRouteParser;
     private final RouteCostService routeCostService;
     private final FuelPriceService fuelPriceService;
     private final TractorService tractorService;
@@ -38,23 +38,21 @@ public class RouteOptimizationService {
         // Get Truck Configuration
         Tractor tractor = tractorService.getEntityById(request.getTractorId());
         SemiTrailer semiTrailer = semiTrailerService.getEntityById(request.getSemiTrailerId());
-        TruckConfiguration truckConfiguration = truckConfigurationFactory.create(tractor, semiTrailer);
+        TruckConfiguration truckConfiguration = truckConfigurationFactory.create(tractor,semiTrailer);
 
         // HERE Routing API + Parsing
-        String raw = hereRoutingService.calculateRoutes(request, truckConfiguration);
-        List<HereRouteParser.ParsedRoute> parsedRoutes = hereRouteParser.parseRoutes(raw);
+        String raw = hereRoutingService.calculateRoutes(request,truckConfiguration);
+        List<RouteHereParser.ParsedRoute> parsedRoutes = hereRouteParser.parseRoutes(raw);
 
         // Cost calculation
         double fuelPrice = fuelPriceService.getAverageDieselPrice();
         double consumption = truckConfiguration.getAverageConsumption().doubleValue();
-        double driverRate = 0;
 
         // Enriched DTOs
         List<RoutesDto> routes = new ArrayList<>();
-        for (HereRouteParser.ParsedRoute parsed : parsedRoutes) {
+        for (RouteHereParser.ParsedRoute parsed : parsedRoutes) {
             double km = parsed.distanceMeters / 1000.0;
-            double hours = parsed.duration / 3600.0;
-            RouteCostDetailsDto costs = routeCostService.calculateCosts(km, hours, consumption, fuelPrice, parsed.tollCost, driverRate);
+            RouteCostDetailsDto costs = routeCostService.calculateCosts(km,consumption,fuelPrice,parsed.tollCost);
 
             RoutesDto dto = new RoutesDto();
             dto.setDistanceMeters(parsed.distanceMeters);

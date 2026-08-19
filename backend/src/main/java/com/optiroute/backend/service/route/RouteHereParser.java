@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class HereRouteParser {
+public class RouteHereParser {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

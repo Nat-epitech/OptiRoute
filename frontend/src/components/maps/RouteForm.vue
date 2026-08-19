@@ -165,8 +165,7 @@ onMounted(async () => {
                 </option>
 
                 <option v-for="tractor in tractors" :key="tractor.id" :value="tractor.id">
-                    {{ tractor.registration }}
-                    - {{ formatVehicleLabel(tractor.brand, tractor.model) }}
+                    {{ tractor.registration }} - {{ formatVehicleLabel(tractor.brand, tractor.model) }}
                 </option>
             </select>
 
@@ -184,8 +183,7 @@ onMounted(async () => {
                 </option>
 
                 <option v-for="semiTrailer in semiTrailers" :key="semiTrailer.id" :value="semiTrailer.id">
-                    {{ semiTrailer.registration }}
-                    - {{ formatVehicleLabel(semiTrailer.brand, semiTrailer.model) }}
+                    {{ semiTrailer.registration }} - {{ formatVehicleLabel(semiTrailer.brand, semiTrailer.model) }}
                 </option>
             </select>
 

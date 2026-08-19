@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.optiroute.backend.dto.request.transport.CreateTransportFromRouteRequest;
+import com.optiroute.backend.dto.request.transport.TransportFromRouteRequest;
 import com.optiroute.backend.dto.request.transport.TransportRequest;
 import com.optiroute.backend.dto.response.transport.TransportDetailResponse;
 import com.optiroute.backend.dto.response.transport.TransportPlanningResponse;
@@ -23,8 +23,7 @@ public class TransportController {
     private final TransportPlanningService transportPlanningService;
     private final TransportDetailService transportDetailService;
 
-    public TransportController(TransportFacadeService transportFacadeService, TransportPlanningService transportPlanningService,
-            TransportDetailService transportDetailService) {
+    public TransportController(TransportFacadeService transportFacadeService, TransportPlanningService transportPlanningService, TransportDetailService transportDetailService) {
         this.transportFacadeService = transportFacadeService;
         this.transportPlanningService = transportPlanningService;
         this.transportDetailService = transportDetailService;
@@ -39,7 +38,7 @@ public class TransportController {
 
     @GetMapping("/planning")
     public ResponseEntity<List<TransportPlanningResponse>> getPlanning(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
-        return ResponseEntity.ok(transportPlanningService.getPlanning(startDate, endDate));
+        return ResponseEntity.ok(transportPlanningService.getPlanning(startDate,endDate));
     }
 
     @GetMapping("/{id}")
@@ -48,7 +47,7 @@ public class TransportController {
     }
 
     @PostMapping("/from-route")
-    public ResponseEntity<Transport> createFromRoute(@RequestBody CreateTransportFromRouteRequest request) {
+    public ResponseEntity<Transport> createFromRoute(@RequestBody TransportFromRouteRequest request) {
         Transport transport = transportFacadeService.createFromRoute(request);
 
         return ResponseEntity.ok(transport);
