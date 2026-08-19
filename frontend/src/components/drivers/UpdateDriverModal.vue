@@ -52,7 +52,7 @@ const populateForm = () => {
         lastName: props.driver.lastName,
 
         phoneNumber: props.driver.phoneNumber,
-        monthlyCost: props.driver.monthlyCost,
+        annualSalary: props.driver.annualSalary,
         monthlyWorkingHours: props.driver.monthlyWorkingHours,
     } satisfies DriverFormData)
 }
@@ -70,7 +70,7 @@ const submitDriver = async () => {
             lastName: form.lastName,
 
             phoneNumber: form.phoneNumber,
-            monthlyCost: form.monthlyCost,
+            annualSalary: form.annualSalary,
             monthlyWorkingHours: form.monthlyWorkingHours,
         }
 

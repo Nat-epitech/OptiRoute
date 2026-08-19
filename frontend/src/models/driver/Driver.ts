@@ -8,7 +8,7 @@ export interface DriverDetails extends DriverSummary {
     login: string
     phoneNumber: string
 
-    monthlyCost: number
+    annualSalary: number
     monthlyWorkingHours: number
 }
 
@@ -16,7 +16,7 @@ export interface CreateDriverRequest {
     firstName: string | null
     lastName: string | null
     phoneNumber: string | null
-    monthlyCost: number | null
+    annualSalary: number | null
     monthlyWorkingHours: number | null
 }
 
@@ -24,7 +24,7 @@ export interface UpdateDriverRequest {
     firstName: string | null
     lastName: string | null
     phoneNumber: string | null
-    monthlyCost: number | null
+    annualSalary: number | null
     monthlyWorkingHours: number | null
 }
 
@@ -32,6 +32,6 @@ export interface DriverFormData {
     firstName: string | null
     lastName: string | null
     phoneNumber: string | null
-    monthlyCost: number | null
+    annualSalary: number | null
     monthlyWorkingHours: number | null
 }

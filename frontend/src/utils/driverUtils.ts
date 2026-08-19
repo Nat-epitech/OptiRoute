@@ -7,7 +7,7 @@ export const createEmptyDriverForm = (): DriverFormData => ({
 
     phoneNumber: null,
 
-    monthlyCost: null,
+    annualSalary: null,
     monthlyWorkingHours: null,
 })
 
@@ -22,9 +22,9 @@ export const getDriverName = (driver: DriverDetails | null): string => {
 }
 
 export const getHourlyCost = (driver: DriverDetails | null): number => {
-    if (driver == null || driver.monthlyCost == null || driver.monthlyWorkingHours == null || driver.monthlyWorkingHours <= 0) {
+    if (driver == null || driver.annualSalary == null || driver.monthlyWorkingHours == null || driver.monthlyWorkingHours <= 0) {
         return -1
     }
 
-    return (driver.monthlyCost / driver.monthlyWorkingHours)
+    return ((driver.annualSalary / 12) / driver.monthlyWorkingHours)
 }

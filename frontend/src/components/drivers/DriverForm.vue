@@ -26,8 +26,7 @@ withDefaults(
                         Prénom
                     </label>
 
-                    <input v-model="form.firstName" type="text" required maxlength="100" placeholder="Jean"
-                        :disabled="disabled"
+                    <input v-model="form.firstName" type="text" required maxlength="100" :disabled="disabled"
                         class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100" />
                 </div>
 
@@ -36,8 +35,7 @@ withDefaults(
                         Nom
                     </label>
 
-                    <input v-model="form.lastName" type="text" required maxlength="100" placeholder="Dupont"
-                        :disabled="disabled"
+                    <input v-model="form.lastName" type="text" required maxlength="100" :disabled="disabled"
                         class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100" />
                 </div>
             </div>
@@ -47,8 +45,7 @@ withDefaults(
                     Numéro de téléphone
                 </label>
 
-                <input v-model="form.phoneNumber" type="tel" maxlength="30" placeholder="06 12 34 56 78"
-                    :disabled="disabled"
+                <input v-model="form.phoneNumber" type="tel" maxlength="30" :disabled="disabled"
                     class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100" />
             </div>
         </section>
@@ -61,16 +58,16 @@ withDefaults(
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                     <label class="mb-1 block text-sm font-medium text-slate-700">
-                        Coût mensuel
+                        Coût annuel
                     </label>
 
-                    <input v-model.number="form.monthlyCost" type="number" min="0" step="0.01" placeholder="3500.00"
-                        :disabled="disabled"
+                    <input v-model.number="form.annualSalary" type="number" min="0" step="100" :disabled="disabled"
                         class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100" />
 
                     <p class="mt-1 text-xs text-slate-500">
-                        Euros par mois
+                        Euros par an
                     </p>
+
                 </div>
 
                 <div>
@@ -78,8 +75,7 @@ withDefaults(
                         Temps de travail mensuel
                     </label>
 
-                    <input v-model.number="form.monthlyWorkingHours" type="number" min="0" step="0.01"
-                        placeholder="151.67" :disabled="disabled"
+                    <input v-model.number="form.monthlyWorkingHours" type="number" min="0" step="1" :disabled="disabled"
                         class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100" />
 
                     <p class="mt-1 text-xs text-slate-500">

@@ -52,7 +52,7 @@ const submitDriver = async () => {
             lastName: form.lastName,
 
             phoneNumber: form.phoneNumber,
-            monthlyCost: form.monthlyCost,
+            annualSalary: form.annualSalary,
             monthlyWorkingHours: form.monthlyWorkingHours,
         }
 

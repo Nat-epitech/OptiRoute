@@ -203,8 +203,8 @@ watch(
             </DetailSection>
 
             <DetailSection title="Coût du chauffeur" :icon="WalletCards">
-                <DetailRow label="Coût salarial mensuel" :value="driver.monthlyCost != null
-                    ? formatCurrency(driver.monthlyCost)
+                <DetailRow label="Coût annuel" :value="driver.annualSalary != null
+                    ? formatCurrency(driver.annualSalary)
                     : 'Non renseigné'
                     " />
 
