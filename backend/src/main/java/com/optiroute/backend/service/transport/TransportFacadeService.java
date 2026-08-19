@@ -42,7 +42,7 @@ public class TransportFacadeService {
         RouteResponse routeResponse = routeOptimizationService.calculateRoute(routeRequest);
 
         // Sauvegarde de l'estimation
-        transportEstimateService.saveEstimate(transport, routeResponse);
+        transportEstimateService.saveEstimate(transport,routeResponse);
 
         return transport;
     }
@@ -50,7 +50,7 @@ public class TransportFacadeService {
     @Transactional
     public Transport createFromRoute(CreateTransportFromRouteRequest request) {
         Transport transport = transportService.create(request.transport());
-        transportEstimateService.saveEstimate(transport, request.selectedRoute(), request.routingProvider(), request.routingMode());
+        transportEstimateService.saveEstimate(transport,request.selectedRoute());
 
         return transport;
     }

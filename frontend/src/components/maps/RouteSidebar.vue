@@ -126,9 +126,7 @@ const handleAssignRoute = async (data: AssignTransport) => {
 
     const request: CreateTransportFromRouteRequest = {
         transport,
-        selectedRoute,
-        routingProvider: 'HERE',
-        routingMode: 'fastest'
+        selectedRoute
     }
 
     try {

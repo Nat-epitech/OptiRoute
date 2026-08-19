@@ -27,8 +27,6 @@ public class TransportEstimateService {
 
 		TransportEstimate estimate = new TransportEstimate();
 		estimate.setTransportId(transport.getId());
-		estimate.setRoutingProvider("HERE");
-		estimate.setRoutingMode("FASTEST");
 		estimate.setDepartureTime(transport.getPlannedStart());
 		estimate.setDistanceMeters(bestRoute.getDistanceMeters());
 		estimate.setDurationSeconds(bestRoute.getDuration());
@@ -41,13 +39,11 @@ public class TransportEstimateService {
 	}
 
 	@Transactional
-	public TransportEstimate saveEstimate(Transport transport, RoutesDto route, String routingProvider, String routingMode) {
+	public TransportEstimate saveEstimate(Transport transport, RoutesDto route) {
 
 		TransportEstimate estimate = new TransportEstimate();
 
 		estimate.setTransportId(transport.getId());
-		estimate.setRoutingProvider(routingProvider);
-		estimate.setRoutingMode(routingMode);
 		estimate.setDepartureTime(transport.getPlannedStart());
 
 		estimate.setDistanceMeters(route.getDistanceMeters());

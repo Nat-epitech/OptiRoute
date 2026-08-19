@@ -25,8 +25,6 @@ export interface CreateTransportRequest {
 export interface CreateTransportFromRouteRequest {
     transport: CreateTransportRequest
     selectedRoute: RoutesDto
-    routingProvider: string
-    routingMode: string
 }
 
 export interface AssignTransport {

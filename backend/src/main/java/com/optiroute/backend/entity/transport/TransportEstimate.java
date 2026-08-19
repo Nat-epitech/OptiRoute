@@ -1,10 +1,15 @@
 package com.optiroute.backend.entity.transport;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "transport_estimate")
 public class TransportEstimate {
 
@@ -14,12 +19,6 @@ public class TransportEstimate {
 
     @Column(name = "transport_id", nullable = false, unique = true)
     private Long transportId;
-
-    @Column(name = "routing_provider", nullable = false, length = 50)
-    private String routingProvider;
-
-    @Column(name = "routing_mode", nullable = false, length = 20)
-    private String routingMode;
 
     @Column(name = "departure_time")
     private OffsetDateTime departureTime;
@@ -45,87 +44,5 @@ public class TransportEstimate {
     @PrePersist
     public void prePersist() {
         createdAt = OffsetDateTime.now();
-    }
-
-    // ===== getters / setters =====
-
-    public Long getId() {
-        return id;
-    }
-
-    public Long getTransportId() {
-        return transportId;
-    }
-
-    public void setTransportId(Long transportId) {
-        this.transportId = transportId;
-    }
-
-    public String getRoutingProvider() {
-        return routingProvider;
-    }
-
-    public void setRoutingProvider(String routingProvider) {
-        this.routingProvider = routingProvider;
-    }
-
-    public String getRoutingMode() {
-        return routingMode;
-    }
-
-    public void setRoutingMode(String routingMode) {
-        this.routingMode = routingMode;
-    }
-
-    public OffsetDateTime getDepartureTime() {
-        return departureTime;
-    }
-
-    public void setDepartureTime(OffsetDateTime departureTime) {
-        this.departureTime = departureTime;
-    }
-
-    public Long getDistanceMeters() {
-        return distanceMeters;
-    }
-
-    public void setDistanceMeters(Long distanceMeters) {
-        this.distanceMeters = distanceMeters;
-    }
-
-    public Long getDurationSeconds() {
-        return durationSeconds;
-    }
-
-    public void setDurationSeconds(Long durationSeconds) {
-        this.durationSeconds = durationSeconds;
-    }
-
-    public String getPolyline() {
-        return polyline;
-    }
-
-    public void setPolyline(String polyline) {
-        this.polyline = polyline;
-    }
-
-    public BigDecimal getEstimatedFuelCost() {
-        return estimatedFuelCost;
-    }
-
-    public void setEstimatedFuelCost(BigDecimal estimatedFuelCost) {
-        this.estimatedFuelCost = estimatedFuelCost;
-    }
-
-    public BigDecimal getEstimatedTollCost() {
-        return estimatedTollCost;
-    }
-
-    public void setEstimatedTollCost(BigDecimal estimatedTollCost) {
-        this.estimatedTollCost = estimatedTollCost;
-    }
-
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
     }
 }
