@@ -31,7 +31,7 @@ public class CostParameterEngine {
         List<AppliedCostResponse> costs = new ArrayList<>();
 
         for (CostParameter parameter : costParameterRepository.findByCategory(category)) {
-            if (!costRuleService.isApplicable(parameter,context)) {
+            if (!parameter.isActive() || !costRuleService.isApplicable(parameter,context)) {
                 continue;
             }
 

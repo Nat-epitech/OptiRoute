@@ -26,8 +26,7 @@ public class CostRuleService {
     }
 
     public boolean isApplicable(CostParameter parameter, CostCalculationContext context) {
-
-        List<CostRule> rules = costRuleRepository.findByCostParameterIdAndActiveTrue(parameter.getId());
+        List<CostRule> rules = costRuleRepository.findByCostParameterId(parameter.getId());
 
         // Aucune règle = toujours applicable
         if (rules.isEmpty()) {

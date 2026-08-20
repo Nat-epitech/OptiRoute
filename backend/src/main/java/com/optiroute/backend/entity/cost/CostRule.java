@@ -23,7 +23,4 @@ public class CostRule {
     @Enumerated(EnumType.STRING)
     @Column(name = "logical_operator", nullable = false, length = 10)
     private CostRuleLogicalOperatorType logicalOperator;
-
-    @Column(nullable = false)
-    private boolean active = true;
 }

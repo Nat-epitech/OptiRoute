@@ -1,0 +1,10 @@
+package com.optiroute.backend.dto.response.cost;
+
+import com.optiroute.backend.type.cost.CostParameterCategoryType;
+import com.optiroute.backend.type.cost.CostParameterUnitType;
+
+import java.math.BigDecimal;
+
+public record CostParameterResponse(Long id, CostParameterCategoryType category, String label, BigDecimal value, CostParameterUnitType unit, boolean active,
+    CostRuleResponse rule) {
+}

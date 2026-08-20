@@ -32,4 +32,7 @@ public class CostParameter {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private CostParameterUnitType unit;
+
+    @Column(name = "active", nullable = false)
+    private boolean active = true;
 }

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CostConditionRepository extends JpaRepository<CostCondition, Long> {
     List<CostCondition> findByCostRuleId(Long costRuleId);
+
+    void deleteByCostRuleId(Long costRuleId);
 }
