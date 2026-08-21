@@ -26,7 +26,6 @@ import type { PlanningDay, PlanningDriver, PlanningTransport, } from "@/models/p
 const selectedTransportId = ref<number | null>(null);
 
 function openTransport(transportId: number): void { selectedTransportId.value = transportId; }
-
 function closeTransport(): void { selectedTransportId.value = null; }
 
 
@@ -42,7 +41,6 @@ const handleTransportDeleted = async (): Promise<void> => {
  */
 function addDays(date: Date, numberOfDays: number): Date {
     const result = new Date(date);
-
     result.setDate(result.getDate() + numberOfDays);
 
     return result;
@@ -50,7 +48,6 @@ function addDays(date: Date, numberOfDays: number): Date {
 
 function startOfDay(date: Date): Date {
     const result = new Date(date);
-
     result.setHours(0, 0, 0, 0);
 
     return result;
@@ -62,16 +59,6 @@ function formatDateKey(date: Date): string {
     const day = String(date.getDate()).padStart(2, "0");
 
     return `${year}-${month}-${day}`;
-}
-
-function parseDateKey(value: string): Date {
-    const [year, month, day] = value.split("-").map(Number);
-
-    if (year === undefined || month === undefined || day === undefined || Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) {
-        throw new Error(`Date invalide : ${value}`);
-    }
-
-    return new Date(year, month - 1, day);
 }
 
 function capitalize(value: string): string {
@@ -92,14 +79,8 @@ const selectedEndDate = ref<Date>(
     addDays(today, 2)
 );
 
-const maximumEndDate = computed<Date>(() => {
-    return addDays(selectedStartDate.value, 6);
-});
-
-
 const numberOfDisplayedDays = computed<number>(() => {
     const millisecondsPerDay = 24 * 60 * 60 * 1000;
-
     const difference = selectedEndDate.value.getTime() - selectedStartDate.value.getTime();
 
     return Math.floor(difference / millisecondsPerDay) + 1;
@@ -119,11 +100,7 @@ const days = computed<PlanningDay[]>(() => {
 
             return {
                 key: formatDateKey(date),
-                label: capitalize(
-                    formatter
-                        .format(date)
-                        .replace(".", "")
-                ),
+                label: capitalize(formatter.format(date).replace(".", "")),
                 date,
             };
         }
@@ -182,22 +159,17 @@ function handleRangeChange(range: [Date, Date]): void {
     const normalizedStart = startOfDay(start);
     const normalizedEnd = startOfDay(requestedEnd);
 
-    const maximumEnd = addDays(
-        normalizedStart,
-        6
-    );
+    const maximumEnd = addDays(normalizedStart, 6);
 
     selectedStartDate.value = normalizedStart;
-
     selectedEndDate.value = normalizedEnd > maximumEnd ? maximumEnd : normalizedEnd;
 }
 
-function applyTodayRange(additionalDays: number): void {
+function applyTodayRange(startOffset: number, additionalDays: number): void {
     const currentToday = startOfDay(new Date());
 
-    selectedStartDate.value = currentToday;
-
-    selectedEndDate.value = addDays(currentToday, additionalDays);
+    selectedStartDate.value = addDays(currentToday, startOffset);
+    selectedEndDate.value = addDays(currentToday, startOffset + additionalDays);
 }
 
 watch(

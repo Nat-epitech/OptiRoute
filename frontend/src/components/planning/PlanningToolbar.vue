@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
+
+import { fr } from "date-fns/locale";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
@@ -12,7 +14,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     "update:range": [value: [Date, Date]];
-    "today-range": [additionalDays: number];
+    "today-range": [startOffset: number, additionalDays: number];
 }>();
 
 const selectedRange = ref<DateRange>([
@@ -71,11 +73,12 @@ watch(
                         Période affichée
                     </label>
 
-                    <VueDatePicker :model-value="selectedRange" :range="{ partialRange: false, maxRange: 6, }" auto-apply
-                        :time-config="{
+                    <VueDatePicker :model-value="selectedRange" :range="{ partialRange: false, maxRange: 6 }" auto-apply
+                        :locale="fr" :time-config="{
                             enableTimePicker: false,
-                        }" format="dd/MM/yyyy" placeholder="Sélectionner une période"
-                        @update:model-value="handleRangeChange" />
+                        }" :formats="{
+                            input: 'dd/MM/yyyy',
+                        }" placeholder="Sélectionner une période" @update:model-value="handleRangeChange" />
                 </div>
 
                 <div>
@@ -86,25 +89,31 @@ watch(
                     <div class="flex flex-wrap gap-2">
                         <button type="button"
                             class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
-                            @click="emit('today-range', 0)">
+                            @click="emit('today-range', -1, 1)">
+                            Aujourd’hui - 1 jour
+                        </button>
+
+                        <button type="button"
+                            class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+                            @click="emit('today-range', 0, 0)">
                             Aujourd’hui
                         </button>
 
                         <button type="button"
                             class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
-                            @click="emit('today-range', 1)">
+                            @click="emit('today-range', 0, 1)">
                             Aujourd’hui + 1 jour
                         </button>
 
                         <button type="button"
                             class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
-                            @click="emit('today-range', 2)">
+                            @click="emit('today-range', 0, 2)">
                             Aujourd’hui + 2 jours
                         </button>
 
                         <button type="button"
                             class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
-                            @click="emit('today-range', 3)">
+                            @click="emit('today-range', 0, 3)">
                             Aujourd’hui + 3 jours
                         </button>
                     </div>
