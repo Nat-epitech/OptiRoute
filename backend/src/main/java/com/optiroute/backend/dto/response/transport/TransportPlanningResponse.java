@@ -2,8 +2,6 @@ package com.optiroute.backend.dto.response.transport;
 
 import java.time.OffsetDateTime;
 
-import com.optiroute.backend.dto.response.cost.TransportCostDetailsResponse;
-
 public record TransportPlanningResponse(
 
         Long id, String name,
@@ -14,5 +12,5 @@ public record TransportPlanningResponse(
 
         String originName, String destinationName,
 
-        TransportCostDetailsResponse costs) {
+        double totalCost) {
 }

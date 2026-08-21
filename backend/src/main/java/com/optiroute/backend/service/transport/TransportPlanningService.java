@@ -45,12 +45,7 @@ public class TransportPlanningService {
             TransportCostDetailsResponse costs = transportCostService.calculateCosts(transport,estimate);
 
             return new TransportPlanningResponse(transport.getId(), transport.getName(), driver.getId(), driver.getFirstName() + " " + driver.getLastName(),
-
-                transport.getPlannedStart(), transport.getPlannedEnd(),
-
-                transport.getOriginName(), transport.getDestinationName(),
-
-                costs);
+                transport.getPlannedStart(), transport.getPlannedEnd(), transport.getOriginName(), transport.getDestinationName(), costs.totalCost());
         }).toList();
     }
 

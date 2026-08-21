@@ -52,7 +52,7 @@ const endTime = computed(() => {
 });
 
 const formattedCost = computed(() => {
-    const totalCost = props.transport.costs?.totalCost;
+    const totalCost = props.transport.totalCost;
 
     if (totalCost === null || totalCost === undefined) {
         return "Coût indisponible";
