@@ -25,6 +25,7 @@ const showDeleteModal = ref(false)
 
 const actionSemiTrailer = ref<SemiTrailerSummary | null>(null)
 const selectedSemiTrailerId = ref<number | null>(null)
+const openDropdownId = ref<number | null>(null)
 
 const askDeleteSemiTrailer = (semiTrailer: SemiTrailerSummary) => {
     actionSemiTrailer.value = semiTrailer
@@ -118,7 +119,9 @@ onMounted(loadSemiTrailers)
 
                         <!-- Le stop empêche le clic sur les actions d'ouvrir également le drawer. -->
                         <td class="whitespace-nowrap px-6 py-4 text-right" @click.stop @keydown.stop>
-                            <AppDropdown v-slot="{ close }">
+                            <AppDropdown :open="openDropdownId === semiTrailer.id" @update:open="value => {
+                                openDropdownId = value ? semiTrailer.id : null
+                            }" v-slot="{ close }">
                                 <button type="button"
                                     class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                     @click="

@@ -25,6 +25,7 @@ const showDeleteModal = ref(false)
 
 const actionTractor = ref<TractorSummary | null>(null)
 const selectedTractorId = ref<number | null>(null)
+const openDropdownId = ref<number | null>(null)
 
 const askDeleteTractor = (tractor: TractorSummary) => {
     actionTractor.value = tractor
@@ -118,7 +119,9 @@ onMounted(loadTractors)
 
                         <!-- Le stop empêche le clic sur les actions d'ouvrir également le drawer. -->
                         <td class="whitespace-nowrap px-6 py-4 text-right" @click.stop @keydown.stop>
-                            <AppDropdown v-slot="{ close }">
+                            <AppDropdown :open="openDropdownId === tractor.id" @update:open="value => {
+                                openDropdownId = value ? tractor.id : null
+                            }" v-slot="{ close }">
                                 <button type="button"
                                     class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                     @click="close(); askDeleteTractor(tractor)">

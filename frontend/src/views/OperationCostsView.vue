@@ -43,6 +43,7 @@ const structureCosts = computed(() =>
 
 const showCreateModal = ref(false)
 const showDeleteModal = ref(false)
+const openDropdownId = ref<number | null>(null)
 
 const actionCostParameter = ref<CostParameter | null>(null)
 const selectedCostParameterId = ref<number | null>(null)
@@ -217,7 +218,9 @@ onMounted(loadCostParameters)
                             </td>
 
                             <td class="whitespace-nowrap px-6 py-4 text-right" @click.stop @keydown.stop>
-                                <AppDropdown v-slot="{ close }">
+                                <AppDropdown :open="openDropdownId === cost.id" @update:open="value => {
+                                    openDropdownId = value ? cost.id : null
+                                }" v-slot="{ close }">
                                     <button type="button"
                                         class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                         @click="close(); askDeleteCostParameter(cost)">
@@ -305,7 +308,9 @@ onMounted(loadCostParameters)
                             </td>
 
                             <td class="whitespace-nowrap px-6 py-4 text-right" @click.stop @keydown.stop>
-                                <AppDropdown v-slot="{ close }">
+                                <AppDropdown :open="openDropdownId === cost.id" @update:open="value => {
+                                    openDropdownId = value ? cost.id : null
+                                }" v-slot="{ close }">
                                     <button type="button"
                                         class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                         @click="
@@ -395,7 +400,9 @@ onMounted(loadCostParameters)
                             </td>
 
                             <td class="whitespace-nowrap px-6 py-4 text-right" @click.stop @keydown.stop>
-                                <AppDropdown v-slot="{ close }">
+                                <AppDropdown :open="openDropdownId === cost.id" @update:open="value => {
+                                    openDropdownId = value ? cost.id : null
+                                }" v-slot="{ close }">
                                     <button type="button"
                                         class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                         @click="close(); askDeleteCostParameter(cost)">

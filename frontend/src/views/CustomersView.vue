@@ -22,6 +22,7 @@ const loadCustomers = async () => {
 type CustomerAction = 'edit' | 'delete' | null
 const selectedCustomer = ref<Customer | null>(null)
 const activeAction = ref<CustomerAction>(null)
+const openDropdownId = ref<number | null>(null)
 
 const openEditCustomerModal = (customer: Customer) => {
     selectedCustomer.value = customer
@@ -98,7 +99,9 @@ onMounted(async () => {
                         </td>
 
                         <td class="px-6 py-4 text-right">
-                            <AppDropdown v-slot="{ close }">
+                            <AppDropdown :open="openDropdownId === customer.id" @update:open="value => {
+                                openDropdownId = value ? customer.id : null
+                            }" v-slot="{ close }">
                                 <button type="button"
                                     class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-100"
                                     @click="close(); openEditCustomerModal(customer)">

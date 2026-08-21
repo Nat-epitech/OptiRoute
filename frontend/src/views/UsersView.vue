@@ -26,6 +26,7 @@ type UserAction = 'edit' | 'delete' | null
 
 const activeAction = ref<UserAction>(null)
 const selectedUser = ref<User | null>(null)
+const openDropdownId = ref<number | null>(null)
 
 const openEditUserModal = (user: User) => {
     selectedUser.value = user
@@ -94,7 +95,9 @@ const closeUserAction = () => {
 
                         <td class="px-6 py-4 text-right">
 
-                            <AppDropdown v-slot="{ close }">
+                            <AppDropdown :open="openDropdownId === user.id" @update:open="value => {
+                                openDropdownId = value ? user.id : null
+                            }" v-slot="{ close }">
 
                                 <button class="flex w-full items-center px-4 py-2 text-sm hover:bg-gray-100"
                                     @click="close(); openEditUserModal(user)">
