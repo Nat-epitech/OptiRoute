@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import DashboardView from '@/views/DashboardView.vue'
+import OperationCostsView from '@/views/OperationCostsView.vue'
 import UsersView from '@/views/UsersView.vue'
 import LoginView from '@/views/LoginView.vue'
 import DriversView from '@/views/DriversView.vue'
@@ -8,7 +9,7 @@ import MapsView from '@/views/MapsView.vue'
 import PlanningView from '@/views/PlanningView.vue'
 import CustomersView from '@/views/CustomersView.vue'
 import TractorsView from '@/views/vehicle/TractorsView.vue'
-import SemiTrailers from '@/views/vehicle/SemiTrailersView.vue'
+import SemiTrailersView from '@/views/vehicle/SemiTrailersView.vue'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import MapLayout from '@/layouts/MapLayout.vue'
@@ -69,6 +70,11 @@ const routes = [
                         component: DashboardView
                     },
                     {
+                        path: 'operationCosts',
+                        name: 'operationCosts',
+                        component: OperationCostsView
+                    },
+                    {
                         path: 'drivers',
                         name: 'drivers',
                         component: DriversView
@@ -81,7 +87,7 @@ const routes = [
                     {
                         path: 'semiTrailers',
                         name: 'semiTrailers',
-                        component: SemiTrailers
+                        component: SemiTrailersView
                     },
                     {
                         path: 'customers',

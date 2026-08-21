@@ -63,6 +63,8 @@ watch(isVehiclesSection, (isActive) => {
             <template v-else-if="isGestionSection">
                 <SidebarLink to="/gestion/dashboard" label="Dashboard" />
 
+                <SidebarLink to="/gestion/operationCosts" label="Coûts opérationnels" />
+
                 <SidebarLink to="/gestion/drivers" label="Conducteurs" />
 
                 <!-- VEHICLES MENU -->
