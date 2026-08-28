@@ -18,7 +18,10 @@ import com.optiroute.backend.mapper.TruckConfigurationFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
+import com.optiroute.backend.type.GpsModeType;
 
 @Service
 @RequiredArgsConstructor
@@ -68,27 +71,21 @@ public class RouteOptimizationService {
             routes.add(dto);
         }
 
-        /*
-         * // Fastest route reference
-         * RouteDto fastestRoute =
-         * routes.stream().min(Comparator.comparingLong(RouteDto::getDuration)).
-         * orElseThrow();
-         * long fastestDuration = fastestRoute.getDuration();
-         * 
-         * // Max duration management
-         * long maxDuration = (request.getMaxTravelTimeMinutes() != null)
-         * ? request.getMaxTravelTimeMinutes() * 60L
-         * : (long) (fastestDuration * 1.10);
-         * 
-         * // Filtrage
-         * List<RouteDto> validRoutes = routes.stream().filter(r -> r.getDuration() <=
-         * maxDuration).toList();
-         * if (validRoutes.isEmpty()) {
-         * validRoutes = List.of(fastestRoute); // fallback
-         * }
-         */
+        List<RouteDto> validRoutes = routes;
 
-        List<RouteDto> validRoutes = routes.stream().toList();
+        if (GpsModeType.CHEAPEST.equals(request.getMode())) {
+            long maxDurationSeconds = request.getMaxTravelTimeMinutes() == null ? Long.MAX_VALUE : request.getMaxTravelTimeMinutes() * 60L;
+
+            List<RouteDto> sortedRoutes = routes.stream().sorted(Comparator.comparingDouble(route -> route.getCosts().getTotalCost())).toList();
+
+            validRoutes = sortedRoutes.stream().filter(route -> route.getDuration() <= maxDurationSeconds).toList();
+
+            if (validRoutes.isEmpty() && !sortedRoutes.isEmpty()) {
+                validRoutes = List.of(sortedRoutes.getFirst());
+            } else {
+                validRoutes = validRoutes.stream().limit(3).toList();
+            }
+        }
 
         // Response
         RoutesResponse response = new RoutesResponse();
