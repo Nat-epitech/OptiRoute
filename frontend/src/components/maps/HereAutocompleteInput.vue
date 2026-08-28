@@ -5,13 +5,26 @@ import { autocompletePlaces, geocodePlace } from '@/api/here/mapsApi'
 
 //Variables
 
-const props = defineProps({ label: String })
+const props = defineProps<{
+    label?: string
+    modelValue?: any
+}>()
 
-const emit = defineEmits(['selected'])
+const emit = defineEmits(['selected', 'update:modelValue'])
 const inputValue = ref('')
 const results = ref<any[]>([])
 const loading = ref(false)
 const isSelecting = ref(false)
+
+watch(() => props.modelValue, (value) => {
+    isSelecting.value = true
+    inputValue.value = value?.address ?? ''
+    results.value = []
+
+    setTimeout(() => {
+        isSelecting.value = false
+    }, 0)
+}, { immediate: true })
 
 //Functions
 
@@ -59,14 +72,17 @@ async function selectPlace(item: any) {
         inputValue.value = label
         results.value = []
 
-        emit('selected', {
+        const selectedPlace = {
             name: place.address.city ?? place.title ?? label,
             address: label,
             position: {
                 lat: place.position.lat,
                 lng: place.position.lng
             }
-        })
+        }
+
+        emit('selected', selectedPlace)
+        emit('update:modelValue', selectedPlace)
 
     } finally {
         loading.value = false

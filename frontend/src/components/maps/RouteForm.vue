@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { ArrowUpDown } from 'lucide-vue-next'
 import HereAutocompleteInput from './HereAutocompleteInput.vue'
 
 import { calculateRoute } from '@/api/here/mapsApi'
@@ -47,6 +48,12 @@ function toPosition(place: {
         lat: place.position.lat,
         lng: place.position.lng
     }
+}
+
+function swapLocations() {
+    const origin = form.origin
+    form.origin = form.destination
+    form.destination = origin
 }
 
 async function submit() {
@@ -99,11 +106,20 @@ onMounted(async () => {
 <template>
     <div class="space-y-5">
 
-        <!-- ORIGIN -->
-        <HereAutocompleteInput label="Départ" @selected="form.origin = $event" />
+        <!-- LOCATIONS -->
+        <div class="relative">
+            <HereAutocompleteInput v-model="form.origin" label="Départ" />
+            <div class="mt-5">
+                <HereAutocompleteInput v-model="form.destination" label="Arrivée" />
+            </div>
 
-        <!-- DESTINATION -->
-        <HereAutocompleteInput label="Arrivée" @selected="form.destination = $event" />
+            <!-- SWAP -->
+            <button type="button" @click="swapLocations"
+                class="absolute right-0 top-[58%] z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 hover:text-slate-900"
+                aria-label="Inverser le départ et l'arrivée" title="Inverser le départ et l'arrivée">
+                <ArrowUpDown :size="16" :stroke-width="2" aria-hidden="true" />
+            </button>
+        </div>
 
         <!-- MODE -->
         <div class="space-y-3">
