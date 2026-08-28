@@ -22,7 +22,7 @@ import { getDrivers } from '@/api/driver/driverApi.ts'
 import { getCustomers } from '@/api/customerApi'
 import { getApiErrorMessage } from '@/api/utils'
 
-import { formatDuration } from "@/utils/formatters"
+import { formatDurationSeconds } from "@/utils/formatters"
 
 import { useNotification } from '@/composables/useNotification'
 
@@ -194,7 +194,7 @@ onMounted(async () => {
 
                                             <div class="flex items-center gap-1">
                                                 <Car class="h-4 w-4" />
-                                                <span>{{ formatDuration(route.duration - route.baseDuration) }}</span>
+                                                <span>{{ formatDurationSeconds(route.duration - route.baseDuration) }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -202,7 +202,7 @@ onMounted(async () => {
                                     <!-- RIGHT -->
                                     <div class="text-right">
                                         <div class="text-lg font-semibold text-slate-800">
-                                            {{ formatDuration(route.duration) }}
+                                            {{ formatDurationSeconds(route.duration) }}
                                         </div>
 
                                         <div class="text-sm text-slate-500 mt-1">

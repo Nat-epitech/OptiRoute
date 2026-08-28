@@ -56,7 +56,7 @@ export const formatDateTime = (value: string | null | undefined,): string => {
     }).format(new Date(value))
 }
 
-export const formatDuration = (value: number | null): string => {
+export const formatDurationSeconds = (value: number | null): string => {
     if (value === null) {
         return "Non renseignée";
     }
@@ -79,3 +79,22 @@ export const formatDuration = (value: number | null): string => {
 
     return `${hours} h ${String(minutes).padStart(2, "0")}`;
 }
+
+export const formatDurationMinutes = (value: number | null): string => {
+    if (value === null) {
+        return "Non renseignée";
+    }
+
+    const hours = Math.floor(value / 60);
+    const minutes = value % 60;
+
+    if (hours === 0) {
+        return `${minutes} min${minutes > 1 ? "s" : ""}`;
+    }
+
+    if (minutes === 0) {
+        return `${hours} h`;
+    }
+
+    return `${hours} h ${String(minutes).padStart(2, "0")} min`;
+};

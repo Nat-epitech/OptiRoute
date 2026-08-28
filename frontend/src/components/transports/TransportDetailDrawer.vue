@@ -16,7 +16,7 @@ import DeleteTransportModal from "@/components/transports/DeleteTransportModal.v
 import AppDetailDrawer from "@/components/ui/AppDetailDrawer.vue"
 
 import { formatVehicleLabel } from "@/utils/vehicleUtils"
-import { formatDuration, formatCurrency, formatDateTime, formatDistance } from "@/utils/formatters"
+import { formatDurationSeconds, formatCurrency, formatDateTime, formatDistance } from "@/utils/formatters"
 
 const showDeleteModal = ref(false)
 
@@ -270,7 +270,7 @@ watch(
                 <div class="mt-5 grid grid-cols-2 gap-3">
                     <TransportMetricCard label="Distance" :value="formatDistance(transport.distanceMeters)" />
 
-                    <TransportMetricCard label="Durée estimée" :value="formatDuration(transport.durationSeconds)" />
+                    <TransportMetricCard label="Durée estimée" :value="formatDurationSeconds(transport.durationSeconds)" />
                 </div>
             </section>
 

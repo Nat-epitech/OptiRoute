@@ -11,6 +11,7 @@ import type { Position } from '@/models/route/Position'
 import type { TractorSummary } from "@/models/vehicle/Tractor"
 import type { SemiTrailerSummary } from "@/models/vehicle/SemiTrailer"
 import { formatVehicleLabel } from "@/utils/vehicleUtils"
+import { formatDurationMinutes } from "@/utils/formatters"
 
 //Variables
 const departureMode = ref('NOW')
@@ -140,9 +141,25 @@ onMounted(async () => {
             </select>
 
             <!-- MAX TIME -->
-            <input v-if="form.mode === 'CHEAPEST'" v-model="form.maxTravelTimeMinutes" type="number"
-                placeholder="(Optionnel) Temps de trajet max en minutes"
-                class="w-full rounded-xl border border-slate-300 p-3" />
+            <div v-if="form.mode === 'CHEAPEST'" class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <label class="block text-sm font-medium">
+                        Temps de trajet maximum
+                    </label>
+
+                    <span class="text-sm font-semibold text-slate-700">
+                        {{ formatDurationMinutes(form.maxTravelTimeMinutes) }}
+                    </span>
+                </div>
+
+                <input v-model.number="form.maxTravelTimeMinutes" type="range" min="0" max="1440" step="15"
+                    class="w-full accent-slate-900" />
+
+                <div class="flex justify-between text-xs text-slate-400">
+                    <span>0 min</span>
+                    <span>24 h</span>
+                </div>
+            </div>
 
         </div>
 
