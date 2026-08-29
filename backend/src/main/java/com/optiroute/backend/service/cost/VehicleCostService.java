@@ -55,29 +55,32 @@ public class VehicleCostService {
 			return 0;
 		}
 
-		int workingDaysYear = workingDaysService.getWorkingDaysInYear(date.getYear());
-		if (workingDaysYear <= 0) {
-			return 0;
-		}
-
 		double depreciationCost = 0;
 		if (isInDepreciationPeriod(tractor.getDepreciationStartDate(),tractor.getDepreciationEndDate(),date)) {
-			depreciationCost += calculateVehicleDepreciation(tractor.getPurchaseCost(),workingDaysYear,distanceKm,dailyVehicleDistanceKm);
+			depreciationCost += calculateVehicleDepreciation(tractor.getPurchaseCost(),tractor.getDepreciationStartDate(),tractor.getDepreciationEndDate(),distanceKm,
+				dailyVehicleDistanceKm);
 		}
 
 		if (isInDepreciationPeriod(semiTrailer.getDepreciationStartDate(),semiTrailer.getDepreciationEndDate(),date)) {
-			depreciationCost += calculateVehicleDepreciation(semiTrailer.getPurchaseCost(),workingDaysYear,distanceKm,dailyVehicleDistanceKm);
+			depreciationCost += calculateVehicleDepreciation(semiTrailer.getPurchaseCost(),semiTrailer.getDepreciationStartDate(),semiTrailer.getDepreciationEndDate(),distanceKm,
+				dailyVehicleDistanceKm);
 		}
 
 		return depreciationCost;
 	}
 
-	private double calculateVehicleDepreciation(BigDecimal purchaseCost, int workingDaysYear, double distanceKm, double dailyVehicleDistanceKm) {
-		if (purchaseCost == null) {
+	private double calculateVehicleDepreciation(BigDecimal purchaseCost, LocalDate depreciationStartDate, LocalDate depreciationEndDate, double distanceKm,
+		double dailyVehicleDistanceKm) {
+		if (purchaseCost == null || depreciationStartDate == null || depreciationEndDate == null) {
 			return 0;
 		}
 
-		double dailyDepreciation = purchaseCost.doubleValue() / workingDaysYear;
+		int workingDaysInPeriod = workingDaysService.getWorkingDaysBetween(depreciationStartDate,depreciationEndDate);
+		if (workingDaysInPeriod <= 0) {
+			return 0;
+		}
+
+		double dailyDepreciation = purchaseCost.doubleValue() / workingDaysInPeriod;
 		return dailyDepreciation * (distanceKm / dailyVehicleDistanceKm);
 	}
 

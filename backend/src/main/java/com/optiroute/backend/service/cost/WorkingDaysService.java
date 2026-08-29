@@ -51,4 +51,23 @@ public class WorkingDaysService {
 
         return count;
     }
+
+    public int getWorkingDaysBetween(LocalDate startDate, LocalDate endDate) {
+        if (startDate == null || endDate == null || endDate.isBefore(startDate)) {
+            return 0;
+        }
+
+        int count = 0;
+        LocalDate date = startDate;
+
+        while (!date.isAfter(endDate)) {
+            DayOfWeek day = date.getDayOfWeek();
+            if (day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY) {
+                count++;
+            }
+            date = date.plusDays(1);
+        }
+
+        return count;
+    }
 }
