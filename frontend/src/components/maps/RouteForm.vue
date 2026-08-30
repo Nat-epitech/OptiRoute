@@ -17,6 +17,7 @@ import { formatDurationMinutes } from "@/utils/formatters"
 const departureMode = ref('NOW')
 const tractors = ref<TractorSummary[]>([])
 const semiTrailers = ref<SemiTrailerSummary[]>([])
+const isSubmitting = ref(false)
 
 const emit = defineEmits(['route-calculated'])
 
@@ -59,9 +60,11 @@ function swapLocations() {
 
 async function submit() {
 
-    if (!form.origin || !form.destination || !form.tractorId) {
+    if (!form.origin || !form.destination || !form.tractorId || isSubmitting.value) {
         return
     }
+
+    isSubmitting.value = true
 
     try {
         const effectiveDepartureTime = toOffsetDateTime(form.departureTime) ?? new Date().toISOString()
@@ -88,6 +91,8 @@ async function submit() {
         )
     } catch (e) {
         console.error(e)
+    } finally {
+        isSubmitting.value = false
     }
 }
 
@@ -223,8 +228,22 @@ onMounted(async () => {
         </div>
 
         <!-- BUTTON -->
-        <button @click="submit" class="w-full bg-slate-900 text-white rounded-xl p-3 hover:bg-slate-800 transition">
-            Calculer l'itinéraire
+        <button @click="submit" :disabled="isSubmitting"
+            class="w-full rounded-xl p-3 text-white transition disabled:cursor-not-allowed disabled:opacity-80"
+            :class="isSubmitting ? 'bg-slate-700' : 'bg-slate-900 hover:bg-slate-800'">
+            <span class="flex items-center justify-center gap-2">
+                <svg v-if="isSubmitting" class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                    <path class="opacity-75"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A8 8 0 0112 4v4a4 4 0 00-2.236 6.97l-3.764 2.321z"
+                        fill="currentColor" />
+                </svg>
+
+                <span>
+                    {{ isSubmitting ? 'Calcul en cours...' : "Calculer l'itinéraire" }}
+                </span>
+            </span>
         </button>
 
     </div>
