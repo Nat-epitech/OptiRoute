@@ -51,12 +51,20 @@ public class CostParameterEngine {
 
             case EUR_PER_HOUR -> context.durationHours() * parameter.getValue().doubleValue();
 
-            case EUR_PER_DAY -> parameter.getValue().doubleValue();
+            case EUR_PER_DAY -> calculateDailyCost(parameter,context);
 
             case EUR_PER_MONTH -> calculateMonthlyCost(parameter,context);
 
             case EUR_PER_YEAR -> calculateYearlyCost(parameter,context);
         };
+    }
+
+    private double calculateDailyCost(CostParameter parameter, CostCalculationContext context) {
+        if (context.dailyTransportCount() <= 0) {
+            return parameter.getValue().doubleValue();
+        }
+
+        return parameter.getValue().doubleValue() / context.dailyTransportCount();
     }
 
     private double calculateMonthlyCost(CostParameter parameter, CostCalculationContext context) {
