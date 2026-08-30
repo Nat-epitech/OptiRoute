@@ -50,18 +50,21 @@ public class TransportCostService {
 
         LocalDate transportDate = transport.getPlannedStart().atZoneSameInstant(PLANNING_ZONE).toLocalDate();
         LocalTime departureTime = transport.getPlannedStart().atZoneSameInstant(PLANNING_ZONE).toLocalTime();
+        LocalTime arrivalTime = transport.getPlannedEnd().atZoneSameInstant(PLANNING_ZONE).toLocalTime();
 
         double dailyVehicleDistanceKm = calculateDailyVehicleDistance(transport.getTractorId(),transportDate);
         int dailyTransportCount = calculateDailyTransportCount(transportDate);
 
         double dailyDriverDurationHours = calculateDailyDriverDuration(transport.getDriverId(),transportDate);
+        LocalTime driverDayStartTime = calculateDailyDriverStartTime(transport.getDriverId(),transportDate);
+        LocalTime driverDayEndTime = calculateDailyDriverEndTime(transport.getDriverId(),transportDate);
 
         Tractor tractor = tractorService.getEntityById(transport.getTractorId());
         SemiTrailer semiTrailer = transport.getSemiTrailerId() != null ? semiTrailerService.getEntityById(transport.getSemiTrailerId()) : null;
         String vehicleType = semiTrailer != null && semiTrailer.getTrailerType() != null ? semiTrailer.getTrailerType().name() : null;
 
         CostCalculationContext context = new CostCalculationContext(transportDate, distanceKm, dailyVehicleDistanceKm, durationHours, dailyTransportCount, departureTime,
-            vehicleType, dailyDriverDurationHours);
+            arrivalTime, driverDayStartTime, driverDayEndTime, vehicleType, dailyDriverDurationHours);
 
         CostCategoryResponse vehicleCost = vehicleCostService.calculateCosts(tractor,semiTrailer,context,estimate.getEstimatedFuelCost().doubleValue(),
             estimate.getEstimatedTollCost().doubleValue());
@@ -100,5 +103,21 @@ public class TransportCostService {
 
         return transportRepository.findByDriverIdAndPlannedStartGreaterThanEqualAndPlannedStartLessThan(driverId,start,end).stream().map(Transport::getId)
             .map(transportEstimateRepository::findByTransportId).flatMap(Optional::stream).mapToDouble(estimate -> estimate.getDurationSeconds() / 3600.0).sum();
+    }
+
+    private LocalTime calculateDailyDriverStartTime(Long driverId, LocalDate date) {
+        OffsetDateTime start = date.atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
+        OffsetDateTime end = date.plusDays(1).atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
+
+        return transportRepository.findByDriverIdAndPlannedStartGreaterThanEqualAndPlannedStartLessThan(driverId,start,end).stream()
+            .map(transport -> transport.getPlannedStart().atZoneSameInstant(PLANNING_ZONE).toLocalTime()).min(LocalTime::compareTo).orElse(null);
+    }
+
+    private LocalTime calculateDailyDriverEndTime(Long driverId, LocalDate date) {
+        OffsetDateTime start = date.atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
+        OffsetDateTime end = date.plusDays(1).atStartOfDay(PLANNING_ZONE).toOffsetDateTime();
+
+        return transportRepository.findByDriverIdAndPlannedStartGreaterThanEqualAndPlannedStartLessThan(driverId,start,end).stream()
+            .map(transport -> transport.getPlannedEnd().atZoneSameInstant(PLANNING_ZONE).toLocalTime()).max(LocalTime::compareTo).orElse(null);
     }
 }

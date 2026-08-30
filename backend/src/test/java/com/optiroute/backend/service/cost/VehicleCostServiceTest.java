@@ -58,9 +58,9 @@ class VehicleCostServiceTest {
         parameter.setActive(true);
 
         when(repository.findByCategory(CostParameterCategoryType.VEHICLE)).thenReturn(List.of(parameter));
-        when(costRuleService.isApplicable(parameter,new CostCalculationContext(LocalDate.of(2024,1,5), 100.0, 500.0, 3.0, 3, null, null, 5.0))).thenReturn(true);
+        when(costRuleService.isApplicable(parameter,new CostCalculationContext(LocalDate.of(2024,1,5), 100.0, 500.0, 3.0, 3, null, null, null, null, null, 5.0))).thenReturn(true);
 
-        CostCalculationContext context = new CostCalculationContext(LocalDate.of(2024,1,5), 100.0, 500.0, 3.0, 3, null, null, 5.0);
+        CostCalculationContext context = new CostCalculationContext(LocalDate.of(2024,1,5), 100.0, 500.0, 3.0, 3, null, null, null, null, null, 5.0);
 
         double result = engine.calculateCosts(CostParameterCategoryType.VEHICLE,context).getFirst().amount();
 

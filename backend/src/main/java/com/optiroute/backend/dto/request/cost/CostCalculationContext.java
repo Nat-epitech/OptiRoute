@@ -13,6 +13,12 @@ public record CostCalculationContext(LocalDate date,
 
     LocalTime departureTime,
 
+    LocalTime arrivalTime,
+
+    LocalTime driverDayStartTime,
+
+    LocalTime driverDayEndTime,
+
     String vehicleType,
 
     double dailyDriverDurationHours) {

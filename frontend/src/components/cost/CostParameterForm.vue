@@ -103,6 +103,10 @@ const tripFieldOptions: {
             value: "DEPARTURE_TIME",
             label: "Heure de départ",
         },
+        {
+            value: "ARRIVAL_TIME",
+            label: "Heure d'arrivée",
+        },
     ]
 
 const vehicleFieldOptions: {
@@ -118,7 +122,16 @@ const vehicleFieldOptions: {
 const driverFieldOptions: {
     value: CostConditionField
     label: string
-}[] = []
+}[] = [
+        {
+            value: "DRIVER_DAY_START_TIME",
+            label: "Heure de début de journée",
+        },
+        {
+            value: "DRIVER_DAY_END_TIME",
+            label: "Heure de fin de journée",
+        },
+    ]
 
 const operatorOptions: {
     value: CostConditionOperator
@@ -432,8 +445,8 @@ const handleSourceChange = (
 
                             <!-- Heure -->
 
-                            <input v-if="condition.field === 'DEPARTURE_TIME'" v-model="condition.value" type="time"
-                                required :disabled="disabled"
+                            <input v-if="['DEPARTURE_TIME', 'ARRIVAL_TIME', 'DRIVER_DAY_START_TIME', 'DRIVER_DAY_END_TIME'].includes(condition.field)"
+                                v-model="condition.value" type="time" required :disabled="disabled"
                                 class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500" />
 
                             <!-- Type véhicule -->

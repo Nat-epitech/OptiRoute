@@ -20,7 +20,10 @@ export type CostConditionField =
     | "DISTANCE"
     | "DURATION"
     | "DEPARTURE_TIME"
+    | "ARRIVAL_TIME"
     | "VEHICLE_TYPE"
+    | "DRIVER_DAY_START_TIME"
+    | "DRIVER_DAY_END_TIME"
 
 export type CostConditionOperator =
     | "EQUALS"

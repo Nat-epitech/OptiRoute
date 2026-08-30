@@ -89,7 +89,10 @@ const conditionFieldLabels: Record<string, string> = {
     DISTANCE: "Distance",
     DURATION: "Durée",
     DEPARTURE_TIME: "Heure de départ",
+    ARRIVAL_TIME: "Heure d'arrivée",
     VEHICLE_TYPE: "Type de véhicule",
+    DRIVER_DAY_START_TIME: "Heure de début de journée",
+    DRIVER_DAY_END_TIME: "Heure de fin de journée",
 }
 
 const conditionOperatorLabels: Record<string, string> = {

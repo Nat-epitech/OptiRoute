@@ -60,6 +60,12 @@ public class CostRuleService {
 
             case DEPARTURE_TIME -> evaluateTime(context.departureTime(),condition);
 
+            case ARRIVAL_TIME -> evaluateTime(context.arrivalTime(),condition);
+
+            case DRIVER_DAY_START_TIME -> evaluateTime(context.driverDayStartTime(),condition);
+
+            case DRIVER_DAY_END_TIME -> evaluateTime(context.driverDayEndTime(),condition);
+
             case VEHICLE_TYPE -> evaluateString(context.vehicleType(),condition);
         };
     }
