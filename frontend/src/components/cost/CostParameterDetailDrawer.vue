@@ -90,6 +90,8 @@ const conditionFieldLabels: Record<string, string> = {
     DURATION: "Durée",
     DEPARTURE_TIME: "Heure de départ",
     ARRIVAL_TIME: "Heure d'arrivée",
+    EMPTY_TRIP: "Trajet à vide",
+    LOADED_TRIP: "Trajet chargé",
     VEHICLE_TYPE: "Type de véhicule",
     DRIVER_DAY_START_TIME: "Heure de début de journée",
     DRIVER_DAY_END_TIME: "Heure de fin de journée",

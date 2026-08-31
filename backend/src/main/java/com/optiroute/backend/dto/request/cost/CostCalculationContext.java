@@ -11,6 +11,8 @@ public record CostCalculationContext(LocalDate date,
 
     int dailyTransportCount,
 
+    boolean emptyTrip,
+
     LocalTime departureTime,
 
     LocalTime arrivalTime,

@@ -62,6 +62,10 @@ public class CostRuleService {
 
             case ARRIVAL_TIME -> evaluateTime(context.arrivalTime(),condition);
 
+            case EMPTY_TRIP -> evaluateBoolean(context.emptyTrip(),condition);
+
+            case LOADED_TRIP -> evaluateBoolean(!context.emptyTrip(),condition);
+
             case DRIVER_DAY_START_TIME -> evaluateTime(context.driverDayStartTime(),condition);
 
             case DRIVER_DAY_END_TIME -> evaluateTime(context.driverDayEndTime(),condition);
@@ -101,6 +105,19 @@ public class CostRuleService {
             case AFTER -> actualValue.isAfter(expectedValue);
 
             default -> throw new IllegalArgumentException("Invalid operator for time condition: " + condition.getOperator());
+        };
+    }
+
+    private boolean evaluateBoolean(boolean actualValue, CostCondition condition) {
+        boolean expectedValue = Boolean.parseBoolean(condition.getValue());
+
+        return switch (condition.getOperator()) {
+
+            case EQUALS -> actualValue == expectedValue;
+
+            case NOT_EQUALS -> actualValue != expectedValue;
+
+            default -> throw new IllegalArgumentException("Invalid operator for boolean condition: " + condition.getOperator());
         };
     }
 

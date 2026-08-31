@@ -63,8 +63,8 @@ public class TransportCostService {
         SemiTrailer semiTrailer = transport.getSemiTrailerId() != null ? semiTrailerService.getEntityById(transport.getSemiTrailerId()) : null;
         String vehicleType = semiTrailer != null && semiTrailer.getTrailerType() != null ? semiTrailer.getTrailerType().name() : null;
 
-        CostCalculationContext context = new CostCalculationContext(transportDate, distanceKm, dailyVehicleDistanceKm, durationHours, dailyTransportCount, departureTime,
-            arrivalTime, driverDayStartTime, driverDayEndTime, vehicleType, dailyDriverDurationHours);
+        CostCalculationContext context = new CostCalculationContext(transportDate, distanceKm, dailyVehicleDistanceKm, durationHours, dailyTransportCount, transport.isEmptyTrip(),
+            departureTime, arrivalTime, driverDayStartTime, driverDayEndTime, vehicleType, dailyDriverDurationHours);
 
         CostCategoryResponse vehicleCost = vehicleCostService.calculateCosts(tractor,semiTrailer,context,estimate.getEstimatedFuelCost().doubleValue(),
             estimate.getEstimatedTollCost().doubleValue());

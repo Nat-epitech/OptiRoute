@@ -107,6 +107,14 @@ const tripFieldOptions: {
             value: "ARRIVAL_TIME",
             label: "Heure d'arrivée",
         },
+        {
+            value: "EMPTY_TRIP",
+            label: "Trajet à vide",
+        },
+        {
+            value: "LOADED_TRIP",
+            label: "Trajet chargé",
+        },
     ]
 
 const vehicleFieldOptions: {
@@ -448,6 +456,24 @@ const handleSourceChange = (
                             <input v-if="['DEPARTURE_TIME', 'ARRIVAL_TIME', 'DRIVER_DAY_START_TIME', 'DRIVER_DAY_END_TIME'].includes(condition.field)"
                                 v-model="condition.value" type="time" required :disabled="disabled"
                                 class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500" />
+
+                            <!-- Booléen -->
+
+                            <select v-else-if="['EMPTY_TRIP', 'LOADED_TRIP'].includes(condition.field)" v-model="condition.value" required
+                                :disabled="disabled"
+                                class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500">
+                                <option value="" disabled>
+                                    Sélectionner un état
+                                </option>
+
+                                <option value="true">
+                                    Oui
+                                </option>
+
+                                <option value="false">
+                                    Non
+                                </option>
+                            </select>
 
                             <!-- Type véhicule -->
 

@@ -90,32 +90,34 @@ withDefaults(
                 </div>
             </div>
 
-            <div>
-                <label class="mb-1 block text-sm font-medium text-slate-700">
-                    Consommation moyenne en charge
-                </label>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">
+                        Consommation moyenne en charge
+                    </label>
 
-                <input v-model.number="form.averageConsumption" type="number" min="0" step="0.01" placeholder="31.8"
-                    :disabled="disabled"
-                    class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100" />
+                    <input v-model.number="form.averageConsumption" type="number" min="0" step="0.01" placeholder="31.8"
+                        :disabled="disabled"
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100" />
 
-                <p class="mt-1 text-xs text-slate-500">
-                    Litres / 100 km
-                </p>
-            </div>
+                    <p class="mt-1 text-xs text-slate-500">
+                        Litres / 100 km
+                    </p>
+                </div>
 
-            <div>
-                <label class="mb-1 block text-sm font-medium text-slate-700">
-                    Consommation moyenne à vide
-                </label>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">
+                        Consommation moyenne à vide
+                    </label>
 
-                <input v-model.number="form.averageConsumptionEmpty" type="number" min="0" step="0.01"
-                    placeholder="28.5" :disabled="disabled"
-                    class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100" />
+                    <input v-model.number="form.averageConsumptionEmpty" type="number" min="0" step="0.01"
+                        placeholder="28.5" :disabled="disabled"
+                        class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100" />
 
-                <p class="mt-1 text-xs text-slate-500">
-                    Litres / 100 km pour un trajet à vide
-                </p>
+                    <p class="mt-1 text-xs text-slate-500">
+                        Litres / 100 km pour un trajet à vide
+                    </p>
+                </div>
             </div>
         </section>
 

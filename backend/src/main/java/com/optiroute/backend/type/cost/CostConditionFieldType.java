@@ -2,7 +2,7 @@ package com.optiroute.backend.type.cost;
 
 public enum CostConditionFieldType {
     // Trip
-    DISTANCE, DURATION, DEPARTURE_TIME, ARRIVAL_TIME,
+    DISTANCE, DURATION, DEPARTURE_TIME, ARRIVAL_TIME, EMPTY_TRIP, LOADED_TRIP,
 
     // Vehicle
     VEHICLE_TYPE,

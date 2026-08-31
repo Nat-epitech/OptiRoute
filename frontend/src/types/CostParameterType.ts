@@ -21,6 +21,8 @@ export type CostConditionField =
     | "DURATION"
     | "DEPARTURE_TIME"
     | "ARRIVAL_TIME"
+    | "EMPTY_TRIP"
+    | "LOADED_TRIP"
     | "VEHICLE_TYPE"
     | "DRIVER_DAY_START_TIME"
     | "DRIVER_DAY_END_TIME"
