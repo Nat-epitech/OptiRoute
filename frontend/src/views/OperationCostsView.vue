@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 
-import { getCostParameters } from "@/api/cost/costParameterApi"
+import { getCostParameters, setCostParameterActive } from "@/api/cost/costParameterApi"
 
 import type { CostParameter } from "@/models/cost/CostParameter"
 
@@ -39,8 +39,56 @@ const structureCosts = computed(() =>
     ),
 )
 
-const selectedCostCategory = ref<"ALL" | "VEHICLE" | "DRIVER" | "STRUCTURE">("ALL")
+const selectedCostCategory = ref<"ALL" | "VEHICLE" | "DRIVER" | "STRUCTURE" | "ACTIVE_ONLY">("ALL")
+const selectedSort = ref<"CREATION_DATE" | "ALPHABET" | "CATEGORY" | "ACTIVE_FIRST">("CREATION_DATE")
 const searchQuery = ref("")
+
+const getCategoryRank = (category: string) => {
+    switch (category) {
+        case "DRIVER":
+            return 0
+        case "VEHICLE":
+            return 1
+        case "STRUCTURE":
+            return 2
+        default:
+            return 3
+    }
+}
+
+const sortCosts = (costs: CostParameter[]) => {
+    return [...costs].sort((first, second) => {
+        if (selectedSort.value === "ALPHABET") {
+            const labelComparison = first.label.localeCompare(second.label, "fr", { sensitivity: "base" })
+
+            if (labelComparison !== 0) {
+                return labelComparison
+            }
+
+            return first.id - second.id
+        }
+
+        if (selectedSort.value === "CATEGORY") {
+            const categoryComparison = getCategoryRank(first.category) - getCategoryRank(second.category)
+
+            if (categoryComparison !== 0) {
+                return categoryComparison
+            }
+
+            return first.id - second.id
+        }
+
+        if (selectedSort.value === "ACTIVE_FIRST") {
+            if (first.active !== second.active) {
+                return Number(second.active) - Number(first.active)
+            }
+
+            return first.id - second.id
+        }
+
+        return first.id - second.id
+    })
+}
 
 const visibleCosts = computed(() => {
     const baseCosts = (() => {
@@ -51,18 +99,22 @@ const visibleCosts = computed(() => {
                 return driverCosts.value
             case "STRUCTURE":
                 return structureCosts.value
+            case "ACTIVE_ONLY":
+                return costParameters.value.filter(cost => cost.active)
             default:
                 return costParameters.value
         }
     })()
 
+    const sortedBaseCosts = sortCosts(baseCosts)
+
     if (!searchQuery.value.trim()) {
-        return baseCosts
+        return sortedBaseCosts
     }
 
     const normalized = searchQuery.value.trim().toLowerCase()
 
-    return baseCosts.filter(cost =>
+    return sortedBaseCosts.filter(cost =>
         cost.label.toLowerCase().includes(normalized)
         || (cost.category === "VEHICLE" && "véhicule".includes(normalized))
         || (cost.category === "DRIVER" && "conducteur".includes(normalized))
@@ -120,6 +172,15 @@ const handleCostParameterDeleted = async () => {
     closeCostParameterAction()
     closeCostParameterDetails()
     await loadCostParameters()
+}
+
+const toggleCostParameterActive = async (costParameter: CostParameter) => {
+    try {
+        await setCostParameterActive(costParameter.id, !costParameter.active)
+        await loadCostParameters()
+    } catch (error) {
+        console.error("Impossible de modifier le statut du coût :", error)
+    }
 }
 
 // Helpers
@@ -183,40 +244,62 @@ onMounted(loadCostParameters)
 
         <section class="mb-8">
             <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold text-slate-800">
-                        Coûts
-                    </h2>
 
-                    <p class="text-sm text-slate-500">
-                        Gestion centralisée des coûts opérationnels.
-                    </p>
-                </div>
+                <div class="flex w-full flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                    <div class="flex w-full flex-col gap-3 sm:max-w-xl sm:flex-row">
+                        <div class="w-full sm:max-w-xs">
+                            <label class="mb-1 block text-sm font-medium text-slate-700">
+                                Filtre
+                            </label>
 
-                <div class="flex w-full flex-col gap-3 sm:max-w-xl sm:flex-row">
-                    <div class="w-full sm:max-w-xs">
-                        <label class="mb-1 block text-sm font-medium text-slate-700">
-                            Affichage
-                        </label>
+                            <select v-model="selectedCostCategory"
+                                class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-blue-500">
+                                <option value="ALL">
+                                    Tous les coûts
+                                </option>
 
-                        <select v-model="selectedCostCategory"
-                            class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-blue-500">
-                            <option value="ALL">
-                                Tous les coûts
-                            </option>
+                                <option value="ACTIVE_ONLY">
+                                    Activé uniquement
+                                </option>
 
-                            <option value="DRIVER">
-                                Coûts chauffeur
-                            </option>
+                                <option value="DRIVER">
+                                    Coûts chauffeur
+                                </option>
 
-                            <option value="VEHICLE">
-                                Coûts véhicule
-                            </option>
+                                <option value="VEHICLE">
+                                    Coûts véhicule
+                                </option>
 
-                            <option value="STRUCTURE">
-                                Coûts structure
-                            </option>
-                        </select>
+                                <option value="STRUCTURE">
+                                    Coûts structure
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="w-full sm:max-w-xs">
+                            <label class="mb-1 block text-sm font-medium text-slate-700">
+                                Tri
+                            </label>
+
+                            <select v-model="selectedSort"
+                                class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-blue-500">
+                                <option value="CREATION_DATE">
+                                    Date de création
+                                </option>
+
+                                <option value="ALPHABET">
+                                    Alphabet
+                                </option>
+
+                                <option value="CATEGORY">
+                                    Catégorie
+                                </option>
+
+                                <option value="ACTIVE_FIRST">
+                                    Actif en premier
+                                </option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="w-full sm:max-w-xs">
@@ -281,7 +364,7 @@ onMounted(loadCostParameters)
 
                             <td class="whitespace-nowrap px-6 py-4 text-slate-600">
                                 {{ cost.category === 'VEHICLE' ? 'Véhicule' : cost.category === 'DRIVER' ? 'Conducteur'
-                                : 'Structure' }}
+                                    : 'Structure' }}
                             </td>
 
                             <td class="whitespace-nowrap px-6 py-4">
@@ -296,6 +379,12 @@ onMounted(loadCostParameters)
                                 <AppDropdown :open="openDropdownId === cost.id" @update:open="value => {
                                     openDropdownId = value ? cost.id : null
                                 }" v-slot="{ close }">
+                                    <button type="button"
+                                        class="flex w-full items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                                        @click="close(); void toggleCostParameterActive(cost)">
+                                        {{ cost.active ? "Désactiver" : "Activer" }}
+                                    </button>
+
                                     <button type="button"
                                         class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                         @click="close(); askDeleteCostParameter(cost)">
