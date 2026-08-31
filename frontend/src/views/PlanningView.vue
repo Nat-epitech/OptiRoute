@@ -13,6 +13,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 import PlanningGrid from "@/components/planning/PlanningGrid.vue";
 import PlanningToolbar from "@/components/planning/PlanningToolbar.vue";
@@ -69,14 +70,72 @@ function capitalize(value: string): string {
     return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+const route = useRoute();
+const router = useRouter();
+
 const today = startOfDay(new Date());
+const PLANNING_RANGE_STORAGE_KEY = "optiroute:lastPlanningRange";
+
+function parseQueryDate(value: unknown): Date | null {
+    const rawValue = Array.isArray(value) ? value[0] : value;
+
+    if (typeof rawValue !== "string" || !rawValue) {
+        return null;
+    }
+
+    const parsed = new Date(`${rawValue}T00:00:00`);
+
+    if (Number.isNaN(parsed.getTime())) {
+        return null;
+    }
+
+    return startOfDay(parsed);
+}
+
+function persistRange(start: Date, end: Date): void {
+    try {
+        window.localStorage.setItem(
+            PLANNING_RANGE_STORAGE_KEY,
+            JSON.stringify({
+                start: formatDateKey(start),
+                end: formatDateKey(end),
+            })
+        );
+    } catch {
+        // Ignore storage errors silently.
+    }
+}
+
+function restoreRangeFromStorage(): { start: Date; end: Date } | null {
+    try {
+        const rawValue = window.localStorage.getItem(PLANNING_RANGE_STORAGE_KEY);
+
+        if (!rawValue) {
+            return null;
+        }
+
+        const parsed = JSON.parse(rawValue) as { start?: string; end?: string };
+        const start = parseQueryDate(parsed.start);
+        const end = parseQueryDate(parsed.end);
+
+        if (!start || !end) {
+            return null;
+        }
+
+        return { start, end };
+    } catch {
+        return null;
+    }
+}
+
+const initialStoredRange = restoreRangeFromStorage();
 
 const selectedStartDate = ref<Date>(
-    new Date(today)
+    parseQueryDate(route.query.startDate) ?? initialStoredRange?.start ?? new Date(today)
 );
 
 const selectedEndDate = ref<Date>(
-    addDays(today, 2)
+    parseQueryDate(route.query.endDate) ?? initialStoredRange?.end ?? addDays(today, 2)
 );
 
 const numberOfDisplayedDays = computed<number>(() => {
@@ -153,6 +212,28 @@ async function loadCurrentPeriod(): Promise<void> {
     });
 }
 
+function syncUrlRange(start: Date, end: Date): void {
+    const nextStart = formatDateKey(start);
+    const nextEnd = formatDateKey(end);
+
+    persistRange(start, end);
+
+    const currentStart = Array.isArray(route.query.startDate) ? route.query.startDate[0] : route.query.startDate;
+    const currentEnd = Array.isArray(route.query.endDate) ? route.query.endDate[0] : route.query.endDate;
+
+    if (currentStart === nextStart && currentEnd === nextEnd) {
+        return;
+    }
+
+    void router.replace({
+        name: "planning",
+        query: {
+            startDate: nextStart,
+            endDate: nextEnd,
+        },
+    });
+}
+
 function handleRangeChange(range: [Date, Date]): void {
     const [start, requestedEnd] = range;
 
@@ -163,6 +244,7 @@ function handleRangeChange(range: [Date, Date]): void {
 
     selectedStartDate.value = normalizedStart;
     selectedEndDate.value = normalizedEnd > maximumEnd ? maximumEnd : normalizedEnd;
+    syncUrlRange(selectedStartDate.value, selectedEndDate.value);
 }
 
 function applyTodayRange(startOffset: number, additionalDays: number): void {
@@ -170,10 +252,59 @@ function applyTodayRange(startOffset: number, additionalDays: number): void {
 
     selectedStartDate.value = addDays(currentToday, startOffset);
     selectedEndDate.value = addDays(currentToday, startOffset + additionalDays);
+    syncUrlRange(selectedStartDate.value, selectedEndDate.value);
 }
 
 watch(
-    [() => formatDateKey(selectedStartDate.value), () => formatDateKey(selectedEndDate.value),], () => { void loadCurrentPeriod(); },
+    [() => formatDateKey(selectedStartDate.value), () => formatDateKey(selectedEndDate.value),],
+    () => { void loadCurrentPeriod(); },
+    {
+        immediate: true,
+    }
+);
+
+watch(
+    () => route.query,
+    (query) => {
+        const nextStart = parseQueryDate(query.startDate);
+        const nextEnd = parseQueryDate(query.endDate);
+
+        if (nextStart && nextEnd) {
+            const normalizedStart = startOfDay(nextStart);
+            const normalizedEnd = startOfDay(nextEnd);
+            const maximumEnd = addDays(normalizedStart, 6);
+            const clampedEnd = normalizedEnd > maximumEnd ? maximumEnd : normalizedEnd;
+
+            if (
+                formatDateKey(selectedStartDate.value) !== formatDateKey(normalizedStart) ||
+                formatDateKey(selectedEndDate.value) !== formatDateKey(clampedEnd)
+            ) {
+                selectedStartDate.value = normalizedStart;
+                selectedEndDate.value = clampedEnd;
+                persistRange(selectedStartDate.value, selectedEndDate.value);
+            }
+
+            return;
+        }
+
+        const storedRange = restoreRangeFromStorage();
+
+        if (!storedRange) {
+            return;
+        }
+
+        const normalizedStart = startOfDay(storedRange.start);
+        const normalizedEnd = startOfDay(storedRange.end);
+
+        if (
+            formatDateKey(selectedStartDate.value) !== formatDateKey(normalizedStart) ||
+            formatDateKey(selectedEndDate.value) !== formatDateKey(normalizedEnd)
+        ) {
+            selectedStartDate.value = normalizedStart;
+            selectedEndDate.value = normalizedEnd;
+            persistRange(selectedStartDate.value, selectedEndDate.value);
+        }
+    },
     {
         immediate: true,
     }
