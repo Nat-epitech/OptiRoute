@@ -6,34 +6,21 @@ import java.time.OffsetDateTime;
 
 import com.optiroute.backend.type.FuelType;
 
-public record TractorResponse(
-        Long id,
-        String externalId,
-        String externalSource,
+public record TractorResponse(Long id, String externalId, String externalSource,
 
         String registration,
 
-        String brand,
-        String model,
+        String brand, String model,
 
         Integer maxSpeed,
 
-        FuelType fuelType,
-        BigDecimal averageConsumption,
+        FuelType fuelType, BigDecimal averageConsumption, BigDecimal averageConsumptionEmpty,
 
-        Integer emptyWeightKg,
-        Integer grossCombinationWeightKg,
+        Integer emptyWeightKg, Integer grossCombinationWeightKg,
 
-        Integer heightCm,
-        Integer widthCm,
-        Integer lengthCm,
-        Integer axleCount,
+        Integer heightCm, Integer widthCm, Integer lengthCm, Integer axleCount,
 
-        BigDecimal purchaseCost,
-        LocalDate depreciationStartDate,
-        LocalDate depreciationEndDate,
+        BigDecimal purchaseCost, LocalDate depreciationStartDate, LocalDate depreciationEndDate,
 
-        Boolean active,
-        OffsetDateTime createdAt,
-        OffsetDateTime updatedAt) {
+        Boolean active, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
 }

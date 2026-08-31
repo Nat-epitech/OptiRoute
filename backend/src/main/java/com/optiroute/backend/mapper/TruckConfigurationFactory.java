@@ -11,15 +11,15 @@ import org.springframework.stereotype.Component;
 public class TruckConfigurationFactory {
 
     public TruckConfiguration create(Tractor tractor, SemiTrailer semiTrailer) {
-        return TruckConfiguration.builder()
-                .emptyWeightKg(add(tractor.getEmptyWeightKg(), semiTrailer.getEmptyWeightKg()))
-                .heightCm(max(tractor.getHeightCm(), semiTrailer.getHeightCm()))
-                .widthCm(max(tractor.getWidthCm(), semiTrailer.getWidthCm()))
-                .lengthCm(add(tractor.getLengthCm(), semiTrailer.getLengthCm()))
-                .axleCount(add(tractor.getAxleCount(), semiTrailer.getAxleCount()))
-                .maxSpeed(CommonUtils.kmhToMs(min(tractor.getMaxSpeed(), semiTrailer.getMaxSpeed())))
-                .averageConsumption(tractor.getAverageConsumption())
-                .build();
+        return create(tractor,semiTrailer,false);
+    }
+
+    public TruckConfiguration create(Tractor tractor, SemiTrailer semiTrailer, boolean emptyTrip) {
+        return TruckConfiguration.builder().emptyWeightKg(add(tractor.getEmptyWeightKg(),semiTrailer.getEmptyWeightKg()))
+            .heightCm(max(tractor.getHeightCm(),semiTrailer.getHeightCm())).widthCm(max(tractor.getWidthCm(),semiTrailer.getWidthCm()))
+            .lengthCm(add(tractor.getLengthCm(),semiTrailer.getLengthCm())).axleCount(add(tractor.getAxleCount(),semiTrailer.getAxleCount()))
+            .maxSpeed(CommonUtils.kmhToMs(min(tractor.getMaxSpeed(),semiTrailer.getMaxSpeed())))
+            .averageConsumption(emptyTrip && tractor.getAverageConsumptionEmpty() != null ? tractor.getAverageConsumptionEmpty() : tractor.getAverageConsumption()).build();
     }
 
     private Integer add(Integer first, Integer second) {
@@ -39,7 +39,7 @@ public class TruckConfigurationFactory {
             return first;
         }
 
-        return Math.max(first, second);
+        return Math.max(first,second);
     }
 
     private Integer min(Integer first, Integer second) {
@@ -51,7 +51,7 @@ public class TruckConfigurationFactory {
             return first;
         }
 
-        return Math.min(first, second);
+        return Math.min(first,second);
     }
 
     private int valueOrZero(Integer value) {

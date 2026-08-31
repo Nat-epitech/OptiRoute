@@ -220,7 +220,9 @@ watch(
             <DetailSection title="Motorisation" :icon="Fuel">
                 <DetailRow label="Type de carburant" :value="formatFuelType(tractor.fuelType)" />
 
-                <DetailRow label="Consommation moyenne" :value="formatConsumption(tractor.averageConsumption)" />
+                <DetailRow label="Consommation moyenne en charge" :value="formatConsumption(tractor.averageConsumption)" />
+
+                <DetailRow label="Consommation moyenne à vide" :value="formatConsumption(tractor.averageConsumptionEmpty)" />
 
                 <DetailRow label="Vitesse maximale" :value="formatNumber(tractor.maxSpeed, ' km/h', 0)" />
             </DetailSection>

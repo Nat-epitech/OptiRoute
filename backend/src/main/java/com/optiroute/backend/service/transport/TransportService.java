@@ -26,6 +26,7 @@ public class TransportService {
         transport.setTractorId(req.tractorId());
         transport.setSemiTrailerId(req.semiTrailerId());
         transport.setCustomerId(req.customerId());
+        transport.setEmptyTrip(req.emptyTrip());
 
         transport.setPlannedStart(req.plannedStart());
         transport.setPlannedEnd(req.plannedEnd());

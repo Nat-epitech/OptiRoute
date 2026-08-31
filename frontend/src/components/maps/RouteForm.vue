@@ -29,6 +29,7 @@ const form = reactive({
 
     mode: 'FASTEST',
     maxTravelTimeMinutes: null,
+    emptyTrip: false,
 
     tractorId: null,
     semiTrailerId: null,
@@ -77,6 +78,7 @@ async function submit() {
 
             mode: form.mode,
             maxTravelTimeMinutes: form.maxTravelTimeMinutes,
+            emptyTrip: form.emptyTrip,
 
             tractorId: form.tractorId,
             semiTrailerId: form.semiTrailerId,
@@ -167,6 +169,16 @@ onMounted(async () => {
             </div>
 
         </div>
+
+        <!-- TRIP TYPE -->
+        <label class="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
+            <input v-model="form.emptyTrip" type="checkbox"
+                class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+
+            <span class="text-sm font-medium text-slate-700">
+                Trajet à vide
+            </span>
+        </label>
 
         <!-- DEPARTURE TIME -->
         <div class="space-y-3">

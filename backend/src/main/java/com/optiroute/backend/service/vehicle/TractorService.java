@@ -32,8 +32,7 @@ public class TractorService {
 
     @Transactional(readOnly = true)
     public TractorResponse getById(Long id) {
-        Tractor tractor = tractorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Tractor not found with id: " + id));
+        Tractor tractor = tractorRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Tractor not found with id: " + id));
 
         return VehicleUtils.toTractorResponse(tractor);
     }
@@ -52,9 +51,7 @@ public class TractorService {
         Tractor tractor = new Tractor();
 
         tractor.setExternalId(request.externalId());
-        tractor.setExternalSource(request.externalSource() == null || request.externalSource().isBlank()
-                ? "MANUAL"
-                : request.externalSource());
+        tractor.setExternalSource(request.externalSource() == null || request.externalSource().isBlank() ? "MANUAL" : request.externalSource());
 
         tractor.setRegistration(request.registration());
 
@@ -65,6 +62,7 @@ public class TractorService {
 
         tractor.setFuelType(request.fuelType());
         tractor.setAverageConsumption(request.averageConsumption());
+        tractor.setAverageConsumptionEmpty(request.averageConsumptionEmpty());
 
         tractor.setEmptyWeightKg(request.emptyWeightKg());
         tractor.setGrossCombinationWeightKg(request.grossCombinationWeightKg());
@@ -89,9 +87,7 @@ public class TractorService {
         Tractor tractor = tractorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Tractor not found with id " + id));
 
         tractor.setExternalId(request.externalId());
-        tractor.setExternalSource(request.externalSource() == null || request.externalSource().isBlank()
-                ? "MANUAL"
-                : request.externalSource());
+        tractor.setExternalSource(request.externalSource() == null || request.externalSource().isBlank() ? "MANUAL" : request.externalSource());
 
         tractor.setRegistration(request.registration());
 
@@ -102,6 +98,7 @@ public class TractorService {
 
         tractor.setFuelType(request.fuelType());
         tractor.setAverageConsumption(request.averageConsumption());
+        tractor.setAverageConsumptionEmpty(request.averageConsumptionEmpty());
 
         tractor.setEmptyWeightKg(request.emptyWeightKg());
         tractor.setGrossCombinationWeightKg(request.grossCombinationWeightKg());

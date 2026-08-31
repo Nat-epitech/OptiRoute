@@ -8,6 +8,8 @@ export interface CreateTransportRequest {
     tractorId: number
     semiTrailerId?: number
 
+    emptyTrip: boolean
+
     plannedStart: string
     plannedEnd: string
 

@@ -7,6 +7,8 @@ export interface RouteRequest {
     tractorId: number
     semiTrailerId?: number
 
+    emptyTrip: boolean
+
     departureTime?: string
 
     maxTravelTimeMinutes?: number

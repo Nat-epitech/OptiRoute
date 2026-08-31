@@ -19,6 +19,8 @@ public class RouteRequest {
     private Long tractorId;
     private Long semiTrailerId;
 
+    private boolean emptyTrip;
+
     public Position getOrigin() {
         return origin;
     }
@@ -73,6 +75,14 @@ public class RouteRequest {
 
     public void setSemiTrailerId(Long semiTrailerId) {
         this.semiTrailerId = semiTrailerId;
+    }
+
+    public boolean isEmptyTrip() {
+        return emptyTrip;
+    }
+
+    public void setEmptyTrip(boolean emptyTrip) {
+        this.emptyTrip = emptyTrip;
     }
 
 }

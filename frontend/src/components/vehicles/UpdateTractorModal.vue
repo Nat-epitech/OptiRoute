@@ -56,6 +56,7 @@ const populateForm = () => {
 
         fuelType: props.tractor.fuelType ?? null,
         averageConsumption: props.tractor.averageConsumption,
+        averageConsumptionEmpty: props.tractor.averageConsumptionEmpty,
 
         emptyWeightKg: props.tractor.emptyWeightKg,
         grossCombinationWeightKg: props.tractor.grossCombinationWeightKg,
@@ -91,6 +92,7 @@ const submitTractor = async () => {
 
             fuelType: form.fuelType,
             averageConsumption: form.averageConsumption,
+            averageConsumptionEmpty: form.averageConsumptionEmpty,
 
             emptyWeightKg: form.emptyWeightKg,
             grossCombinationWeightKg: form.grossCombinationWeightKg,

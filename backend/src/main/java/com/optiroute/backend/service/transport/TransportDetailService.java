@@ -59,7 +59,7 @@ public class TransportDetailService {
 
         return new TransportDetailResponse(
 
-            transport.getId(), transport.getName(), transport.getStatus(),
+            transport.getId(), transport.getName(), transport.getStatus(), transport.isEmptyTrip(),
 
             transport.getPlannedStart(), transport.getPlannedEnd(),
 

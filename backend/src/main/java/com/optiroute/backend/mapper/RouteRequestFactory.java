@@ -35,13 +35,7 @@ public class RouteRequestFactory {
 		// Caractéristiques véhicule
 		request.setTractorId(transport.getTractorId());
 		request.setSemiTrailerId(transport.getSemiTrailerId());
-
-		// Coût horaire chauffeur
-		/*
-		 * if (driver.getHourlyRate() != null) {
-		 * request.setDriverHourlyRate(driver.getHourlyRate().doubleValue());
-		 * }
-		 */
+		request.setEmptyTrip(transport.isEmptyTrip());
 
 		return request;
 	}

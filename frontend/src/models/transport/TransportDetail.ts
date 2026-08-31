@@ -21,6 +21,7 @@ export interface TransportDetail {
     id: number;
     name: string;
     status: TransportStatus;
+    emptyTrip: boolean;
 
     plannedStart: string;
     plannedEnd: string;

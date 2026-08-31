@@ -60,6 +60,7 @@ const submitTractor = async () => {
 
             fuelType: form.fuelType,
             averageConsumption: form.averageConsumption,
+            averageConsumptionEmpty: form.averageConsumptionEmpty,
 
             emptyWeightKg: form.emptyWeightKg,
             grossCombinationWeightKg: form.grossCombinationWeightKg,

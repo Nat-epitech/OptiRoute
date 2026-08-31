@@ -2,24 +2,15 @@ package com.optiroute.backend.dto.request.transport;
 
 import java.time.OffsetDateTime;
 
-public record TransportRequest(
-        String name,
+public record TransportRequest(String name,
 
-        Long driverId,
-        Long tractorId,
-        Long semiTrailerId,
-        Long customerId,
+        Long driverId, Long tractorId, Long semiTrailerId, Long customerId,
 
-        OffsetDateTime plannedStart,
-        OffsetDateTime plannedEnd,
+        boolean emptyTrip,
 
-        String originName,
-        String originAddress,
-        double originLat,
-        double originLng,
+        OffsetDateTime plannedStart, OffsetDateTime plannedEnd,
 
-        String destinationName,
-        String destinationAddress,
-        double destinationLat,
-        double destinationLng) {
+        String originName, String originAddress, double originLat, double originLng,
+
+        String destinationName, String destinationAddress, double destinationLat, double destinationLng) {
 }

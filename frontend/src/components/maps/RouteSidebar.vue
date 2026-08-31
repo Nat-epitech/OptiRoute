@@ -109,6 +109,7 @@ const handleAssignRoute = async (data: AssignTransport) => {
         driverId: data.driverId,
         tractorId: requestValue.tractorId,
         semiTrailerId: requestValue.semiTrailerId,
+        emptyTrip: requestValue.emptyTrip,
 
         plannedStart,
         plannedEnd,
@@ -194,7 +195,8 @@ onMounted(async () => {
 
                                             <div class="flex items-center gap-1">
                                                 <Car class="h-4 w-4" />
-                                                <span>{{ formatDurationSeconds(route.duration - route.baseDuration) }}</span>
+                                                <span>{{ formatDurationSeconds(route.duration -
+                                                    route.baseDuration) }}</span>
                                             </div>
                                         </div>
                                     </div>

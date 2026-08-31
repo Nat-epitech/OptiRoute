@@ -12,5 +12,7 @@ public record TransportPlanningResponse(
 
         String originName, String destinationName,
 
+        boolean emptyTrip,
+
         double totalCost) {
 }

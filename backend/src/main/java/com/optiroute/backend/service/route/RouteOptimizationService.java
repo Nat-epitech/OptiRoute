@@ -40,7 +40,7 @@ public class RouteOptimizationService {
         // Get Truck Configuration
         Tractor tractor = tractorService.getEntityById(request.getTractorId());
         SemiTrailer semiTrailer = semiTrailerService.getEntityById(request.getSemiTrailerId());
-        TruckConfiguration truckConfiguration = truckConfigurationFactory.create(tractor,semiTrailer);
+        TruckConfiguration truckConfiguration = truckConfigurationFactory.create(tractor,semiTrailer,request.isEmptyTrip());
 
         // HERE Routing API + Parsing
         String raw = hereRoutingService.calculateRoutes(request,truckConfiguration);

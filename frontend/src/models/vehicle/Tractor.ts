@@ -14,6 +14,7 @@ export interface TractorDetails extends TractorSummary {
 
     fuelType: FuelType | null
     averageConsumption: number | null
+    averageConsumptionEmpty: number | null
 
     emptyWeightKg: number | null
     grossCombinationWeightKg: number | null
@@ -51,6 +52,7 @@ export interface CreateTractorRequest {
 
     fuelType: FuelType | null
     averageConsumption: number | null
+    averageConsumptionEmpty: number | null
 
     emptyWeightKg: number | null
     grossCombinationWeightKg: number | null
@@ -79,6 +81,7 @@ export interface UpdateTractorRequest {
 
     fuelType: FuelType | null
     averageConsumption: number | null
+    averageConsumptionEmpty: number | null
 
     emptyWeightKg: number | null
     grossCombinationWeightKg: number | null
@@ -106,6 +109,7 @@ export interface TractorFormData {
 
     fuelType: FuelType | null
     averageConsumption: number | null
+    averageConsumptionEmpty: number | null
 
     emptyWeightKg: number | null
     grossCombinationWeightKg: number | null

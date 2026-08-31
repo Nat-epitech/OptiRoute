@@ -1,7 +1,19 @@
 <template>
-    <button type="button"
-        class="w-full cursor-pointer rounded-lg border border-emerald-200 bg-emerald-50 p-2 text-left shadow-sm transition hover:border-emerald-300 hover:bg-emerald-100 hover:shadow-md"
-        @click="emit('select', transport.id)">
+    <button type="button" :class="[
+        'w-full cursor-pointer rounded-lg border p-2 text-left shadow-sm transition hover:shadow-md',
+        transport.emptyTrip
+            ? 'border-red-200 bg-red-50 hover:border-red-300 hover:bg-red-100'
+            : 'border-emerald-200 bg-emerald-50 hover:border-emerald-300 hover:bg-emerald-100'
+    ]" @click="emit('select', transport.id)">
+        <div class="mb-2 flex items-center justify-end">
+            <span
+                :class="[
+                    'inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold',
+                    transport.emptyTrip ? 'border-red-200 bg-red-100 text-red-700' : 'border-emerald-200 bg-emerald-100 text-emerald-700']">
+                {{ tripLabel }}
+            </span>
+        </div>
+
         <div class="truncate text-sm font-semibold text-slate-800">
             {{ transport.name }}
         </div>
@@ -36,6 +48,10 @@ const props = defineProps<{
 const emit = defineEmits<{
     select: [transportId: number];
 }>();
+
+const tripLabel = computed(() => {
+    return props.transport.emptyTrip ? "Trajet à vide" : "Trajet en charge";
+});
 
 const startTime = computed(() => {
     return new Intl.DateTimeFormat("fr-FR", {

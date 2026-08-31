@@ -97,6 +97,24 @@ const statusClasses = computed<string>(() => {
     );
 });
 
+const tripLabel = computed<string>(() => {
+    if (!transport.value) {
+        return "";
+    }
+
+    return transport.value.emptyTrip ? "Trajet à vide" : "Trajet en charge";
+});
+
+const tripClasses = computed<string>(() => {
+    if (!transport.value) {
+        return "border-slate-200 bg-slate-100 text-slate-700";
+    }
+
+    return transport.value.emptyTrip
+        ? "border-red-200 bg-red-100 text-red-700"
+        : "border-emerald-200 bg-emerald-100 text-emerald-700";
+});
+
 async function loadTransport(): Promise<void> {
     if (props.transportId === null) {
         transport.value = null;
@@ -182,9 +200,15 @@ watch(
             <!-- Statut et horaires -->
             <section class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                 <div class="flex items-center justify-between gap-3">
-                    <span class="rounded-full px-3 py-1 text-xs font-semibold" :class="statusClasses">
-                        {{ statusLabel }}
-                    </span>
+                    <div class="flex items-center gap-2">
+                        <span class="rounded-full px-3 py-1 text-xs font-semibold" :class="statusClasses">
+                            {{ statusLabel }}
+                        </span>
+
+                        <span class="rounded-full border px-3 py-1 text-xs font-semibold" :class="tripClasses">
+                            {{ tripLabel }}
+                        </span>
+                    </div>
                 </div>
 
                 <div class="mt-4 grid grid-cols-2 gap-4">
@@ -270,7 +294,8 @@ watch(
                 <div class="mt-5 grid grid-cols-2 gap-3">
                     <TransportMetricCard label="Distance" :value="formatDistance(transport.distanceMeters)" />
 
-                    <TransportMetricCard label="Durée estimée" :value="formatDurationSeconds(transport.durationSeconds)" />
+                    <TransportMetricCard label="Durée estimée"
+                        :value="formatDurationSeconds(transport.durationSeconds)" />
                 </div>
             </section>
 

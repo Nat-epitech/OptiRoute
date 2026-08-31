@@ -2,6 +2,8 @@ export interface PlanningTransport {
     id: number;
     name: string;
 
+    emptyTrip: boolean;
+
     driverId: number;
     driverName: string;
 

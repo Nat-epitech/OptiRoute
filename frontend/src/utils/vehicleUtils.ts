@@ -90,6 +90,7 @@ export const createEmptyTractorForm = (): TractorFormData => ({
 
     fuelType: "DIESEL",
     averageConsumption: null,
+    averageConsumptionEmpty: null,
 
     emptyWeightKg: null,
     grossCombinationWeightKg: null,
