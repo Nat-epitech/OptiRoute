@@ -59,7 +59,7 @@ function handleLogout() {
             <button class="px-4 py-2 rounded-xl font-medium transition" :class="isHomepageSection
                 ? 'bg-slate-900 text-white'
                 : 'text-slate-600 hover:bg-slate-100'" @click="goToHomepage">
-                Tableau de bord
+                Planification
             </button>
 
             <button class="px-4 py-2 rounded-xl font-medium transition" :class="isGestionSection

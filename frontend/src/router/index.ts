@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import DashboardView from '@/views/DashboardView.vue'
 import OperationCostsView from '@/views/OperationCostsView.vue'
 import UsersView from '@/views/UsersView.vue'
 import LoginView from '@/views/LoginView.vue'
@@ -40,12 +39,7 @@ const routes = [
 
     {
         path: '/gestion',
-        redirect: '/gestion/dashboard'
-    },
-
-    {
-        path: '/gestion',
-        redirect: '/gestion/dashboard'
+        redirect: '/gestion/operationCosts'
     },
 
     {
@@ -64,11 +58,6 @@ const routes = [
             {
                 path: 'gestion',
                 children: [
-                    {
-                        path: 'dashboard',
-                        name: 'dashboard',
-                        component: DashboardView
-                    },
                     {
                         path: 'operationCosts',
                         name: 'operationCosts',
