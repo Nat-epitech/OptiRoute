@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -28,25 +29,32 @@ public class RoutingService {
 
     public String calculateRoutes(RouteRequest request, TruckConfiguration truckConfiguration) {
 
+        List<String> viaPoints = request.getWaypoints() == null ? List.of()
+            : request.getWaypoints().stream().filter(point -> point != null).map(point -> point.getLat() + "," + point.getLng()).toList();
+
+        if (viaPoints.size() > 4) {
+            throw new IllegalArgumentException("Un itinéraire ne peut contenir que 4 étapes maximum.");
+        }
+
         String origin = request.getOrigin().getLat() + "," + request.getOrigin().getLng();
         String destination = request.getDestination().getLat() + "," + request.getDestination().getLng();
         String departureTime = request.getDepartureTime() != null ? CommonUtils.formatTime(request.getDepartureTime()) : CommonUtils.formatTime(OffsetDateTime.now());
 
         if (GpsModeType.FASTEST.equals(request.getMode())) {
-            String routeWithTolls = hereApiClient.getRoutes(origin,destination,departureTime,truckConfiguration,false,0);
-            String routeWithoutTolls = hereApiClient.getRoutes(origin,destination,departureTime,truckConfiguration,true,0);
+            String routeWithTolls = hereApiClient.getRoutes(origin,destination,viaPoints,departureTime,truckConfiguration,false,0);
+            String routeWithoutTolls = hereApiClient.getRoutes(origin,destination,viaPoints,departureTime,truckConfiguration,true,0);
 
             return mergeRoutes(routeWithTolls,routeWithoutTolls);
         }
 
         if (GpsModeType.CHEAPEST.equals(request.getMode())) {
-            String routesWithTolls = hereApiClient.getRoutes(origin,destination,departureTime,truckConfiguration,false,3);
-            String routesWithoutTolls = hereApiClient.getRoutes(origin,destination,departureTime,truckConfiguration,true,3);
+            String routesWithTolls = hereApiClient.getRoutes(origin,destination,viaPoints,departureTime,truckConfiguration,false,3);
+            String routesWithoutTolls = hereApiClient.getRoutes(origin,destination,viaPoints,departureTime,truckConfiguration,true,3);
 
             return mergeRoutes(routesWithTolls,routesWithoutTolls);
         }
 
-        return hereApiClient.getRoutes(origin,destination,departureTime,truckConfiguration,false,2);
+        return hereApiClient.getRoutes(origin,destination,viaPoints,departureTime,truckConfiguration,false,2);
     }
 
     private String mergeRoutes(String firstResponse, String secondResponse) {

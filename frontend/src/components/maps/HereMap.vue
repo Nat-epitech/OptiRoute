@@ -14,6 +14,7 @@ const routePolylines: any[] = []
 
 let startMarker: any = null
 let endMarker: any = null
+const waypointMarkers: any[] = []
 
 const emit = defineEmits([
     'route-selected'
@@ -41,9 +42,15 @@ function clearMarkers() {
     if (endMarker) {
         map.removeObject(endMarker)
     }
+
+    for (const marker of waypointMarkers) {
+        map.removeObject(marker)
+    }
+
+    waypointMarkers.length = 0
 }
 
-function setMarkers(origin: any, destination: any) {
+function setMarkers(origin: any, destination: any, waypoints: any[] = []) {
     clearMarkers()
 
     startMarker = new H.map.Marker(origin)
@@ -51,6 +58,22 @@ function setMarkers(origin: any, destination: any) {
 
     map.addObject(startMarker)
     map.addObject(endMarker)
+
+    const waypointIcon = new H.map.Icon(
+        'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 40">' +
+            '<path d="M16 1C8.3 1 2 7.3 2 15c0 10.2 14 23 14 23s14-12.8 14-23C30 7.3 23.7 1 16 1Z" fill="#f59e0b" stroke="#92400e" stroke-width="2"/>' +
+            '<circle cx="16" cy="15" r="5" fill="#fff7ed" stroke="#92400e" stroke-width="2"/>' +
+            '</svg>'
+        ),
+        { size: { w: 32, h: 40 }, anchor: { x: 16, y: 40 } }
+    )
+
+    for (const waypoint of waypoints.filter(Boolean)) {
+        const marker = new H.map.Marker(waypoint, { icon: waypointIcon })
+        waypointMarkers.push(marker)
+        map.addObject(marker)
+    }
 }
 
 function displayRoutes(routes: any[], selectedRoute: any) {
@@ -62,39 +85,49 @@ function displayRoutes(routes: any[], selectedRoute: any) {
     const orderedRoutes = routes.map((route, index) => ({ route, index, isSelected: index === selectedIndex })).sort((a, b) => Number(a.isSelected) - Number(b.isSelected))
 
     orderedRoutes.forEach(({ route, index, isSelected }) => {
-        const lineString = H.geo.LineString.fromFlexiblePolyline(route.polyline)
+        const routeGroup = new H.map.Group()
+        let polylines: string[]
 
-        const polyline = new H.map.Polyline(lineString,
-            {
-                style: {
-                    lineWidth: isSelected ? 8 : 5,
-                    strokeColor: isSelected
-                        ? '#2563eb'
-                        : '#38bdf8',
-                    lineCap: 'round',
-                    lineJoin: 'round'
+        try {
+            const parsedPolyline = JSON.parse(route.polyline)
+            polylines = Array.isArray(parsedPolyline) ? parsedPolyline : [route.polyline]
+        } catch {
+            polylines = [route.polyline]
+        }
+
+        for (const encodedPolyline of polylines) {
+            const lineString = H.geo.LineString.fromFlexiblePolyline(encodedPolyline)
+            const polyline = new H.map.Polyline(lineString,
+                {
+                    style: {
+                        lineWidth: isSelected ? 8 : 5,
+                        strokeColor: isSelected
+                            ? '#2563eb'
+                            : '#38bdf8',
+                        lineCap: 'round',
+                        lineJoin: 'round'
+                    }
                 }
-            }
-        )
+            )
 
-        polyline.routeIndex = index
+            polyline.addEventListener('pointerenter', () => {
+                if (mapContainer.value) {
+                    mapContainer.value.style.cursor = 'pointer'
+                }
+            })
 
-        polyline.addEventListener('pointerenter', () => {
-            if (mapContainer.value) {
-                mapContainer.value.style.cursor = 'pointer'
-            }
-        })
+            polyline.addEventListener('pointerleave', () => {
+                if (mapContainer.value) {
+                    mapContainer.value.style.cursor = ''
+                }
+            })
 
-        polyline.addEventListener('pointerleave', () => {
-            if (mapContainer.value) {
-                mapContainer.value.style.cursor = ''
-            }
-        })
+            polyline.addEventListener('tap', () => { emitRouteSelected(index) })
+            routeGroup.addObject(polyline)
+        }
 
-        polyline.addEventListener('tap', () => { emitRouteSelected(index) })
-
-        routePolylines.push(polyline)
-        map.addObject(polyline)
+        routePolylines.push(routeGroup)
+        map.addObject(routeGroup)
     })
 
     const selectedPolyline = routePolylines[routePolylines.length - 1]

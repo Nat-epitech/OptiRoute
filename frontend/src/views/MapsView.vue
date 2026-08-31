@@ -28,7 +28,8 @@ function handleRouteCalculated(payload: { response: any, request: any }) {
 
     mapRef.value?.setMarkers(
         payload.request.origin,
-        payload.request.destination
+        payload.request.destination,
+        payload.request.waypoints
     )
 }
 
@@ -47,7 +48,7 @@ function handleSelectRoute(index: number) {
 
         <!-- MAP -->
         <div class="absolute inset-0">
-            <HereMap ref="mapRef" @route-selected="handleSelectRoute" />s
+            <HereMap ref="mapRef" @route-selected="handleSelectRoute" />
         </div>
 
         <!-- SIDEBAR -->

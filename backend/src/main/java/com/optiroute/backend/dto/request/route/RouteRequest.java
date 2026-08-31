@@ -4,11 +4,14 @@ import com.optiroute.backend.model.Position;
 import com.optiroute.backend.type.GpsModeType;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RouteRequest {
 
     private Position origin;
     private Position destination;
+    private List<Position> waypoints = new ArrayList<>();
 
     private GpsModeType mode;
 
@@ -35,6 +38,14 @@ public class RouteRequest {
 
     public void setDestination(Position destination) {
         this.destination = destination;
+    }
+
+    public List<Position> getWaypoints() {
+        return waypoints;
+    }
+
+    public void setWaypoints(List<Position> waypoints) {
+        this.waypoints = waypoints == null ? new ArrayList<>() : waypoints;
     }
 
     public GpsModeType getMode() {

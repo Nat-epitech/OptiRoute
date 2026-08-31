@@ -18,12 +18,14 @@ const departureMode = ref('NOW')
 const tractors = ref<TractorSummary[]>([])
 const semiTrailers = ref<SemiTrailerSummary[]>([])
 const isSubmitting = ref(false)
+const MAX_WAYPOINTS = 4
 
 const emit = defineEmits(['route-calculated'])
 
 const form = reactive({
     origin: null as any,
     destination: null as any,
+    waypoints: [] as any[],
 
     departureTime: null as any,
 
@@ -59,9 +61,21 @@ function swapLocations() {
     form.destination = origin
 }
 
+function addWaypoint() {
+    if (form.waypoints.length >= MAX_WAYPOINTS) {
+        return
+    }
+
+    form.waypoints.push(null)
+}
+
 async function submit() {
 
     if (!form.origin || !form.destination || !form.tractorId || isSubmitting.value) {
+        return
+    }
+
+    if (form.waypoints.filter(Boolean).length > MAX_WAYPOINTS) {
         return
     }
 
@@ -73,6 +87,7 @@ async function submit() {
         const payload = {
             origin: toPosition(form.origin),
             destination: toPosition(form.destination),
+            waypoints: form.waypoints.filter(Boolean).map(toPosition),
 
             departureTime: effectiveDepartureTime,
 
@@ -127,6 +142,33 @@ onMounted(async () => {
                 aria-label="Inverser le départ et l'arrivée" title="Inverser le départ et l'arrivée">
                 <ArrowUpDown :size="16" :stroke-width="2" aria-hidden="true" />
             </button>
+        </div>
+
+        <!-- WAYPOINTS -->
+        <div class="space-y-3">
+            <div class="flex items-center justify-between gap-3">
+                <label class="block text-sm font-medium">
+                    Étapes
+                </label>
+
+                <button type="button" @click="addWaypoint"
+                    :disabled="form.waypoints.length >= MAX_WAYPOINTS"
+                    class="rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50">
+                    {{ form.waypoints.length >= MAX_WAYPOINTS ? 'Limite atteinte (4)' : '+ Ajouter une étape' }}
+                </button>
+            </div>
+
+            <div v-for="(waypoint, index) in form.waypoints" :key="index" class="flex items-start gap-2">
+                <div class="flex-1">
+                    <HereAutocompleteInput v-model="form.waypoints[index]" :label="`Étape ${index + 1}`" />
+                </div>
+
+                <button type="button" @click="form.waypoints.splice(index, 1)"
+                    class="mt-8 rounded-lg border border-red-200 bg-red-50 px-2 py-2 text-sm text-red-600 transition hover:bg-red-100"
+                    aria-label="Supprimer cette étape" title="Supprimer cette étape">
+                    ×
+                </button>
+            </div>
         </div>
 
         <!-- MODE -->

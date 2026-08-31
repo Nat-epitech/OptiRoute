@@ -12,38 +12,59 @@ const props = defineProps<{
 const mapContainer = ref<HTMLElement | null>(null)
 
 let map: any = null
-let routePolyline: any = null
+let routePolylines: any[] = []
 let resizeObserver: ResizeObserver | null = null
 
 function clearRoute() {
-    if (!map || !routePolyline) return
+    if (!map) return
 
-    map.removeObject(routePolyline)
-    routePolyline = null
+    for (const routePolyline of routePolylines) {
+        map.removeObject(routePolyline)
+    }
+
+    routePolylines = []
 }
 
 function displayRoute() {
     if (!map || !props.polyline) return
 
+    let encodedPolylines: string[]
+
+    try {
+        const parsedPolyline = JSON.parse(props.polyline)
+        encodedPolylines = Array.isArray(parsedPolyline)
+            ? parsedPolyline
+            : [props.polyline]
+    } catch {
+        encodedPolylines = [props.polyline]
+    }
+
     clearRoute()
 
-    const lineString = H.geo.LineString.fromFlexiblePolyline(
-        props.polyline
+    for (const encodedPolyline of encodedPolylines) {
+        const lineString = H.geo.LineString.fromFlexiblePolyline(encodedPolyline)
+        const routePolyline = new H.map.Polyline(lineString, {
+            style: {
+                strokeColor: '#059669',
+                lineWidth: 5,
+                lineCap: 'round',
+                lineJoin: 'round'
+            }
+        })
+
+        routePolylines.push(routePolyline)
+        map.addObject(routePolyline)
+    }
+
+    const bounds = routePolylines.reduce(
+        (currentBounds, routePolyline) => currentBounds
+            ? currentBounds.merge(routePolyline.getBoundingBox())
+            : routePolyline.getBoundingBox(),
+        null
     )
 
-    routePolyline = new H.map.Polyline(lineString, {
-        style: {
-            strokeColor: '#059669',
-            lineWidth: 5,
-            lineCap: 'round',
-            lineJoin: 'round'
-        }
-    })
-
-    map.addObject(routePolyline)
-
     map.getViewModel().setLookAtData({
-        bounds: routePolyline.getBoundingBox(),
+        bounds,
         padding: {
             top: 30,
             right: 30,
@@ -89,12 +110,7 @@ onMounted(async () => {
     displayRoute()
 })
 
-watch(
-    () => props.polyline,
-    () => {
-        displayRoute()
-    }
-)
+watch(() => props.polyline, displayRoute)
 
 onBeforeUnmount(() => {
     resizeObserver?.disconnect()

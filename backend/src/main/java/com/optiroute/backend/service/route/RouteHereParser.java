@@ -20,18 +20,27 @@ public class RouteHereParser {
             JsonNode routes = root.path("routes");
 
             for (JsonNode route : routes) {
+                JsonNode sections = route.path("sections");
+                long duration = 0L;
+                long baseDuration = 0L;
+                long distance = 0L;
+                double tollCost = 0.0;
+                List<String> polylines = new ArrayList<>();
 
-                JsonNode section = route.path("sections").get(0);
+                for (JsonNode section : sections) {
+                    duration += section.path("summary").path("duration").asLong();
+                    baseDuration += section.path("summary").path("baseDuration").asLong();
+                    distance += section.path("summary").path("length").asLong();
+                    tollCost += extractTollCost(section);
 
-                long duration = section.path("summary").path("duration").asLong();
-                long baseDuration = section.path("summary").path("baseDuration").asLong();
-                long distance = section.path("summary").path("length").asLong();
+                    String polyline = section.path("polyline").asText();
+                    if (!polyline.isBlank()) {
+                        polylines.add(polyline);
+                    }
+                }
 
-                String polyline = section.path("polyline").asText();
-
-                double tollCost = extractTollCost(section);
-
-                String rawJson = section.toString();
+                String polyline = serializePolylines(polylines);
+                String rawJson = sections.toString();
 
                 parsedRoutes.add(new ParsedRoute(duration, baseDuration, distance, polyline, tollCost, rawJson));
             }
@@ -41,6 +50,18 @@ public class RouteHereParser {
         } catch (Exception e) {
             throw new RuntimeException("HERE parsing failed", e);
         }
+    }
+
+    private String serializePolylines(List<String> polylines) throws Exception {
+        if (polylines.isEmpty()) {
+            return "";
+        }
+
+        if (polylines.size() == 1) {
+            return polylines.getFirst();
+        }
+
+        return objectMapper.writeValueAsString(polylines);
     }
 
     private double extractTollCost(JsonNode section) {

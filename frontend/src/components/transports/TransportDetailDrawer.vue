@@ -294,8 +294,7 @@ watch(
                 <div class="mt-5 grid grid-cols-2 gap-3">
                     <TransportMetricCard label="Distance" :value="formatDistance(transport.distanceMeters)" />
 
-                    <TransportMetricCard label="Durée estimée"
-                        :value="formatDurationSeconds(transport.durationSeconds)" />
+                    <TransportMetricCard label="Durée estimée" :value="formatDurationSeconds(transport.durationSeconds)" />
                 </div>
             </section>
 

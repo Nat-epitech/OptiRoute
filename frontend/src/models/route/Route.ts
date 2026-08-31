@@ -3,6 +3,7 @@ import type { Position } from '@/models/route/Position'
 export interface RouteRequest {
     origin: Position
     destination: Position
+    waypoints?: Position[]
 
     tractorId: number
     semiTrailerId?: number
