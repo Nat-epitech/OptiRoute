@@ -22,5 +22,5 @@ public record TractorResponse(Long id, String externalId, String externalSource,
 
         BigDecimal purchaseCost, LocalDate depreciationStartDate, LocalDate depreciationEndDate,
 
-        Boolean active, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+        OffsetDateTime createdAt, OffsetDateTime updatedAt) {
 }

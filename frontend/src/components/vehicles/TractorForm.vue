@@ -252,19 +252,5 @@ withDefaults(
             </div>
         </section>
 
-        <section>
-            <label class="flex cursor-pointer items-center gap-3">
-                <input v-model="form.active" type="checkbox" :disabled="disabled"
-                    class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed" />
-
-                <span class="text-sm font-medium text-slate-700">
-                    Tracteur actif
-                </span>
-            </label>
-
-            <p class="ml-7 mt-1 text-xs text-slate-500">
-                Un tracteur inactif ne sera plus proposé pour une nouvelle affectation.
-            </p>
-        </section>
     </div>
 </template>

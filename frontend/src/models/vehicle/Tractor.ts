@@ -30,8 +30,6 @@ export interface TractorDetails extends TractorSummary {
     depreciationStartDate: string | null
     depreciationEndDate: string | null
 
-    active: boolean
-
     externalId: string | null
     externalSource: string
 
@@ -67,8 +65,6 @@ export interface CreateTractorRequest {
 
     depreciationStartDate: string | null
     depreciationEndDate: string | null
-
-    active: boolean
 }
 
 export interface UpdateTractorRequest {
@@ -96,8 +92,6 @@ export interface UpdateTractorRequest {
 
     depreciationStartDate: string | null
     depreciationEndDate: string | null
-
-    active: boolean
 }
 
 export interface TractorFormData {
@@ -123,6 +117,4 @@ export interface TractorFormData {
     purchaseCost: number | null
     depreciationStartDate: string | null
     depreciationEndDate: string | null
-
-    active: boolean
 }

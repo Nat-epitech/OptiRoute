@@ -76,8 +76,6 @@ public class TractorService {
         tractor.setDepreciationStartDate(request.depreciationStartDate());
         tractor.setDepreciationEndDate(request.depreciationEndDate());
 
-        tractor.setActive(true);
-
         Tractor savedTractor = tractorRepository.save(tractor);
         return VehicleUtils.toTractorResponse(savedTractor);
     }
@@ -111,8 +109,6 @@ public class TractorService {
         tractor.setPurchaseCost(request.purchaseCost());
         tractor.setDepreciationStartDate(request.depreciationStartDate());
         tractor.setDepreciationEndDate(request.depreciationEndDate());
-
-        tractor.setActive(true);
 
         Tractor updatedTractor = tractorRepository.save(tractor);
         return VehicleUtils.toTractorResponse(updatedTractor);

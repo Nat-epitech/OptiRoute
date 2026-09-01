@@ -58,9 +58,6 @@ public class SemiTrailer extends EntityUtils {
 
     private LocalDate depreciationEndDate;
 
-    @Column(name = "is_active", nullable = false)
-    private Boolean active = true;
-
     public Long getId() {
         return id;
     }
@@ -195,14 +192,6 @@ public class SemiTrailer extends EntityUtils {
 
     public void setDepreciationEndDate(LocalDate depreciationEndDate) {
         this.depreciationEndDate = depreciationEndDate;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
     }
 
 }

@@ -29,8 +29,7 @@ public class SemiTrailerService {
 
     @Transactional(readOnly = true)
     public SemiTrailerResponse getById(Long id) {
-        SemiTrailer semiTrailer = semiTrailerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("SemiTrailer not found with id: " + id));
+        SemiTrailer semiTrailer = semiTrailerRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("SemiTrailer not found with id: " + id));
 
         return VehicleUtils.toSemiTrailerResponse(semiTrailer);
     }
@@ -49,9 +48,7 @@ public class SemiTrailerService {
         SemiTrailer semiTrailer = new SemiTrailer();
 
         semiTrailer.setExternalId(request.externalId());
-        semiTrailer.setExternalSource(request.externalSource() == null || request.externalSource().isBlank()
-                ? "MANUAL"
-                : request.externalSource());
+        semiTrailer.setExternalSource(request.externalSource() == null || request.externalSource().isBlank() ? "MANUAL" : request.externalSource());
 
         semiTrailer.setRegistration(request.registration());
 
@@ -72,8 +69,6 @@ public class SemiTrailerService {
         semiTrailer.setPurchaseCost(request.purchaseCost());
         semiTrailer.setDepreciationStartDate(request.depreciationStartDate());
         semiTrailer.setDepreciationEndDate(request.depreciationEndDate());
-
-        semiTrailer.setActive(true);
 
         SemiTrailer savedSemiTrailer = semiTrailerRepository.save(semiTrailer);
         return VehicleUtils.toSemiTrailerResponse(savedSemiTrailer);
@@ -81,13 +76,10 @@ public class SemiTrailerService {
 
     @Transactional
     public SemiTrailerResponse updateSemiTrailer(Long id, SemiTrailerRequest request) {
-        SemiTrailer semiTrailer = semiTrailerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("SemiTrailer not found with id " + id));
+        SemiTrailer semiTrailer = semiTrailerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("SemiTrailer not found with id " + id));
 
         semiTrailer.setExternalId(request.externalId());
-        semiTrailer.setExternalSource(request.externalSource() == null || request.externalSource().isBlank()
-                ? "MANUAL"
-                : request.externalSource());
+        semiTrailer.setExternalSource(request.externalSource() == null || request.externalSource().isBlank() ? "MANUAL" : request.externalSource());
 
         semiTrailer.setRegistration(request.registration());
 
@@ -108,8 +100,6 @@ public class SemiTrailerService {
         semiTrailer.setPurchaseCost(request.purchaseCost());
         semiTrailer.setDepreciationStartDate(request.depreciationStartDate());
         semiTrailer.setDepreciationEndDate(request.depreciationEndDate());
-
-        semiTrailer.setActive(true);
 
         SemiTrailer updatedSemiTrailer = semiTrailerRepository.save(semiTrailer);
         return VehicleUtils.toSemiTrailerResponse(updatedSemiTrailer);

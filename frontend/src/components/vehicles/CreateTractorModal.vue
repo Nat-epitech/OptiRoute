@@ -74,8 +74,6 @@ const submitTractor = async () => {
             purchaseCost: form.purchaseCost,
             depreciationStartDate: form.depreciationStartDate || null,
             depreciationEndDate: form.depreciationEndDate || null,
-
-            active: form.active,
         }
 
         await createTractor(payload)

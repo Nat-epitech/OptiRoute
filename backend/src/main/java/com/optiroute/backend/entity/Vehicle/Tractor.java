@@ -67,7 +67,4 @@ public class Tractor extends EntityUtils {
     private LocalDate depreciationStartDate;
 
     private LocalDate depreciationEndDate;
-
-    @Column(name = "is_active", nullable = false)
-    private Boolean active = true;
 }

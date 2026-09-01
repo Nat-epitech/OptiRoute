@@ -77,8 +77,6 @@ export const createEmptySemiTrailerForm = (): SemiTrailerFormData => ({
     purchaseCost: null,
     depreciationStartDate: null,
     depreciationEndDate: null,
-
-    active: true,
 })
 
 export const createEmptyTractorForm = (): TractorFormData => ({
@@ -104,6 +102,4 @@ export const createEmptyTractorForm = (): TractorFormData => ({
     purchaseCost: null,
     depreciationStartDate: null,
     depreciationEndDate: null,
-
-    active: true,
 })
