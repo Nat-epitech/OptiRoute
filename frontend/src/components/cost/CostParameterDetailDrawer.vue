@@ -128,7 +128,7 @@ const formatCondition = (condition: CostCondition) => {
         <template #header>
             <div class="min-w-0">
                 <p class="text-xs font-medium uppercase tracking-wide text-blue-600">
-                    Coût opérationnel
+                    Coûts référentiels
                 </p>
 
                 <h2 class="mt-1 truncate text-xl font-bold text-slate-900">

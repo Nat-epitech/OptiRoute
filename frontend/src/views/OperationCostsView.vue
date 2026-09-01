@@ -227,7 +227,7 @@ onMounted(loadCostParameters)
         <div class="mb-6 flex items-center justify-between">
             <div>
                 <h1 class="text-3xl font-bold text-gray-800">
-                    Coûts opérationnels
+                    Coûts référentiels
                 </h1>
 
                 <p class="mt-1 text-sm text-gray-500">
