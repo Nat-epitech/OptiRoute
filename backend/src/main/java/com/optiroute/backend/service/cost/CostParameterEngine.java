@@ -27,11 +27,15 @@ public class CostParameterEngine {
     }
 
     public List<AppliedCostResponse> calculateCosts(CostParameterCategoryType category, CostCalculationContext context) {
+        return calculateCosts(category,context,List.of(context));
+    }
+
+    public List<AppliedCostResponse> calculateCosts(CostParameterCategoryType category, CostCalculationContext context, List<CostCalculationContext> dailyContexts) {
 
         List<AppliedCostResponse> costs = new ArrayList<>();
 
         for (CostParameter parameter : costParameterRepository.findByCategory(category)) {
-            if (!parameter.isActive() || !costRuleService.isApplicable(parameter,context)) {
+            if (!parameter.isActive() || !isApplicable(parameter,context,dailyContexts)) {
                 continue;
             }
 
@@ -40,6 +44,14 @@ public class CostParameterEngine {
         }
 
         return costs;
+    }
+
+    private boolean isApplicable(CostParameter parameter, CostCalculationContext context, List<CostCalculationContext> dailyContexts) {
+        if (parameter.getUnit() != com.optiroute.backend.type.cost.CostParameterUnitType.EUR_PER_DAY) {
+            return costRuleService.isApplicable(parameter,context);
+        }
+
+        return dailyContexts.stream().anyMatch(dailyContext -> costRuleService.isApplicable(parameter,dailyContext));
     }
 
     private double calculateAmount(CostParameter parameter, CostCalculationContext context) {

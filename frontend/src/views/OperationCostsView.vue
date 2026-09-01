@@ -259,7 +259,7 @@ onMounted(loadCostParameters)
                                 </option>
 
                                 <option value="ACTIVE_ONLY">
-                                    Activé uniquement
+                                    Coûts activés
                                 </option>
 
                                 <option value="DRIVER">

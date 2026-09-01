@@ -19,9 +19,13 @@ public class StructureCostService {
     private final CostParameterEngine costParameterEngine;
 
     public CostCategoryResponse calculateCosts(CostCalculationContext context) {
+        return calculateCosts(context,List.of(context));
+    }
+
+    public CostCategoryResponse calculateCosts(CostCalculationContext context, List<CostCalculationContext> dailyContexts) {
 
         // CostParameters STRUCTURE
-        List<AppliedCostResponse> costs = costParameterEngine.calculateCosts(CostParameterCategoryType.STRUCTURE,context);
+        List<AppliedCostResponse> costs = costParameterEngine.calculateCosts(CostParameterCategoryType.STRUCTURE,context,dailyContexts);
 
         double totalCost = costs.stream().mapToDouble(AppliedCostResponse::amount).sum();
 

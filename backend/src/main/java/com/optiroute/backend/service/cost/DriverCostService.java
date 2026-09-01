@@ -22,6 +22,10 @@ public class DriverCostService {
     private final CostParameterEngine costParameterEngine;
 
     public CostCategoryResponse calculateCosts(Driver driver, CostCalculationContext context) {
+        return calculateCosts(driver,context,List.of(context));
+    }
+
+    public CostCategoryResponse calculateCosts(Driver driver, CostCalculationContext context, List<CostCalculationContext> dailyContexts) {
 
         List<AppliedCostResponse> costs = new ArrayList<>();
 
@@ -35,7 +39,7 @@ public class DriverCostService {
         costs.add(new AppliedCostResponse(SALARY_LABEL, salaryCost));
 
         // CostParameters DRIVER
-        costs.addAll(costParameterEngine.calculateCosts(CostParameterCategoryType.DRIVER,context));
+        costs.addAll(costParameterEngine.calculateCosts(CostParameterCategoryType.DRIVER,context,dailyContexts));
 
         double totalCost = costs.stream().mapToDouble(AppliedCostResponse::amount).sum();
 

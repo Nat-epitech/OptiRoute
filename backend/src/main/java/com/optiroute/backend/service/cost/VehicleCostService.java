@@ -29,6 +29,11 @@ public class VehicleCostService {
 	}
 
 	public CostCategoryResponse calculateCosts(Tractor tractor, SemiTrailer semiTrailer, CostCalculationContext context, double fuelCost, double tollCost) {
+		return calculateCosts(tractor,semiTrailer,context,fuelCost,tollCost,List.of(context));
+	}
+
+	public CostCategoryResponse calculateCosts(Tractor tractor, SemiTrailer semiTrailer, CostCalculationContext context, double fuelCost, double tollCost,
+		List<CostCalculationContext> dailyContexts) {
 
 		List<AppliedCostResponse> costs = new ArrayList<>();
 
@@ -43,7 +48,7 @@ public class VehicleCostService {
 		costs.add(new AppliedCostResponse(DEPRECIATION_LABEL, depreciationCost));
 
 		// CostParameters VEHICLE
-		costs.addAll(costParameterEngine.calculateCosts(CostParameterCategoryType.VEHICLE,context));
+		costs.addAll(costParameterEngine.calculateCosts(CostParameterCategoryType.VEHICLE,context,dailyContexts));
 
 		double totalCost = costs.stream().mapToDouble(AppliedCostResponse::amount).sum();
 

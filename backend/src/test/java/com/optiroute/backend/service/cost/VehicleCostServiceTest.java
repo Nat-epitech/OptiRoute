@@ -67,4 +67,30 @@ class VehicleCostServiceTest {
 
         assertEquals(100.0,result,0.0001);
     }
+
+    @Test
+    void shouldApplyConditionalDailyCostToEveryTripWhenOneTripMatches() {
+        CostParameterRepository repository = mock(CostParameterRepository.class);
+        CostRuleService costRuleService = mock(CostRuleService.class);
+        CostParameterEngine engine = new CostParameterEngine(repository, costRuleService, new WorkingDaysService());
+
+        CostParameter parameter = new CostParameter();
+        parameter.setId(2L);
+        parameter.setCategory(CostParameterCategoryType.VEHICLE);
+        parameter.setLabel("Coût conditionnel journalier");
+        parameter.setValue(new BigDecimal("300"));
+        parameter.setUnit(CostParameterUnitType.EUR_PER_DAY);
+        parameter.setActive(true);
+
+        CostCalculationContext matchingTrip = new CostCalculationContext(LocalDate.of(2024,1,5), 100.0, 500.0, 3.0, 3, true, null, null, null, null, null, 5.0);
+        CostCalculationContext nonMatchingTrip = new CostCalculationContext(LocalDate.of(2024,1,5), 100.0, 500.0, 3.0, 3, false, null, null, null, null, null, 5.0);
+
+        when(repository.findByCategory(CostParameterCategoryType.VEHICLE)).thenReturn(List.of(parameter));
+        when(costRuleService.isApplicable(parameter,matchingTrip)).thenReturn(true);
+        when(costRuleService.isApplicable(parameter,nonMatchingTrip)).thenReturn(false);
+
+        double result = engine.calculateCosts(CostParameterCategoryType.VEHICLE,nonMatchingTrip,List.of(matchingTrip,nonMatchingTrip)).getFirst().amount();
+
+        assertEquals(100.0,result,0.0001);
+    }
 }
