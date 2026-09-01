@@ -146,13 +146,8 @@ onMounted(async () => {
 
         <!-- WAYPOINTS -->
         <div class="space-y-3">
-            <div class="flex items-center justify-between gap-3">
-                <label class="block text-sm font-medium">
-                    Étapes
-                </label>
-
-                <button type="button" @click="addWaypoint"
-                    :disabled="form.waypoints.length >= MAX_WAYPOINTS"
+            <div class="flex items-center justify-end gap-3">
+                <button type="button" @click="addWaypoint" :disabled="form.waypoints.length >= MAX_WAYPOINTS"
                     class="rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50">
                     {{ form.waypoints.length >= MAX_WAYPOINTS ? 'Limite atteinte (4)' : '+ Ajouter une étape' }}
                 </button>
