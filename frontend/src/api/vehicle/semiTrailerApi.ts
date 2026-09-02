@@ -10,6 +10,12 @@ import type {
 export type TrailerTypeOption = {
     id: number;
     label: string;
+    description: string | null;
+};
+
+export type TrailerTypeRequest = {
+    label: string;
+    description: string | null;
 };
 
 export const getSemiTrailers = async (): Promise<SemiTrailerSummary[]> => {
@@ -28,6 +34,28 @@ export const getSemiTrailerTypes = async (): Promise<TrailerTypeOption[]> => {
     const response = await api.get<TrailerTypeOption[]>("/semiTrailers/types");
 
     return response.data;
+};
+
+export const getTrailerType = async (id: number): Promise<TrailerTypeOption> => {
+    const response = await api.get<TrailerTypeOption>(`/semiTrailers/types/${id}`);
+
+    return response.data;
+};
+
+export const createTrailerType = async (trailerType: TrailerTypeRequest): Promise<TrailerTypeOption> => {
+    const response = await api.post<TrailerTypeOption>("/semiTrailers/types", trailerType);
+
+    return response.data;
+};
+
+export const updateTrailerType = async (id: number, trailerType: TrailerTypeRequest): Promise<TrailerTypeOption> => {
+    const response = await api.put<TrailerTypeOption>(`/semiTrailers/types/${id}`, trailerType);
+
+    return response.data;
+};
+
+export const deleteTrailerType = async (id: number): Promise<void> => {
+    await api.delete(`/semiTrailers/types/${id}`);
 };
 
 export const createSemiTrailer = async (semiTrailer: CreateSemiTrailerRequest): Promise<SemiTrailerSummary> => {

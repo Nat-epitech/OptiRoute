@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.optiroute.backend.dto.request.vehicle.SemiTrailerRequest;
+import com.optiroute.backend.dto.request.vehicle.TrailerTypeRequest;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerResponse;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerLightResponse;
 import com.optiroute.backend.dto.response.vehicle.TrailerTypeResponse;
@@ -45,6 +46,28 @@ public class SemiTrailerController {
     @GetMapping("/types")
     public ResponseEntity<List<TrailerTypeResponse>> getTrailerTypes() {
         return ResponseEntity.ok(semiTrailerService.getAllTrailerTypes());
+    }
+
+    @GetMapping("/types/{id}")
+    public ResponseEntity<TrailerTypeResponse> getTrailerType(@PathVariable Long id) {
+        return ResponseEntity.ok(semiTrailerService.getTrailerType(id));
+    }
+
+    @PostMapping("/types")
+    public ResponseEntity<TrailerTypeResponse> createTrailerType(@RequestBody TrailerTypeRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(semiTrailerService.createTrailerType(request));
+    }
+
+    @PutMapping("/types/{id}")
+    public ResponseEntity<TrailerTypeResponse> updateTrailerType(@PathVariable Long id, @RequestBody TrailerTypeRequest request) {
+        return ResponseEntity.ok(semiTrailerService.updateTrailerType(id,request));
+    }
+
+    @DeleteMapping("/types/{id}")
+    public ResponseEntity<Void> deleteTrailerType(@PathVariable Long id) {
+        semiTrailerService.deleteTrailerType(id);
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

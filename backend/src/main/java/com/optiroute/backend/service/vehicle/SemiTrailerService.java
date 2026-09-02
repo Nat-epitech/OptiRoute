@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.optiroute.backend.dto.request.vehicle.SemiTrailerRequest;
+import com.optiroute.backend.dto.request.vehicle.TrailerTypeRequest;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerResponse;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerLightResponse;
 import com.optiroute.backend.dto.response.vehicle.TrailerTypeResponse;
@@ -35,7 +36,39 @@ public class SemiTrailerService {
 
     @Transactional(readOnly = true)
     public List<TrailerTypeResponse> getAllTrailerTypes() {
-        return trailerTypeRepository.findAll(Sort.by("label")).stream().map(type -> new TrailerTypeResponse(type.getId(), type.getLabel())).toList();
+        return trailerTypeRepository.findAll(Sort.by("label")).stream().map(type -> toTrailerTypeResponse(type)).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public TrailerTypeResponse getTrailerType(Long id) {
+        return toTrailerTypeResponse(trailerTypeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("TrailerType not found with id " + id)));
+    }
+
+    @Transactional
+    public TrailerTypeResponse createTrailerType(TrailerTypeRequest request) {
+        String label = validateTrailerTypeLabel(request.label());
+        if (trailerTypeRepository.findByLabelIgnoreCase(label).isPresent()) {
+            throw new IllegalArgumentException("A trailer type with this label already exists");
+        }
+
+        TrailerType trailerType = new TrailerType();
+        trailerType.setLabel(label);
+        trailerType.setDescription(normalizeDescription(request.description()));
+        return toTrailerTypeResponse(trailerTypeRepository.save(trailerType));
+    }
+
+    @Transactional
+    public TrailerTypeResponse updateTrailerType(Long id, TrailerTypeRequest request) {
+        String label = validateTrailerTypeLabel(request.label());
+        TrailerType trailerType = trailerTypeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("TrailerType not found with id " + id));
+
+        trailerTypeRepository.findByLabelIgnoreCase(label).filter(existing -> !existing.getId().equals(id)).ifPresent(existing -> {
+            throw new IllegalArgumentException("A trailer type with this label already exists");
+        });
+
+        trailerType.setLabel(label);
+        trailerType.setDescription(normalizeDescription(request.description()));
+        return toTrailerTypeResponse(trailerTypeRepository.save(trailerType));
     }
 
     @Transactional(readOnly = true)
@@ -123,6 +156,30 @@ public class SemiTrailerService {
         }
 
         semiTrailerRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteTrailerType(Long id) {
+        if (!trailerTypeRepository.existsById(id)) {
+            throw new EntityNotFoundException("TrailerType not found with id " + id);
+        }
+
+        trailerTypeRepository.deleteById(id);
+    }
+
+    private TrailerTypeResponse toTrailerTypeResponse(TrailerType trailerType) {
+        return new TrailerTypeResponse(trailerType.getId(), trailerType.getLabel(), trailerType.getDescription());
+    }
+
+    private String validateTrailerTypeLabel(String label) {
+        if (label == null || label.isBlank()) {
+            throw new IllegalArgumentException("Trailer type label is required");
+        }
+        return label.trim();
+    }
+
+    private String normalizeDescription(String description) {
+        return description == null || description.isBlank() ? null : description.trim();
     }
 
     private TrailerType resolveTrailerType(String requestedLabel) {
