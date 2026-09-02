@@ -24,7 +24,7 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        boolean passwordMatches = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        boolean passwordMatches = passwordEncoder.matches(request.getPassword(),user.getPassword());
 
         if (!passwordMatches) {
             throw new RuntimeException("Invalid credentials");
@@ -32,6 +32,6 @@ public class AuthService {
 
         String token = jwtService.generateToken(user.getEmail());
 
-        return LoginResponse.builder().token(token).build();
+        return LoginResponse.builder().token(token).firstName(user.getFirstName()).lastName(user.getLastName()).build();
     }
 }

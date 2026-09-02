@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/authStore'
 import { useRoute, useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { UserRound } from 'lucide-vue-next'
+import AppDropdown from '@/components/ui/AppDropdown.vue'
 
 // Variables
 
 const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
+const userMenuOpen = ref(false)
+
+const currentUserName = computed(() =>
+    `${authStore.firstName} ${authStore.lastName}`.trim() || 'Mon compte'
+)
 
 const isRoutesSection = computed(() =>
     route.path.startsWith('/routes')
@@ -44,8 +51,14 @@ function goToAdmin() {
 }
 
 function handleLogout() {
+    userMenuOpen.value = false
     authStore.logout()
     router.push('/login')
+}
+
+function goToAccount(close: () => void) {
+    close()
+    router.push('/account/account')
 }
 
 </script>
@@ -85,10 +98,30 @@ function handleLogout() {
         <!-- RIGHT -->
         <div class="flex items-center gap-3">
 
-            <button class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl transition"
-                @click="handleLogout">
-                Se déconnecter
-            </button>
+            <AppDropdown v-model:open="userMenuOpen">
+                <template #default="{ close }">
+                    <button type="button"
+                        class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-100"
+                        @click="goToAccount(close)">
+                        Mon compte
+                    </button>
+
+                    <button type="button"
+                        class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+                        @click="handleLogout(); close()">
+                        Se déconnecter
+                    </button>
+                </template>
+
+                <template #trigger="{ toggle }">
+                    <button type="button"
+                        class="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+                        aria-label="Menu utilisateur" @click.stop="toggle">
+                        <UserRound class="h-5 w-5 text-slate-600" />
+                        <span class="font-medium">{{ currentUserName }}</span>
+                    </button>
+                </template>
+            </AppDropdown>
 
         </div>
 

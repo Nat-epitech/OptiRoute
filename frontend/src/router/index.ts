@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import OperationCostsView from '@/views/OperationCostsView.vue'
 import AdminView from '@/views/AdminView.vue'
-import LoginView from '@/views/LoginView.vue'
+import LoginView from '@/views/users/LoginView.vue'
+import AccountView from '@/views/users/AccountView.vue'
 import DriversView from '@/views/DriversView.vue'
 import MapsView from '@/views/MapsView.vue'
 import PlanningView from '@/views/PlanningView.vue'
@@ -93,6 +94,17 @@ const routes = [
                         path: 'homepage',
                         name: 'homepage',
                         component: AdminView
+                    }
+                ]
+            },
+
+            {
+                path: 'account',
+                children: [
+                    {
+                        path: 'account',
+                        name: 'account',
+                        component: AccountView
                     }
                 ]
             }

@@ -17,7 +17,7 @@ const handleLogin = async () => {
         loading.value = true
 
         const response = await login(email.value, password.value)
-        authStore.setToken(response.token)
+        authStore.setToken(response.token, response.firstName, response.lastName)
         router.push('/homepage')
     } catch (e) {
         alert('Invalid credentials')
