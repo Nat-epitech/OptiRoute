@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import OperationCostsView from '@/views/OperationCostsView.vue'
-import UsersView from '@/views/UsersView.vue'
+import AdminView from '@/views/AdminView.vue'
 import LoginView from '@/views/LoginView.vue'
 import DriversView from '@/views/DriversView.vue'
 import MapsView from '@/views/MapsView.vue'
@@ -44,7 +44,7 @@ const routes = [
 
     {
         path: '/admin',
-        redirect: '/admin/users'
+        redirect: '/admin/homepage'
     },
 
     // MAIN APP LAYOUT (padding / standard pages)
@@ -90,9 +90,9 @@ const routes = [
                 path: 'admin',
                 children: [
                     {
-                        path: 'users',
-                        name: 'admin-users',
-                        component: UsersView
+                        path: 'homepage',
+                        name: 'homepage',
+                        component: AdminView
                     }
                 ]
             }

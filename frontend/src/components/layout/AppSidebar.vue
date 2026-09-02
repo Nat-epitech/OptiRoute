@@ -88,7 +88,7 @@ watch(isVehiclesSection, (isActive) => {
 
             <!-- ADMIN SECTION -->
             <template v-else-if="isAdminSection">
-                <SidebarLink to="/admin/users" label="Utilisateurs" />
+                <SidebarLink to="/admin/homepage" label="Homepage" />
             </template>
 
         </nav>
