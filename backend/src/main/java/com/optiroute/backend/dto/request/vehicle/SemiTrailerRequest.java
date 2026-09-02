@@ -4,15 +4,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
-import com.optiroute.backend.type.TrailerType;
-
 public record SemiTrailerRequest(String externalId, String externalSource,
 
         String registration,
 
         String brand, String model,
 
-        TrailerType trailerType, Integer maxSpeed,
+        String trailerType, Integer maxSpeed,
 
         Integer emptyWeightKg, Integer grossVehicleWeightKg,
 

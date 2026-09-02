@@ -7,13 +7,3 @@ export type FuelType =
     | 'CNG'
     | 'HYBRID'
     | 'OTHER'
-
-export type TrailerType =
-    | 'CURTAINSIDER'
-    | 'BOX'
-    | 'REFRIGERATED'
-    | 'TANKER'
-    | 'FLATBED'
-    | 'CONTAINER_CHASSIS'
-    | 'TIPPER'
-    | 'OTHER'

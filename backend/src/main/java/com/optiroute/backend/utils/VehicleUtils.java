@@ -10,10 +10,11 @@ import com.optiroute.backend.entity.vehicle.Tractor;
 
 public class VehicleUtils {
     public static SemiTrailerResponse toSemiTrailerResponse(SemiTrailer semiTrailer) {
+        String trailerTypeLabel = semiTrailer.getTrailerType() != null ? semiTrailer.getTrailerType().getLabel() : null;
         return new SemiTrailerResponse(semiTrailer.getId(), semiTrailer.getExternalId(), semiTrailer.getExternalSource(), semiTrailer.getRegistration(), semiTrailer.getBrand(),
-            semiTrailer.getModel(), semiTrailer.getTrailerType(), semiTrailer.getMaxSpeed(), semiTrailer.getEmptyWeightKg(), semiTrailer.getGrossVehicleWeightKg(),
-            semiTrailer.getHeightCm(), semiTrailer.getWidthCm(), semiTrailer.getLengthCm(), semiTrailer.getAxleCount(), semiTrailer.getPurchaseCost(),
-            semiTrailer.getDepreciationStartDate(), semiTrailer.getDepreciationEndDate(), semiTrailer.getCreatedAt(), semiTrailer.getUpdatedAt());
+            semiTrailer.getModel(), trailerTypeLabel, semiTrailer.getMaxSpeed(), semiTrailer.getEmptyWeightKg(), semiTrailer.getGrossVehicleWeightKg(), semiTrailer.getHeightCm(),
+            semiTrailer.getWidthCm(), semiTrailer.getLengthCm(), semiTrailer.getAxleCount(), semiTrailer.getPurchaseCost(), semiTrailer.getDepreciationStartDate(),
+            semiTrailer.getDepreciationEndDate(), semiTrailer.getCreatedAt(), semiTrailer.getUpdatedAt());
     }
 
     public static SemiTrailerLightResponse toSemiTrailerLightResponse(SemiTrailer semiTrailer) {

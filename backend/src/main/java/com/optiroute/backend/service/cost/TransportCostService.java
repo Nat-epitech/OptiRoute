@@ -63,10 +63,10 @@ public class TransportCostService {
 
         Tractor tractor = tractorService.getEntityById(transport.getTractorId());
         SemiTrailer semiTrailer = transport.getSemiTrailerId() != null ? semiTrailerService.getEntityById(transport.getSemiTrailerId()) : null;
-        String vehicleType = semiTrailer != null && semiTrailer.getTrailerType() != null ? semiTrailer.getTrailerType().name() : null;
+        Long trailerTypeId = semiTrailer != null && semiTrailer.getTrailerType() != null ? semiTrailer.getTrailerType().getId() : null;
 
         CostCalculationContext context = new CostCalculationContext(transportDate, distanceKm, dailyVehicleDistanceKm, durationHours, dailyTransportCount, transport.isEmptyTrip(),
-            departureTime, arrivalTime, driverDayStartTime, driverDayEndTime, vehicleType, dailyDriverDurationHours);
+            departureTime, arrivalTime, driverDayStartTime, driverDayEndTime, trailerTypeId, dailyDriverDurationHours);
         List<CostCalculationContext> dailyContexts = calculateDailyContexts(transportDate);
         if (dailyContexts.isEmpty()) {
             dailyContexts = List.of(context);
@@ -105,10 +105,10 @@ public class TransportCostService {
             LocalTime driverDayEndTime = calculateDailyDriverEndTime(dailyTransport.getDriverId(),transportDate);
 
             SemiTrailer semiTrailer = dailyTransport.getSemiTrailerId() != null ? semiTrailerService.getEntityById(dailyTransport.getSemiTrailerId()) : null;
-            String vehicleType = semiTrailer != null && semiTrailer.getTrailerType() != null ? semiTrailer.getTrailerType().name() : null;
+            Long trailerTypeId = semiTrailer != null && semiTrailer.getTrailerType() != null ? semiTrailer.getTrailerType().getId() : null;
 
             contexts.add(new CostCalculationContext(transportDate, dailyEstimate.getDistanceMeters() / 1000.0, dailyVehicleDistanceKm, dailyEstimate.getDurationSeconds() / 3600.0,
-                calculateDailyTransportCount(transportDate), dailyTransport.isEmptyTrip(), departureTime, arrivalTime, driverDayStartTime, driverDayEndTime, vehicleType,
+                calculateDailyTransportCount(transportDate), dailyTransport.isEmptyTrip(), departureTime, arrivalTime, driverDayStartTime, driverDayEndTime, trailerTypeId,
                 dailyDriverDurationHours));
         }
 

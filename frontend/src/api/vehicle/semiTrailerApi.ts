@@ -7,6 +7,11 @@ import type {
     UpdateSemiTrailerRequest,
 } from "@/models/vehicle/SemiTrailer";
 
+export type TrailerTypeOption = {
+    id: number;
+    label: string;
+};
+
 export const getSemiTrailers = async (): Promise<SemiTrailerSummary[]> => {
     const response = await api.get<SemiTrailerSummary[]>("/semiTrailers");
 
@@ -15,6 +20,12 @@ export const getSemiTrailers = async (): Promise<SemiTrailerSummary[]> => {
 
 export const getSemiTrailer = async (id: number): Promise<SemiTrailerDetails> => {
     const response = await api.get<SemiTrailerDetails>(`/semiTrailers/${id}`);
+
+    return response.data;
+};
+
+export const getSemiTrailerTypes = async (): Promise<TrailerTypeOption[]> => {
+    const response = await api.get<TrailerTypeOption[]>("/semiTrailers/types");
 
     return response.data;
 };

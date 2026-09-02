@@ -1,5 +1,3 @@
-import type { TrailerType } from "@/types/vehicleType"
-
 export interface SemiTrailerSummary {
     id: number
 
@@ -10,7 +8,7 @@ export interface SemiTrailerSummary {
 }
 
 export interface SemiTrailerDetails extends SemiTrailerSummary {
-    trailerType: TrailerType | null
+    trailerType: string | null
 
     maxSpeed: number | null
 
@@ -44,7 +42,7 @@ export interface CreateSemiTrailerRequest {
     brand: string | null
     model: string | null
 
-    trailerType: TrailerType | null
+    trailerType: string | null
 
     maxSpeed: number | null
 
@@ -69,7 +67,7 @@ export interface UpdateSemiTrailerRequest {
     brand: string | null
     model: string | null
 
-    trailerType: TrailerType | null
+    trailerType: string | null
 
     maxSpeed: number | null
 
@@ -95,7 +93,7 @@ export interface SemiTrailerFormData {
 
     maxSpeed: number | null
 
-    trailerType: TrailerType | null
+    trailerType: string | null
 
     emptyWeightKg: number | null
     grossVehicleWeightKg: number | null

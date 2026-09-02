@@ -21,7 +21,7 @@ public record CostCalculationContext(LocalDate date,
 
     LocalTime driverDayEndTime,
 
-    String vehicleType,
+    Long trailerTypeId,
 
     double dailyDriverDurationHours) {
 }

@@ -2,14 +2,18 @@ package com.optiroute.backend.service.vehicle;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.optiroute.backend.dto.request.vehicle.SemiTrailerRequest;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerResponse;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerLightResponse;
+import com.optiroute.backend.dto.response.vehicle.TrailerTypeResponse;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
+import com.optiroute.backend.entity.vehicle.TrailerType;
 import com.optiroute.backend.repository.vehicle.SemiTrailerRepository;
+import com.optiroute.backend.repository.vehicle.TrailerTypeRepository;
 import com.optiroute.backend.utils.VehicleUtils;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -18,13 +22,20 @@ import jakarta.persistence.EntityNotFoundException;
 public class SemiTrailerService {
 
     private final SemiTrailerRepository semiTrailerRepository;
+    private final TrailerTypeRepository trailerTypeRepository;
 
-    public SemiTrailerService(SemiTrailerRepository semiTrailerRepository) {
+    public SemiTrailerService(SemiTrailerRepository semiTrailerRepository, TrailerTypeRepository trailerTypeRepository) {
         this.semiTrailerRepository = semiTrailerRepository;
+        this.trailerTypeRepository = trailerTypeRepository;
     }
 
     public List<SemiTrailerLightResponse> getAll() {
         return semiTrailerRepository.findAll().stream().map(semiTrailer -> VehicleUtils.toSemiTrailerLightResponse(semiTrailer)).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<TrailerTypeResponse> getAllTrailerTypes() {
+        return trailerTypeRepository.findAll(Sort.by("label")).stream().map(type -> new TrailerTypeResponse(type.getId(), type.getLabel())).toList();
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +66,7 @@ public class SemiTrailerService {
         semiTrailer.setBrand(request.brand());
         semiTrailer.setModel(request.model());
 
-        semiTrailer.setTrailerType(request.trailerType());
+        semiTrailer.setTrailerType(resolveTrailerType(request.trailerType()));
         semiTrailer.setMaxSpeed(request.maxSpeed());
 
         semiTrailer.setEmptyWeightKg(request.emptyWeightKg());
@@ -86,7 +97,7 @@ public class SemiTrailerService {
         semiTrailer.setBrand(request.brand());
         semiTrailer.setModel(request.model());
 
-        semiTrailer.setTrailerType(request.trailerType());
+        semiTrailer.setTrailerType(resolveTrailerType(request.trailerType()));
         semiTrailer.setMaxSpeed(request.maxSpeed());
 
         semiTrailer.setEmptyWeightKg(request.emptyWeightKg());
@@ -112,6 +123,18 @@ public class SemiTrailerService {
         }
 
         semiTrailerRepository.deleteById(id);
+    }
+
+    private TrailerType resolveTrailerType(String requestedLabel) {
+        if (requestedLabel == null || requestedLabel.isBlank()) {
+            return null;
+        }
+
+        return trailerTypeRepository.findByLabelIgnoreCase(requestedLabel).orElseGet(() -> {
+            TrailerType trailerType = new TrailerType();
+            trailerType.setLabel(requestedLabel);
+            return trailerTypeRepository.save(trailerType);
+        });
     }
 
 }

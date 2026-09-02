@@ -1,10 +1,13 @@
 <script setup lang="ts">
 
+import { onMounted, ref } from "vue"
+
 import type {
     CostConditionRequest,
     CreateCostParameterRequest,
 } from "@/models/cost/CostParameter"
 import type { CostParameterCategory, CostParameterUnit, CostConditionSource, CostConditionField, CostConditionOperator } from '@/types/CostParameterType'
+import { getSemiTrailerTypes } from "@/api/vehicle/semiTrailerApi"
 
 const form = defineModel<CreateCostParameterRequest>({
     required: true,
@@ -171,40 +174,23 @@ const operatorOptions: {
         },
     ]
 
-const vehicleTypeOptions = [
-    {
-        value: "CURTAINSIDER",
-        label: "Curtainsider",
-    },
-    {
-        value: "BOX",
-        label: "Fourgon",
-    },
-    {
-        value: "REFRIGERATED",
-        label: "Réfrigéré",
-    },
-    {
-        value: "TANKER",
-        label: "Citerne",
-    },
-    {
-        value: "FLATBED",
-        label: "Plateau",
-    },
-    {
-        value: "CONTAINER_CHASSIS",
-        label: "Châssis porte-conteneur",
-    },
-    {
-        value: "TIPPER",
-        label: "Benne",
-    },
-    {
-        value: "OTHER",
-        label: "Autre",
-    },
-]
+const vehicleTypeSelectOptions = ref<{ value: string; label: string }[]>([])
+
+const loadVehicleTypeSelectOptions = async () => {
+    try {
+        const trailerTypeOptions = await getSemiTrailerTypes()
+        vehicleTypeSelectOptions.value = trailerTypeOptions.map((option) => ({
+            value: String(option.id),
+            label: option.label,
+        }))
+    } catch {
+        vehicleTypeSelectOptions.value = []
+    }
+}
+
+onMounted(() => {
+    loadVehicleTypeSelectOptions()
+})
 
 // Conditions
 
@@ -484,7 +470,7 @@ const handleSourceChange = (
                                     Sélectionner un type
                                 </option>
 
-                                <option v-for="option in vehicleTypeOptions" :key="option.value" :value="option.value">
+                                <option v-for="option in vehicleTypeSelectOptions" :key="option.value" :value="option.value">
                                     {{ option.label }}
                                 </option>
                             </select>

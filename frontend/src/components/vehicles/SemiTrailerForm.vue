@@ -6,9 +6,10 @@ const form = defineModel<SemiTrailerFormData>({
 })
 
 withDefaults(
-    defineProps<{ disabled?: boolean }>(),
+    defineProps<{ disabled?: boolean; trailerTypes?: string[] }>(),
     {
         disabled: false,
+        trailerTypes: () => [],
     },
 )
 </script>
@@ -62,50 +63,14 @@ withDefaults(
                         Type de semi-remorque
                     </label>
 
-                    <select v-model="form.trailerType" :disabled="disabled"
+                    <select v-model="form.trailerType" :disabled="disabled || trailerTypes.length === 0"
                         class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100">
                         <option :value="null">
-                            Sélectionner un type
+                            {{ trailerTypes.length === 0 ? 'Chargement des types...' : 'Sélectionner un type' }}
                         </option>
 
-                        <option value="CURTAINSIDER">
-                            Tautliner
-                        </option>
-
-                        <option value="BOX">
-                            Fourgon
-                        </option>
-
-                        <option value="REFRIGERATED">
-                            Frigorifique
-                        </option>
-
-                        <option value="FLATBED">
-                            Plateau
-                        </option>
-
-                        <option value="TIPPER">
-                            Benne
-                        </option>
-
-                        <option value="TANKER">
-                            Citerne
-                        </option>
-
-                        <option value="CONTAINER_CHASSIS">
-                            Porte-conteneur
-                        </option>
-
-                        <option value="LOW_LOADER">
-                            Porte-engins
-                        </option>
-
-                        <option value="CAR_CARRIER">
-                            Porte-voitures
-                        </option>
-
-                        <option value="OTHER">
-                            Autre
+                        <option v-for="trailerType in trailerTypes" :key="trailerType" :value="trailerType">
+                            {{ trailerType }}
                         </option>
                     </select>
                 </div>

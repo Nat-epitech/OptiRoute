@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from "vue"
 
-import { createSemiTrailer } from "@/api/vehicle/semiTrailerApi"
+import { createSemiTrailer, getSemiTrailerTypes } from "@/api/vehicle/semiTrailerApi"
 import { getApiErrorMessage } from "@/api/utils"
 
 import type { CreateSemiTrailerRequest, SemiTrailerFormData } from "@/models/vehicle/SemiTrailer"
@@ -16,6 +16,7 @@ import { useNotification } from "@/composables/useNotification"
 
 const notification = useNotification()
 const loading = ref(false)
+const trailerTypes = ref<string[]>([])
 
 const props = defineProps<{
     show: boolean
@@ -40,6 +41,19 @@ const form = reactive<SemiTrailerFormData>(createEmptySemiTrailerForm())
 
 const resetForm = () => {
     Object.assign(form, createEmptySemiTrailerForm())
+}
+
+const loadTrailerTypes = async () => {
+    try {
+        const trailerTypeOptions = await getSemiTrailerTypes()
+        trailerTypes.value = trailerTypeOptions.map((option) => option.label)
+    } catch (error: unknown) {
+        trailerTypes.value = []
+        notification.error(
+            "Chargement impossible",
+            getApiErrorMessage(error, "Les types de semi-remorques n’ont pas pu être chargés."),
+        )
+    }
 }
 
 const submitSemiTrailer = async () => {
@@ -96,6 +110,7 @@ watch(
     (show) => {
         if (show) {
             resetForm()
+            loadTrailerTypes()
         }
     },
 )
@@ -109,7 +124,7 @@ watch(
             </h2>
 
             <div class="max-h-[70vh] overflow-y-auto pr-2">
-                <SemiTrailerForm v-model="form" :disabled="loading" />
+                <SemiTrailerForm v-model="form" :disabled="loading" :trailer-types="trailerTypes" />
             </div>
 
             <div class="mt-6 flex justify-end gap-3">

@@ -26,7 +26,7 @@ import UpdateSemiTrailerModal from "@/components/vehicles/UpdateSemiTrailerModal
 import {
     formatCurrency, formatDate, formatDateTime, formatNumber,
 } from "@/utils/formatters"
-import { formatTrailerType, formatVehicleLabel } from "@/utils/vehicleUtils"
+import { formatVehicleLabel } from "@/utils/vehicleUtils"
 
 //Variables
 
@@ -215,7 +215,7 @@ watch(
 
                 <DetailRow label="Modèle" :value="semiTrailer.model ?? 'Non renseigné'" />
 
-                <DetailRow label="Type" :value="formatTrailerType(semiTrailer.trailerType)" />
+                <DetailRow label="Type" :value="semiTrailer.trailerType ?? 'Non renseigné'" />
             </DetailSection>
 
             <!-- Configuration -->

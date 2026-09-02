@@ -12,6 +12,7 @@ import com.optiroute.backend.type.cost.CostRuleLogicalOperatorType;
 import com.optiroute.backend.dto.request.cost.CostCalculationContext;
 
 import java.util.List;
+import java.util.Objects;
 import java.time.LocalTime;
 
 @Service
@@ -70,7 +71,7 @@ public class CostRuleService {
 
             case DRIVER_DAY_END_TIME -> evaluateTime(context.driverDayEndTime(),condition);
 
-            case VEHICLE_TYPE -> evaluateString(context.vehicleType(),condition);
+            case VEHICLE_TYPE -> evaluateVehicleTypeId(context.trailerTypeId(),condition);
         };
     }
 
@@ -121,14 +122,28 @@ public class CostRuleService {
         };
     }
 
-    private boolean evaluateString(String actualValue, CostCondition condition) {
+    private boolean evaluateVehicleTypeId(Long actualValue, CostCondition condition) {
+        Long expectedValue = parseLongOrNull(condition.getValue());
+
         return switch (condition.getOperator()) {
 
-            case EQUALS -> actualValue.equalsIgnoreCase(condition.getValue());
+            case EQUALS -> Objects.equals(actualValue,expectedValue);
 
-            case NOT_EQUALS -> !actualValue.equalsIgnoreCase(condition.getValue());
+            case NOT_EQUALS -> !Objects.equals(actualValue,expectedValue);
 
-            default -> throw new IllegalArgumentException("Invalid operator for string condition: " + condition.getOperator());
+            default -> throw new IllegalArgumentException("Invalid operator for vehicle type condition: " + condition.getOperator());
         };
+    }
+
+    private Long parseLongOrNull(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        try {
+            return Long.parseLong(value.trim());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }

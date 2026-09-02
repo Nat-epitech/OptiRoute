@@ -12,10 +12,13 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.optiroute.backend.dto.request.cost.CostCalculationContext;
+import com.optiroute.backend.entity.cost.CostCondition;
 import com.optiroute.backend.entity.cost.CostParameter;
 import com.optiroute.backend.entity.vehicle.SemiTrailer;
 import com.optiroute.backend.entity.vehicle.Tractor;
 import com.optiroute.backend.repository.cost.CostParameterRepository;
+import com.optiroute.backend.type.cost.CostConditionFieldType;
+import com.optiroute.backend.type.cost.CostConditionOperatorType;
 import com.optiroute.backend.type.cost.CostParameterCategoryType;
 import com.optiroute.backend.type.cost.CostParameterUnitType;
 
@@ -92,5 +95,24 @@ class VehicleCostServiceTest {
         double result = engine.calculateCosts(CostParameterCategoryType.VEHICLE,nonMatchingTrip,List.of(matchingTrip,nonMatchingTrip)).getFirst().amount();
 
         assertEquals(100.0,result,0.0001);
+    }
+
+    @Test
+    void shouldHandleNullVehicleTypeWhenEvaluatingStringCondition() throws Exception {
+        CostRuleService service = new CostRuleService(null, null);
+
+        CostCondition condition = new CostCondition();
+        condition.setField(CostConditionFieldType.VEHICLE_TYPE);
+        condition.setOperator(CostConditionOperatorType.EQUALS);
+        condition.setValue("42");
+
+        CostCalculationContext context = new CostCalculationContext(LocalDate.of(2024,1,5), 100.0, 500.0, 3.0, 3, false, null, null, null, null, null, 5.0);
+
+        Method method = CostRuleService.class.getDeclaredMethod("evaluateCondition",CostCondition.class,CostCalculationContext.class);
+        method.setAccessible(true);
+
+        boolean result = (boolean) method.invoke(service,condition,context);
+
+        assertEquals(false,result);
     }
 }

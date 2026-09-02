@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.optiroute.backend.dto.request.vehicle.SemiTrailerRequest;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerResponse;
 import com.optiroute.backend.dto.response.vehicle.SemiTrailerLightResponse;
+import com.optiroute.backend.dto.response.vehicle.TrailerTypeResponse;
 
 import com.optiroute.backend.service.vehicle.SemiTrailerService;
 
@@ -41,6 +42,11 @@ public class SemiTrailerController {
         return ResponseEntity.ok(semiTrailerService.getById(id));
     }
 
+    @GetMapping("/types")
+    public ResponseEntity<List<TrailerTypeResponse>> getTrailerTypes() {
+        return ResponseEntity.ok(semiTrailerService.getAllTrailerTypes());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSemiTrailer(@PathVariable Long id) {
         semiTrailerService.deleteSemiTrailer(id);
@@ -50,7 +56,7 @@ public class SemiTrailerController {
 
     @PutMapping("/{id}")
     public ResponseEntity<SemiTrailerResponse> updateSemiTrailer(@PathVariable Long id, @Valid @RequestBody SemiTrailerRequest request) {
-        SemiTrailerResponse updatedSemiTrailer = semiTrailerService.updateSemiTrailer(id, request);
+        SemiTrailerResponse updatedSemiTrailer = semiTrailerService.updateSemiTrailer(id,request);
 
         return ResponseEntity.ok(updatedSemiTrailer);
     }

@@ -1,4 +1,4 @@
-import type { FuelType, TrailerType } from "@/types/vehicleType"
+import type { FuelType } from "@/types/vehicleType"
 import type { SemiTrailerFormData } from "@/models/vehicle/SemiTrailer"
 import type { TractorFormData } from "@/models/vehicle/Tractor"
 
@@ -13,17 +13,6 @@ const FUEL_TYPE_LABELS: Record<FuelType, string> = {
     OTHER: "Autre",
 }
 
-const TRAILER_TYPE_LABELS: Record<TrailerType, string> = {
-    CURTAINSIDER: "Tautliner",
-    BOX: "Fourgon",
-    REFRIGERATED: "Frigorifique",
-    FLATBED: "Plateau",
-    TIPPER: "Benne",
-    TANKER: "Citerne",
-    CONTAINER_CHASSIS: "Porte-conteneur",
-    OTHER: "Autre",
-}
-
 export const formatFuelType = (fuelType: FuelType | null | undefined,): string => {
     if (!fuelType) {
         return "Non renseigné"
@@ -32,12 +21,12 @@ export const formatFuelType = (fuelType: FuelType | null | undefined,): string =
     return FUEL_TYPE_LABELS[fuelType]
 }
 
-export const formatTrailerType = (trailerType: TrailerType | null | undefined,): string => {
+export const formatTrailerType = (trailerType: string | null | undefined,): string => {
     if (!trailerType) {
         return "Non renseigné"
     }
 
-    return TRAILER_TYPE_LABELS[trailerType]
+    return trailerType
 }
 
 export const formatVehicleLabel = (brand: string | null | undefined, model: string | null | undefined, emptyLabel = "Marque et modèle non renseignés",): string => {
