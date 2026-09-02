@@ -4,12 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
 import { UserRound } from 'lucide-vue-next'
 import AppDropdown from '@/components/ui/AppDropdown.vue'
-import {
-    CalendarDays,
-    Settings2,
-    Route,
-    ShieldCheck,
-} from 'lucide-vue-next'
+import { CalendarDays, Settings2, Route, ShieldCheck } from 'lucide-vue-next'
 
 // Variables
 

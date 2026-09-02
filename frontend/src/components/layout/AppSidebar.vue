@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { ChevronDown, KeyRound, LogOut, CircleUser } from 'lucide-vue-next'
+import { ChevronDown, KeyRound, LogOut, CircleUser, Coins, Users, Truck, Container, Building2, CalendarDays, Route, House } from 'lucide-vue-next'
 import SidebarLink from '@/components/layout/SidebarLink.vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
@@ -55,48 +55,51 @@ watch(isVehiclesSection, (isActive) => {
 
         <!-- LOGO -->
         <div class="flex h-16 items-center justify-center border-b border-r border-gray-200 bg-white px-4">
-            <img src="@/assets/images/logo.png" alt="OptiRoute logo" class="h-8 w-auto object-contain" />
+            <img src="@/assets/images/logo.png" alt="OptiRoute logo" class="h-9 w-auto object-contain" />
         </div>
 
         <!-- NAVIGATION -->
-        <nav class="flex-1 space-y-2 overflow-y-auto p-4">
+        <nav class="flex-1 space-y-2 overflow-y-auto p-2">
 
             <!-- ROUTES SECTION -->
             <template v-if="isRoutesSection">
-                <SidebarLink to="/routes" label="Rechercher un itinéraire" />
+                <SidebarLink to="/routes" label="Rechercher un itinéraire" :icon="Route" />
             </template>
 
             <!-- HOMEPAGE SECTION -->
             <template v-else-if="isHomepageSection">
-                <SidebarLink to="/homepage/planning" label="Planning" />
+                <SidebarLink to="/homepage/planning" label="Planning" :icon="CalendarDays" />
             </template>
 
 
             <!-- GESTION SECTION -->
             <template v-else-if="isGestionSection">
-                <SidebarLink to="/gestion/operationCosts" label="Coûts référentiels" />
+                <SidebarLink to="/gestion/operationCosts" label="Coûts référentiels" :icon="Coins" />
 
-                <SidebarLink to="/gestion/drivers" label="Conducteurs" />
+                <SidebarLink to="/gestion/drivers" label="Conducteurs" :icon="Users" />
 
                 <!-- VEHICLES MENU -->
                 <div>
                     <button type="button"
                         class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left font-medium transition text-slate-200 hover:bg-slate-800 hover:text-white"
                         :aria-expanded="vehiclesOpen" @click="vehiclesOpen = !vehiclesOpen">
-                        <span>Véhicules</span>
+                        <span class="flex items-center gap-3">
+                            <Truck class="h-5 w-5" />
+                            <span>Véhicules</span>
+                        </span>
 
                         <ChevronDown class="h-4 w-4 transition-transform duration-200"
                             :class="{ 'rotate-180': vehiclesOpen }" />
                     </button>
 
                     <div v-show="vehiclesOpen" class="mt-1 space-y-1 border-l border-slate-700 pl-3">
-                        <SidebarLink to="/gestion/tractors" label="Tracteurs" />
+                        <SidebarLink to="/gestion/tractors" label="Tracteurs" :icon="Truck" />
 
-                        <SidebarLink to="/gestion/semiTrailers" label="Semi-remorques" />
+                        <SidebarLink to="/gestion/semiTrailers" label="Semi-remorques" :icon="Container" />
                     </div>
                 </div>
 
-                <SidebarLink to="/gestion/customers" label="Donneurs d’ordres" />
+                <SidebarLink to="/gestion/customers" label="Donneurs d’ordres" :icon="Building2" />
             </template>
 
             <!-- USER SECTION -->
@@ -115,7 +118,7 @@ watch(isVehiclesSection, (isActive) => {
 
             <!-- ADMIN SECTION -->
             <template v-else-if="isAdminSection">
-                <SidebarLink to="/admin/homepage" label="Homepage" />
+                <SidebarLink to="/admin/homepage" label="Homepage" :icon="House" />
             </template>
 
         </nav>
