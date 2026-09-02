@@ -22,18 +22,18 @@ public class TransportEstimateService {
 
 	@Transactional
 	public TransportEstimate saveEstimate(Transport transport, RoutesResponse response) {
-		// TODO: Choisir route adapter selon critère (coût, distance, durée, etc.)
-		RouteDto bestRoute = response.getRoutes().getFirst();
+		RouteDto fasterRoute = response.getRoutes().stream().min((route1, route2) -> Long.compare(route1.getDuration(),route2.getDuration()))
+			.orElseThrow(() -> new IllegalArgumentException("No route available"));
 
 		TransportEstimate estimate = new TransportEstimate();
 		estimate.setTransportId(transport.getId());
 		estimate.setDepartureTime(transport.getPlannedStart());
-		estimate.setDistanceMeters(bestRoute.getDistanceMeters());
-		estimate.setDurationSeconds(bestRoute.getDuration());
-		estimate.setPolyline(bestRoute.getPolyline());
+		estimate.setDistanceMeters(fasterRoute.getDistanceMeters());
+		estimate.setDurationSeconds(fasterRoute.getDuration());
+		estimate.setPolyline(fasterRoute.getPolyline());
 
-		estimate.setEstimatedFuelCost(BigDecimal.valueOf(bestRoute.getCosts().getFuelCost()));
-		estimate.setEstimatedTollCost(BigDecimal.valueOf(bestRoute.getCosts().getTollCost()));
+		estimate.setEstimatedFuelCost(BigDecimal.valueOf(fasterRoute.getCosts().getFuelCost()));
+		estimate.setEstimatedTollCost(BigDecimal.valueOf(fasterRoute.getCosts().getTollCost()));
 
 		return transportEstimateRepository.save(estimate);
 	}
