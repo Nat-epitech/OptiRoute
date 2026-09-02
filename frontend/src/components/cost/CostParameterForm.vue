@@ -126,7 +126,7 @@ const vehicleFieldOptions: {
 }[] = [
         {
             value: "VEHICLE_TYPE",
-            label: "Type de véhicule",
+            label: "Type de semi-remorque",
         },
     ]
 
@@ -144,7 +144,7 @@ const driverFieldOptions: {
         },
     ]
 
-const operatorOptions: {
+const equalityOperatorOptions: {
     value: CostConditionOperator
     label: string
 }[] = [
@@ -156,6 +156,12 @@ const operatorOptions: {
             value: "NOT_EQUALS",
             label: "est différent de",
         },
+    ]
+
+const numericOperatorOptions: {
+    value: CostConditionOperator
+    label: string
+}[] = [
         {
             value: "LESS_THAN",
             label: "est inférieur à",
@@ -164,6 +170,12 @@ const operatorOptions: {
             value: "GREATER_THAN",
             label: "est supérieur à",
         },
+    ]
+
+const timeOperatorOptions: {
+    value: CostConditionOperator
+    label: string
+}[] = [
         {
             value: "BEFORE",
             label: "avant",
@@ -190,6 +202,7 @@ const loadVehicleTypeSelectOptions = async () => {
 
 onMounted(() => {
     loadVehicleTypeSelectOptions()
+    normalizeExistingConditions()
 })
 
 // Conditions
@@ -245,7 +258,50 @@ const handleSourceChange = (
     const fields = getFieldOptions(condition.source)
 
     condition.field = fields[0]?.value ?? "DISTANCE"
+    condition.operator = getOperatorOptions(condition.field)[0]?.value ?? "EQUALS"
     condition.value = ""
+}
+
+const handleFieldChange = (
+    condition: CostConditionRequest,
+) => {
+    condition.operator = getOperatorOptions(condition.field)[0]?.value ?? "EQUALS"
+    condition.value = ""
+}
+
+const normalizeExistingConditions = () => {
+    form.value.rule?.conditions.forEach((condition) => {
+        if (!getOperatorOptions(condition.field).some((option) => option.value === condition.operator)) {
+            condition.operator = getOperatorOptions(condition.field)[0]?.value ?? "EQUALS"
+        }
+    })
+}
+
+const getOperatorOptions = (
+    field: CostConditionField,
+) => {
+    if (["DEPARTURE_TIME", "ARRIVAL_TIME", "DRIVER_DAY_START_TIME", "DRIVER_DAY_END_TIME"].includes(field)) {
+        return timeOperatorOptions
+    }
+
+    if (["DISTANCE", "DURATION"].includes(field)) {
+        return numericOperatorOptions
+    }
+
+    return equalityOperatorOptions
+}
+
+const getConditionValueUnit = (
+    field: CostConditionField,
+) => {
+    switch (field) {
+        case "DISTANCE":
+            return "km"
+        case "DURATION":
+            return "heures"
+        default:
+            return null
+    }
 }
 </script>
 
@@ -296,7 +352,7 @@ const handleSourceChange = (
                         Valeur
                     </label>
 
-                    <input v-model.number="form.value" type="number" min="0" step="0.01" required :disabled="disabled"
+                    <input v-model.number="form.value" type="number" min="0" step="100" required :disabled="disabled"
                         class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100" />
                 </div>
 
@@ -407,7 +463,8 @@ const handleSourceChange = (
                             </label>
 
                             <select v-model="condition.field" :disabled="disabled"
-                                class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500">
+                                class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500"
+                                @change="handleFieldChange(condition)">
                                 <option v-for="option in getFieldOptions(condition.source)" :key="option.value"
                                     :value="option.value">
                                     {{ option.label }}
@@ -424,7 +481,8 @@ const handleSourceChange = (
 
                             <select v-model="condition.operator" :disabled="disabled"
                                 class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500">
-                                <option v-for="option in operatorOptions" :key="option.value" :value="option.value">
+                                <option v-for="option in getOperatorOptions(condition.field)" :key="option.value"
+                                    :value="option.value">
                                     {{ option.label }}
                                 </option>
                             </select>
@@ -434,19 +492,21 @@ const handleSourceChange = (
 
                         <div>
                             <label class="mb-1 block text-xs font-medium text-slate-600">
-                                Valeur
+                                Valeur{{ getConditionValueUnit(condition.field) ? `
+                                (${getConditionValueUnit(condition.field)})` : "" }}
                             </label>
 
                             <!-- Heure -->
 
-                            <input v-if="['DEPARTURE_TIME', 'ARRIVAL_TIME', 'DRIVER_DAY_START_TIME', 'DRIVER_DAY_END_TIME'].includes(condition.field)"
+                            <input
+                                v-if="['DEPARTURE_TIME', 'ARRIVAL_TIME', 'DRIVER_DAY_START_TIME', 'DRIVER_DAY_END_TIME'].includes(condition.field)"
                                 v-model="condition.value" type="time" required :disabled="disabled"
                                 class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500" />
 
                             <!-- Booléen -->
 
-                            <select v-else-if="['EMPTY_TRIP', 'LOADED_TRIP'].includes(condition.field)" v-model="condition.value" required
-                                :disabled="disabled"
+                            <select v-else-if="['EMPTY_TRIP', 'LOADED_TRIP'].includes(condition.field)"
+                                v-model="condition.value" required :disabled="disabled"
                                 class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500">
                                 <option value="" disabled>
                                     Sélectionner un état
@@ -470,15 +530,15 @@ const handleSourceChange = (
                                     Sélectionner un type
                                 </option>
 
-                                <option v-for="option in vehicleTypeSelectOptions" :key="option.value" :value="option.value">
+                                <option v-for="option in vehicleTypeSelectOptions" :key="option.value"
+                                    :value="option.value">
                                     {{ option.label }}
                                 </option>
                             </select>
 
                             <!-- Valeur numérique -->
 
-                            <input v-else v-model="condition.value" type="number" step="0.01" required
-                                :disabled="disabled"
+                            <input v-else v-model="condition.value" type="number" step="1" required :disabled="disabled"
                                 class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 outline-none focus:border-blue-500" />
                         </div>
                     </div>

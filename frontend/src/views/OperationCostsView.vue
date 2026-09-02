@@ -166,6 +166,12 @@ const handleCostParameterCreated = async () => {
 
 const handleCostParameterUpdated = async () => {
     await loadCostParameters()
+
+    if (selectedCostParameterId.value !== null) {
+        actionCostParameter.value = costParameters.value.find(
+            cost => cost.id === selectedCostParameterId.value,
+        ) ?? null
+    }
 }
 
 const handleCostParameterDeleted = async () => {

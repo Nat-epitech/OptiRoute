@@ -19,5 +19,15 @@
         "Mettez",
         "modifié",
         "Votre"
-    ]
+    ],
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "editor.quickSuggestions": {
+        "strings": "on"
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "Vue.volar",
+        "editor.formatOnSave": true
+    }
 }

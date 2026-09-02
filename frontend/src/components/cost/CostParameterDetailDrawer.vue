@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { onMounted, ref, watch } from "vue"
 
 import { Edit3, Settings2, Trash2, WalletCards, Info, ListChecks } from "lucide-vue-next"
 
@@ -14,6 +14,7 @@ import type { CostParameter, CostCondition } from "@/models/cost/CostParameter"
 import type { CostParameterCategory, CostParameterUnit } from '@/types/CostParameterType'
 
 import { formatNumber } from "@/utils/formatters"
+import { getSemiTrailerTypes } from "@/api/vehicle/semiTrailerApi"
 
 // Props
 
@@ -32,6 +33,26 @@ const emit = defineEmits<{
 
 const showUpdateModal = ref(false)
 const showDeleteModal = ref(false)
+const trailerTypeLabels = ref<Record<string, string>>({})
+
+const loadTrailerTypeLabels = async () => {
+    try {
+        const trailerTypes = await getSemiTrailerTypes()
+        trailerTypeLabels.value = Object.fromEntries(
+            trailerTypes.map((trailerType) => [String(trailerType.id), trailerType.label]),
+        )
+    } catch {
+        trailerTypeLabels.value = {}
+    }
+}
+
+onMounted(loadTrailerTypeLabels)
+
+watch(() => props.open, (open) => {
+    if (open) {
+        loadTrailerTypeLabels()
+    }
+})
 
 const openUpdateModal = () => {
     showUpdateModal.value = true
@@ -92,7 +113,7 @@ const conditionFieldLabels: Record<string, string> = {
     ARRIVAL_TIME: "Heure d'arrivée",
     EMPTY_TRIP: "Trajet à vide",
     LOADED_TRIP: "Trajet chargé",
-    VEHICLE_TYPE: "Type de véhicule",
+    VEHICLE_TYPE: "Type de semi-remorque",
     DRIVER_DAY_START_TIME: "Heure de début de journée",
     DRIVER_DAY_END_TIME: "Heure de fin de journée",
 }
@@ -114,12 +135,31 @@ const formatUnit = (unit: CostParameterUnit) => {
     return unitLabels[unit] ?? unit
 }
 
+const conditionValueUnits: Record<string, string> = {
+    DISTANCE: "km",
+    DURATION: "heures",
+}
+
 const formatCondition = (condition: CostCondition) => {
     const field = conditionFieldLabels[condition.field] ?? condition.field
 
     const operator = conditionOperatorLabels[condition.operator] ?? condition.operator
+    let value = condition.value
 
-    return `${field} ${operator} ${condition.value}`
+    if (["EMPTY_TRIP", "LOADED_TRIP"].includes(condition.field)) {
+        value = condition.value === "true" ? "Oui" : condition.value === "false" ? "Non" : condition.value
+    }
+
+    if (condition.field === "VEHICLE_TYPE") {
+        value = trailerTypeLabels.value[condition.value] ?? "Type inconnu"
+    }
+
+    const valueUnit = conditionValueUnits[condition.field]
+    if (valueUnit) {
+        value = `${value} ${valueUnit}`
+    }
+
+    return `${field} ${operator} ${value}`
 }
 </script>
 
@@ -128,7 +168,7 @@ const formatCondition = (condition: CostCondition) => {
         <template #header>
             <div class="min-w-0">
                 <p class="text-xs font-medium uppercase tracking-wide text-blue-600">
-                    Coûts référentiels
+                    Coût référentiel
                 </p>
 
                 <h2 class="mt-1 truncate text-xl font-bold text-slate-900">
