@@ -52,12 +52,12 @@ onMounted(async () => {
         <div class="flex items-center justify-between mb-6">
 
             <h1 class="text-3xl font-bold text-gray-800">
-                Clients
+                Donneurs d’ordres
             </h1>
 
             <button @click="showCreateModal = true"
                 class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl shadow transition">
-                Ajouter un client
+                Ajouter un donneur d’ordre
             </button>
 
         </div>

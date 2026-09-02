@@ -54,8 +54,8 @@ const createCustomer = async () => {
         await api.post('/customers', payload)
 
         notification.success(
-            'Client créé',
-            `Le client « ${name.value.trim()} » a bien été créé.`
+            'Donneur d’ordre créé',
+            `Le donneur d’ordre « ${name.value.trim()} » a bien été créé.`
         )
 
         emit('created')
@@ -63,13 +63,7 @@ const createCustomer = async () => {
 
         resetForm()
     } catch (e) {
-        notification.error(
-            'Création impossible',
-            getApiErrorMessage(
-                e,
-                'Le client n’a pas pu être créé.'
-            )
-        )
+        notification.error('Création impossible', getApiErrorMessage(e, 'Donneur d’ordre n’a pas pu être créé.'))
     } finally {
         loading.value = false
     }
@@ -92,7 +86,7 @@ const resetForm = () => {
     <AppModal :show="props.show" @close="emit('close')">
 
         <h2 class="text-2xl font-bold mb-6">
-            Ajouter un nouveau client
+            Ajouter un nouveau donneur d’ordre
         </h2>
 
         <div class="space-y-4">

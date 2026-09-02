@@ -83,7 +83,7 @@ watch(isVehiclesSection, (isActive) => {
                     </div>
                 </div>
 
-                <SidebarLink to="/gestion/customers" label="Clients" />
+                <SidebarLink to="/gestion/customers" label="Donneurs d’ordres" />
             </template>
 
             <!-- ADMIN SECTION -->

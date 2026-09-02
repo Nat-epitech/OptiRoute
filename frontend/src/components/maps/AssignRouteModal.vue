@@ -99,7 +99,7 @@ watch(
 
             <div>
                 <label class="mb-2 block text-sm font-medium">
-                    Client
+                    Donneur d’ordre
 
                     <span class="text-sm font-normal text-slate-400">
                         — optionnel
@@ -108,7 +108,7 @@ watch(
 
                 <select v-model="customerId" class="w-full rounded-lg border p-3">
                     <option :value="undefined">
-                        Aucun client
+                        Aucun donneur d’ordre
                     </option>
 
                     <option v-for="customer in customers" :key="customer.id" :value="customer.id">

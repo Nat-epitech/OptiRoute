@@ -232,7 +232,7 @@ watch(
                     <TransportDetailBlock title="Chauffeur" :primary="transport.driverName"
                         :secondary="transport.driverEmail" />
 
-                    <TransportDetailBlock title="Client" :primary="transport.customerName"
+                    <TransportDetailBlock title="Donneur d’ordre" :primary="transport.customerName"
                         :secondary="customerAddress" />
 
                     <TransportDetailBlock title="Tracteur" :primary="transport.tractorRegistration"

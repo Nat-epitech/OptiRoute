@@ -73,8 +73,8 @@ const saveCustomer = async () => {
         await updateCustomer(props.customer.id, request)
 
         notification.success(
-            'Client modifié',
-            `Le client « ${name.value.trim()} » a bien été modifié.`
+            'Donneur d’ordre modifié',
+            `Le donneur d’ordre « ${name.value.trim()} » a bien été modifié.`
         )
 
         emit('updated')
@@ -82,10 +82,7 @@ const saveCustomer = async () => {
     } catch (error) {
         notification.error(
             'Modification impossible',
-            getApiErrorMessage(
-                error,
-                'Le client n’a pas pu être modifié.'
-            )
+            getApiErrorMessage(error, 'Le donneur d’ordre n’a pas pu être modifié.')
         )
     } finally {
         loading.value = false
@@ -96,7 +93,7 @@ const saveCustomer = async () => {
 <template>
     <AppModal :show="show" @close="closeModal">
         <h2 class="mb-6 text-2xl font-bold">
-            Modifier le client
+            Modifier le donneur d’ordre
         </h2>
 
         <div class="space-y-4">

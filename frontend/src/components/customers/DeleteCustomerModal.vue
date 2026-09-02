@@ -38,19 +38,14 @@ const confirmDelete = async () => {
         await deleteCustomer(props.customer.id)
 
         notification.success(
-            'Client supprimé',
-            `Le client « ${props.customer?.name ?? ''} » a bien été supprimé.`
+            'Donneur d’ordre supprimé',
+            `Le donneur d’ordre « ${props.customer?.name ?? ''} » a bien été supprimé.`
         )
 
         emit('deleted')
         emit('close')
     } catch (error) {
-        notification.error(
-            'Suppression impossible',
-            getApiErrorMessage(
-                error,
-                'Le client n’a pas pu être supprimé.'
-            )
+        notification.error('Suppression impossible', getApiErrorMessage(error, 'Le donneur d’ordre n’a pas pu être supprimé.')
         )
     } finally {
         deleting.value = false
@@ -59,7 +54,7 @@ const confirmDelete = async () => {
 </script>
 
 <template>
-    <ConfirmDeleteModal :show="show" :loading="deleting" title="Supprimer le client"
-        :message="`Voulez-vous vraiment supprimer le client ${customer?.name ?? ''} ?`" @close="closeModal"
+    <ConfirmDeleteModal :show="show" :loading="deleting" title="Supprimer le donneur d’ordre"
+        :message="`Voulez-vous vraiment supprimer le donneur d’ordre ${customer?.name ?? ''} ?`" @close="closeModal"
         @confirm="confirmDelete" />
 </template>
