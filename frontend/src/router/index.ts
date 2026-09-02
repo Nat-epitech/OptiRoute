@@ -4,6 +4,7 @@ import OperationCostsView from '@/views/OperationCostsView.vue'
 import AdminView from '@/views/AdminView.vue'
 import LoginView from '@/views/users/LoginView.vue'
 import AccountView from '@/views/users/AccountView.vue'
+import ChangePasswordView from '@/views/users/ChangePasswordView.vue'
 import DriversView from '@/views/DriversView.vue'
 import MapsView from '@/views/MapsView.vue'
 import PlanningView from '@/views/PlanningView.vue'
@@ -99,12 +100,17 @@ const routes = [
             },
 
             {
-                path: 'account',
+                path: 'user',
                 children: [
                     {
-                        path: 'account',
+                        path: '',
                         name: 'account',
                         component: AccountView
+                    },
+                    {
+                        path: 'password',
+                        name: 'changePassword',
+                        component: ChangePasswordView
                     }
                 ]
             }

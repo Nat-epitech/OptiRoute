@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { ChevronDown } from 'lucide-vue-next'
+import { ChevronDown, KeyRound, LogOut, CircleUser } from 'lucide-vue-next'
 import SidebarLink from '@/components/layout/SidebarLink.vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
 // Variables
 
 const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
 
 const isGestionSection = computed(() =>
     route.path.startsWith('/gestion')
@@ -20,6 +24,10 @@ const isHomepageSection = computed(() =>
     route.path.startsWith('/homepage')
 )
 
+const isUserSection = computed(() =>
+    route.path.startsWith('/user')
+)
+
 const isAdminSection = computed(() =>
     route.path.startsWith('/admin')
 )
@@ -29,6 +37,11 @@ const isVehiclesSection = computed(() =>
 )
 
 const vehiclesOpen = ref(isVehiclesSection.value)
+
+const logout = () => {
+    authStore.logout()
+    router.push('/login')
+}
 
 watch(isVehiclesSection, (isActive) => {
     if (isActive) {
@@ -84,6 +97,20 @@ watch(isVehiclesSection, (isActive) => {
                 </div>
 
                 <SidebarLink to="/gestion/customers" label="Donneurs d’ordres" />
+            </template>
+
+            <!-- USER SECTION -->
+            <template v-else-if="isUserSection">
+                <SidebarLink to="/user" label="Mes informations" :icon="CircleUser" />
+
+                <SidebarLink to="/user/password" label="Modifier mon mot de passe" :icon="KeyRound" />
+
+                <button type="button"
+                    class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+                    @click="logout">
+                    <LogOut class="h-4 w-4" />
+                    <span>Se déconnecter</span>
+                </button>
             </template>
 
             <!-- ADMIN SECTION -->

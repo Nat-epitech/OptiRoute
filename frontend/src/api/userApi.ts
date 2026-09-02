@@ -1,5 +1,10 @@
 import api from './axios'
-import type { UpdateUserRequest } from '@/models/User'
+import type { UpdateUserRequest, User } from '@/models/User'
+
+export const getCurrentUser = async (): Promise<User> => {
+  const response = await api.get<User>('/users/me')
+  return response.data
+}
 
 export const getUsers = async () => {
   const response = await api.get('/users')

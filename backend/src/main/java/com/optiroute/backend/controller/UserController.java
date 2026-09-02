@@ -2,6 +2,7 @@ package com.optiroute.backend.controller;
 
 import com.optiroute.backend.dto.request.UserRequest;
 import com.optiroute.backend.dto.request.UserUpdateRequest;
+import com.optiroute.backend.dto.request.ChangePasswordRequest;
 import com.optiroute.backend.dto.response.UserResponse;
 import com.optiroute.backend.entity.User;
 import com.optiroute.backend.service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,6 +28,17 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getCurrentUser(Principal principal) {
+        return ResponseEntity.ok(userService.getCurrentUser(principal.getName()));
+    }
+
+    @PutMapping("/me/password")
+    public ResponseEntity<Void> changePassword(Principal principal, @Valid @RequestBody ChangePasswordRequest request) {
+        userService.changePassword(principal.getName(),request);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
@@ -44,7 +57,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest request) {
-        UserResponse response = userService.updateUser(id, request);
+        UserResponse response = userService.updateUser(id,request);
 
         return ResponseEntity.ok(response);
     }

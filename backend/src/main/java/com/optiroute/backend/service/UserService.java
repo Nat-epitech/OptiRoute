@@ -2,6 +2,7 @@ package com.optiroute.backend.service;
 
 import com.optiroute.backend.dto.request.UserRequest;
 import com.optiroute.backend.dto.request.UserUpdateRequest;
+import com.optiroute.backend.dto.request.ChangePasswordRequest;
 import com.optiroute.backend.dto.response.UserResponse;
 import com.optiroute.backend.entity.User;
 import com.optiroute.backend.repository.UserRepository;
@@ -27,6 +28,25 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse getCurrentUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        return toResponse(user);
+    }
+
+    @Transactional
+    public void changePassword(String email, ChangePasswordRequest request) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(request.currentPassword(),user.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
     }
 
     @Transactional
@@ -57,12 +77,9 @@ public class UserService {
 
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id " + id));
 
-        userRepository.findByEmail(request.email())
-                .filter(existingUser -> !existingUser.getId().equals(id))
-                .ifPresent(existingUser -> {
-                    throw new IllegalArgumentException(
-                            "Email already used");
-                });
+        userRepository.findByEmail(request.email()).filter(existingUser -> !existingUser.getId().equals(id)).ifPresent(existingUser -> {
+            throw new IllegalArgumentException("Email already used");
+        });
 
         user.setEmail(request.email());
         user.setFirstName(request.firstName());
@@ -77,11 +94,6 @@ public class UserService {
     }
 
     private UserResponse toResponse(User user) {
-        return UserResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .build();
+        return UserResponse.builder().id(user.getId()).email(user.getEmail()).firstName(user.getFirstName()).lastName(user.getLastName()).build();
     }
 }
