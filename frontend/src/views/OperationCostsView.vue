@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from "vue"
 
 import { getCostParameters, setCostParameterActive } from "@/api/cost/costParameterApi"
 
-import type { CostParameter } from "@/models/cost/CostParameter"
+import type { CostParameter, CostParameterLight } from "@/models/cost/CostParameter"
 
 import CreateCostParameterModal from "@/components/cost/CreateCostParameterModal.vue"
 import DeleteCostParameterModal from "@/components/cost/DeleteCostParameterModal.vue"
@@ -14,7 +14,7 @@ import { categoryLabels, formatUnit, formatValue } from "@/utils/costParameterUt
 
 // Load cost parameters
 
-const costParameters = ref<CostParameter[]>([])
+const costParameters = ref<CostParameterLight[]>([])
 
 const loadCostParameters = async () => {
     costParameters.value = await getCostParameters()
@@ -57,7 +57,7 @@ const getCategoryRank = (category: string) => {
     }
 }
 
-const sortCosts = (costs: CostParameter[]) => {
+const sortCosts = (costs: CostParameterLight[]) => {
     return [...costs].sort((first, second) => {
         if (selectedSort.value === "ALPHABET") {
             const labelComparison = first.label.localeCompare(second.label, "fr", { sensitivity: "base" })
@@ -130,18 +130,18 @@ const showCreateModal = ref(false)
 const showDeleteModal = ref(false)
 const openDropdownId = ref<number | null>(null)
 
-const actionCostParameter = ref<CostParameter | null>(null)
+const actionCostParameter = ref<CostParameterLight | null>(null)
 const selectedCostParameterId = ref<number | null>(null)
 
 const askDeleteCostParameter = (
-    costParameter: CostParameter,
+    costParameter: CostParameterLight,
 ) => {
     actionCostParameter.value = costParameter
     showDeleteModal.value = true
 }
 
 const openCostParameterDetails = (
-    costParameter: CostParameter,
+    costParameter: CostParameterLight,
 ) => {
     selectedCostParameterId.value = costParameter.id
 
@@ -181,7 +181,7 @@ const handleCostParameterDeleted = async () => {
     await loadCostParameters()
 }
 
-const toggleCostParameterActive = async (costParameter: CostParameter) => {
+const toggleCostParameterActive = async (costParameter: CostParameterLight) => {
     try {
         await setCostParameterActive(costParameter.id, !costParameter.active)
         await loadCostParameters()
@@ -378,7 +378,7 @@ onMounted(loadCostParameters)
 
         <!-- Detail drawer -->
 
-        <CostParameterDetailDrawer :open="selectedCostParameterId !== null" :costParameter="actionCostParameter"
+        <CostParameterDetailDrawer :open="selectedCostParameterId !== null" :cost-parameter-id="selectedCostParameterId"
             @close="closeCostParameterDetails" @updated="handleCostParameterUpdated"
             @deleted="handleCostParameterDeleted" />
 

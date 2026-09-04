@@ -4,7 +4,7 @@ import { ref } from "vue"
 import { deleteCostParameter } from "@/api/cost/costParameterApi"
 import { getApiErrorMessage } from "@/api/utils"
 
-import type { CostParameter } from "@/models/cost/CostParameter"
+import type { CostParameterLight } from "@/models/cost/CostParameter"
 
 import ConfirmDeleteModal from "@/components/ui/ConfirmDeleteModal.vue"
 import { useNotification } from "@/composables/useNotification"
@@ -13,7 +13,7 @@ const notification = useNotification()
 
 const props = defineProps<{
     show: boolean
-    costParameter: CostParameter | null
+    costParameter: CostParameterLight | null
 }>()
 
 const emit = defineEmits<{

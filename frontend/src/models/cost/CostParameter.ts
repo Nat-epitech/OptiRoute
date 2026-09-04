@@ -32,6 +32,15 @@ export interface CostRuleRequest {
 
 /* CostParameter */
 
+export interface CostParameterLight {
+    id: number
+    label: string
+    value: number
+    unit: CostParameterUnit
+    category: CostParameterCategory
+    active: boolean
+}
+
 export interface CostParameter {
     id: number
     category: CostParameterCategory

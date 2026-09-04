@@ -1,8 +1,8 @@
 import api from '../axios'
-import type { CostParameter, CreateCostParameterRequest, UpdateCostParameterRequest } from '@/models/cost/CostParameter'
+import type { CostParameter, CostParameterLight, CreateCostParameterRequest, UpdateCostParameterRequest } from '@/models/cost/CostParameter'
 
-export const getCostParameters = async (): Promise<CostParameter[]> => {
-    const response = await api.get<CostParameter[]>("/cost-parameters")
+export const getCostParameters = async (): Promise<CostParameterLight[]> => {
+    const response = await api.get<CostParameterLight[]>("/cost-parameters")
     return response.data
 }
 

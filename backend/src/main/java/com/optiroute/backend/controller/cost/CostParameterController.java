@@ -3,6 +3,7 @@ package com.optiroute.backend.controller.cost;
 import com.optiroute.backend.dto.request.cost.CreateCostParameterRequest;
 import com.optiroute.backend.dto.request.cost.UpdateCostParameterRequest;
 import com.optiroute.backend.dto.response.cost.CostParameterResponse;
+import com.optiroute.backend.dto.response.cost.CostParameterLightResponse;
 import com.optiroute.backend.service.cost.CostParameterService;
 
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class CostParameterController {
     }
 
     @GetMapping
-    public List<CostParameterResponse> getAll() {
+    public List<CostParameterLightResponse> getAll() {
         return costParameterService.getAll();
     }
 

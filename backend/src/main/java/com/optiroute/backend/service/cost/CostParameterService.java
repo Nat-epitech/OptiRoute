@@ -11,6 +11,7 @@ import com.optiroute.backend.repository.cost.CostRuleRepository;
 import com.optiroute.backend.entity.cost.CostCondition;
 import com.optiroute.backend.repository.cost.CostConditionRepository;
 import com.optiroute.backend.dto.response.cost.CostParameterResponse;
+import com.optiroute.backend.dto.response.cost.CostParameterLightResponse;
 import com.optiroute.backend.dto.response.cost.CostRuleResponse;
 import com.optiroute.backend.dto.response.cost.CostConditionResponse;
 import com.optiroute.backend.dto.request.cost.CreateCostParameterRequest;
@@ -88,9 +89,10 @@ public class CostParameterService {
     }
 
     @Transactional(readOnly = true)
-    public List<CostParameterResponse> getAll() {
+    public List<CostParameterLightResponse> getAll() {
 
-        return costParameterRepository.findAll().stream().map(this::toResponse).toList();
+        return costParameterRepository.findAll().stream().map(parameter -> new CostParameterLightResponse(parameter.getId(), parameter.getLabel(), parameter.getValue(),
+            parameter.getUnit(), parameter.getCategory(), parameter.isActive())).toList();
     }
 
     public void delete(Long id) {
