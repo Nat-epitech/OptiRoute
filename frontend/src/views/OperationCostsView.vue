@@ -299,10 +299,6 @@ onMounted(loadCostParameters)
                             </th>
 
                             <th class="whitespace-nowrap px-6 py-4 text-left">
-                                Unité
-                            </th>
-
-                            <th class="whitespace-nowrap px-6 py-4 text-left">
                                 Catégorie
                             </th>
 
@@ -329,10 +325,6 @@ onMounted(loadCostParameters)
 
                             <td class="whitespace-nowrap px-6 py-4">
                                 {{ formatValue(cost.value, cost.unit) }}
-                            </td>
-
-                            <td class="whitespace-nowrap px-6 py-4 text-slate-600">
-                                {{ formatUnit(cost.unit) }}
                             </td>
 
                             <td class="whitespace-nowrap px-6 py-4 text-slate-600">

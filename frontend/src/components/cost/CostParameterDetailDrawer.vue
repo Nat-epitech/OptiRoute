@@ -169,10 +169,6 @@ const formatCondition = (condition: CostCondition) => {
             <!-- Valeur -->
 
             <DetailSection title="Valeur" :icon="WalletCards">
-                <DetailRow label="Montant" :value="formatNumber(costParameter.value)" />
-
-                <DetailRow label="Unité" :value="formatUnit(costParameter.unit)" />
-
                 <DetailRow label="Coût"
                     :value="`${formatNumber(costParameter.value)} ${formatUnit(costParameter.unit)}`" />
             </DetailSection>
