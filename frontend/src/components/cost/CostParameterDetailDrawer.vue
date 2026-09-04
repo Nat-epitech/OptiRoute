@@ -11,10 +11,17 @@ import UpdateCostParameterModal from "@/components/cost/UpdateCostParameterModal
 import DeleteCostParameterModal from "@/components/cost/DeleteCostParameterModal.vue"
 
 import type { CostParameter, CostCondition } from "@/models/cost/CostParameter"
-import type { CostParameterCategory, CostParameterUnit } from '@/types/CostParameterType'
 
 import { formatNumber } from "@/utils/formatters"
 import { getSemiTrailerTypes } from "@/api/vehicle/semiTrailerApi"
+import {
+    categoryLabels,
+    conditionFieldLabels,
+    conditionOperatorLabels,
+    conditionSourceLabels,
+    formatConditionValue,
+    formatUnit,
+} from "@/utils/costParameterUtils"
 
 // Props
 
@@ -85,79 +92,11 @@ const handleCostParameterDeleted = () => {
 
 // Formatting
 
-const categoryLabels: Record<CostParameterCategory, string> = {
-    VEHICLE: "Véhicule",
-    DRIVER: "Conducteur",
-    STRUCTURE: "Structure",
-}
-
-const unitLabels: Record<CostParameterUnit, string> = {
-    EUR_PER_KM: "€/km",
-    EUR_PER_TRIP: "€/trajet",
-    EUR_PER_HOUR: "€/heure",
-    EUR_PER_DAY: "€/jour",
-    EUR_PER_MONTH: "€/mois",
-    EUR_PER_YEAR: "€/an",
-}
-
-const conditionSourceLabels: Record<string, string> = {
-    TRIP: "Trajet",
-    VEHICLE: "Véhicule",
-    DRIVER: "Conducteur",
-}
-
-const conditionFieldLabels: Record<string, string> = {
-    DISTANCE: "Distance",
-    DURATION: "Durée",
-    DEPARTURE_TIME: "Heure de départ",
-    ARRIVAL_TIME: "Heure d'arrivée",
-    EMPTY_TRIP: "Trajet à vide",
-    LOADED_TRIP: "Trajet chargé",
-    VEHICLE_TYPE: "Type de semi-remorque",
-    DRIVER_DAY_START_TIME: "Heure de début de journée",
-    DRIVER_DAY_END_TIME: "Heure de fin de journée",
-}
-
-const conditionOperatorLabels: Record<string, string> = {
-    EQUALS: "est égal à",
-    NOT_EQUALS: "est différent de",
-    LESS_THAN: "est inférieur à",
-    GREATER_THAN: "est supérieur à",
-    BEFORE: "avant",
-    AFTER: "après",
-}
-
-const formatValue = (value: number) => {
-    return formatNumber(value)
-}
-
-const formatUnit = (unit: CostParameterUnit) => {
-    return unitLabels[unit] ?? unit
-}
-
-const conditionValueUnits: Record<string, string> = {
-    DISTANCE: "km",
-    DURATION: "heures",
-}
-
 const formatCondition = (condition: CostCondition) => {
     const field = conditionFieldLabels[condition.field] ?? condition.field
 
     const operator = conditionOperatorLabels[condition.operator] ?? condition.operator
-    let value = condition.value
-
-    if (["EMPTY_TRIP", "LOADED_TRIP"].includes(condition.field)) {
-        value = condition.value === "true" ? "Oui" : condition.value === "false" ? "Non" : condition.value
-    }
-
-    if (condition.field === "VEHICLE_TYPE") {
-        value = trailerTypeLabels.value[condition.value] ?? "Type inconnu"
-    }
-
-    const valueUnit = conditionValueUnits[condition.field]
-    if (valueUnit) {
-        value = `${value} ${valueUnit}`
-    }
+    const value = formatConditionValue(condition.field, condition.value, trailerTypeLabels.value)
 
     return `${field} ${operator} ${value}`
 }
@@ -195,12 +134,12 @@ const formatCondition = (condition: CostCondition) => {
             <!-- Valeur -->
 
             <DetailSection title="Valeur" :icon="WalletCards">
-                <DetailRow label="Montant" :value="formatValue(props.costParameter.value)" />
+                <DetailRow label="Montant" :value="formatNumber(props.costParameter.value)" />
 
                 <DetailRow label="Unité" :value="formatUnit(props.costParameter.unit)" />
 
                 <DetailRow label="Coût"
-                    :value="`${formatValue(props.costParameter.value)} ${formatUnit(props.costParameter.unit)}`" />
+                    :value="`${formatNumber(props.costParameter.value)} ${formatUnit(props.costParameter.unit)}`" />
             </DetailSection>
 
             <!-- Conditions -->

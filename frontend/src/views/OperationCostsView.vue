@@ -10,6 +10,7 @@ import DeleteCostParameterModal from "@/components/cost/DeleteCostParameterModal
 import CostParameterDetailDrawer from "@/components/cost/CostParameterDetailDrawer.vue"
 
 import AppDropdown from "@/components/ui/AppDropdown.vue"
+import { categoryLabels, formatUnit, formatValue } from "@/utils/costParameterUtils"
 
 // Load cost parameters
 
@@ -189,40 +190,6 @@ const toggleCostParameterActive = async (costParameter: CostParameter) => {
     }
 }
 
-// Helpers
-
-const formatUnit = (unit: string) => {
-    switch (unit) {
-        case "EUR_PER_KM":
-            return "€/km"
-
-        case "EUR_PER_TRIP":
-            return "€/trajet"
-
-        case "EUR_PER_HOUR":
-            return "€/heure"
-
-        case "EUR_PER_DAY":
-            return "€/jour"
-
-        case "EUR_PER_MONTH":
-            return "€/mois"
-
-        case "EUR_PER_YEAR":
-            return "€/an"
-
-        default:
-            return unit
-    }
-}
-
-const formatValue = (
-    value: number,
-    unit: string,
-) => {
-    return `${value} ${formatUnit(unit)}`
-}
-
 onMounted(loadCostParameters)
 </script>
 
@@ -369,8 +336,7 @@ onMounted(loadCostParameters)
                             </td>
 
                             <td class="whitespace-nowrap px-6 py-4 text-slate-600">
-                                {{ cost.category === 'VEHICLE' ? 'Véhicule' : cost.category === 'DRIVER' ? 'Conducteur'
-                                    : 'Structure' }}
+                                {{ categoryLabels[cost.category] }}
                             </td>
 
                             <td class="whitespace-nowrap px-6 py-4">

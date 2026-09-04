@@ -2,12 +2,9 @@
 
 import { onMounted, ref } from "vue"
 
-import type {
-    CostConditionRequest,
-    CreateCostParameterRequest,
-} from "@/models/cost/CostParameter"
-import type { CostParameterCategory, CostParameterUnit, CostConditionSource, CostConditionField, CostConditionOperator } from '@/types/CostParameterType'
+import type { CostConditionRequest, CreateCostParameterRequest } from "@/models/cost/CostParameter"
 import { getSemiTrailerTypes } from "@/api/vehicle/semiTrailerApi"
+import { categoryOptions, conditionValueUnits, getFieldOptions, getOperatorOptions, sourceOptions, unitOptions } from "@/utils/costParameterUtils"
 
 const form = defineModel<CreateCostParameterRequest>({
     required: true,
@@ -21,170 +18,6 @@ withDefaults(
         disabled: false,
     },
 )
-
-// Labels
-
-const categoryOptions: {
-    value: CostParameterCategory
-    label: string
-}[] = [
-        {
-            value: "VEHICLE",
-            label: "Véhicule",
-        },
-        {
-            value: "DRIVER",
-            label: "Conducteur",
-        },
-        {
-            value: "STRUCTURE",
-            label: "Structure",
-        },
-    ]
-
-const unitOptions: {
-    value: CostParameterUnit
-    label: string
-}[] = [
-        {
-            value: "EUR_PER_KM",
-            label: "€/km",
-        },
-        {
-            value: "EUR_PER_TRIP",
-            label: "€/trajet",
-        },
-        {
-            value: "EUR_PER_HOUR",
-            label: "€/heure",
-        },
-        {
-            value: "EUR_PER_DAY",
-            label: "€/jour",
-        },
-        {
-            value: "EUR_PER_MONTH",
-            label: "€/mois",
-        },
-        {
-            value: "EUR_PER_YEAR",
-            label: "€/an",
-        },
-    ]
-
-const sourceOptions: {
-    value: CostConditionSource
-    label: string
-}[] = [
-        {
-            value: "TRIP",
-            label: "Trajet",
-        },
-        {
-            value: "VEHICLE",
-            label: "Véhicule",
-        },
-        {
-            value: "DRIVER",
-            label: "Conducteur",
-        },
-    ]
-
-const tripFieldOptions: {
-    value: CostConditionField
-    label: string
-}[] = [
-        {
-            value: "DISTANCE",
-            label: "Distance",
-        },
-        {
-            value: "DURATION",
-            label: "Durée",
-        },
-        {
-            value: "DEPARTURE_TIME",
-            label: "Heure de départ",
-        },
-        {
-            value: "ARRIVAL_TIME",
-            label: "Heure d'arrivée",
-        },
-        {
-            value: "EMPTY_TRIP",
-            label: "Trajet à vide",
-        },
-        {
-            value: "LOADED_TRIP",
-            label: "Trajet chargé",
-        },
-    ]
-
-const vehicleFieldOptions: {
-    value: CostConditionField
-    label: string
-}[] = [
-        {
-            value: "VEHICLE_TYPE",
-            label: "Type de semi-remorque",
-        },
-    ]
-
-const driverFieldOptions: {
-    value: CostConditionField
-    label: string
-}[] = [
-        {
-            value: "DRIVER_DAY_START_TIME",
-            label: "Heure de début de journée",
-        },
-        {
-            value: "DRIVER_DAY_END_TIME",
-            label: "Heure de fin de journée",
-        },
-    ]
-
-const equalityOperatorOptions: {
-    value: CostConditionOperator
-    label: string
-}[] = [
-        {
-            value: "EQUALS",
-            label: "est égal à",
-        },
-        {
-            value: "NOT_EQUALS",
-            label: "est différent de",
-        },
-    ]
-
-const numericOperatorOptions: {
-    value: CostConditionOperator
-    label: string
-}[] = [
-        {
-            value: "LESS_THAN",
-            label: "est inférieur à",
-        },
-        {
-            value: "GREATER_THAN",
-            label: "est supérieur à",
-        },
-    ]
-
-const timeOperatorOptions: {
-    value: CostConditionOperator
-    label: string
-}[] = [
-        {
-            value: "BEFORE",
-            label: "avant",
-        },
-        {
-            value: "AFTER",
-            label: "après",
-        },
-    ]
 
 const vehicleTypeSelectOptions = ref<{ value: string; label: string }[]>([])
 
@@ -237,21 +70,6 @@ const removeCondition = (index: number) => {
     }
 }
 
-const getFieldOptions = (
-    source: CostConditionSource,
-) => {
-    switch (source) {
-        case "TRIP":
-            return tripFieldOptions
-
-        case "VEHICLE":
-            return vehicleFieldOptions
-
-        case "DRIVER":
-            return driverFieldOptions
-    }
-}
-
 const handleSourceChange = (
     condition: CostConditionRequest,
 ) => {
@@ -277,32 +95,6 @@ const normalizeExistingConditions = () => {
     })
 }
 
-const getOperatorOptions = (
-    field: CostConditionField,
-) => {
-    if (["DEPARTURE_TIME", "ARRIVAL_TIME", "DRIVER_DAY_START_TIME", "DRIVER_DAY_END_TIME"].includes(field)) {
-        return timeOperatorOptions
-    }
-
-    if (["DISTANCE", "DURATION"].includes(field)) {
-        return numericOperatorOptions
-    }
-
-    return equalityOperatorOptions
-}
-
-const getConditionValueUnit = (
-    field: CostConditionField,
-) => {
-    switch (field) {
-        case "DISTANCE":
-            return "km"
-        case "DURATION":
-            return "heures"
-        default:
-            return null
-    }
-}
 </script>
 
 <template>
@@ -492,8 +284,8 @@ const getConditionValueUnit = (
 
                         <div>
                             <label class="mb-1 block text-xs font-medium text-slate-600">
-                                Valeur{{ getConditionValueUnit(condition.field) ? `
-                                (${getConditionValueUnit(condition.field)})` : "" }}
+                                Valeur{{ conditionValueUnits[condition.field] ? `
+                                (${conditionValueUnits[condition.field]})` : "" }}
                             </label>
 
                             <!-- Heure -->
