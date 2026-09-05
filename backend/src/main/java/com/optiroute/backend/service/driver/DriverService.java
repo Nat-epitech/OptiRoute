@@ -10,8 +10,9 @@ import com.optiroute.backend.dto.request.driver.DriverRequest;
 import com.optiroute.backend.dto.response.driver.DriverResponse;
 import com.optiroute.backend.dto.response.driver.DriverLightResponse;
 import com.optiroute.backend.entity.driver.Driver;
-import com.optiroute.backend.entity.vehicle.Tractor;
 import com.optiroute.backend.repository.driver.DriverRepository;
+import com.optiroute.backend.service.vehicle.SemiTrailerService;
+import com.optiroute.backend.service.vehicle.TractorService;
 
 import com.optiroute.backend.utils.DriverUtils;
 
@@ -21,9 +22,13 @@ import java.util.List;
 public class DriverService {
 
     private final DriverRepository driverRepository;
+    private final TractorService tractorService;
+    private final SemiTrailerService semiTrailerService;
 
-    public DriverService(DriverRepository driverRepository, PasswordEncoder passwordEncoder) {
+    public DriverService(DriverRepository driverRepository, PasswordEncoder passwordEncoder, TractorService tractorService, SemiTrailerService semiTrailerService) {
         this.driverRepository = driverRepository;
+        this.tractorService = tractorService;
+        this.semiTrailerService = semiTrailerService;
     }
 
     public List<DriverLightResponse> getAll() {
@@ -50,6 +55,7 @@ public class DriverService {
         driver.setPhoneNumber(request.phoneNumber());
         driver.setAnnualSalary(request.annualSalary());
         driver.setMonthlyWorkingHours(request.monthlyWorkingHours());
+        applyVehicleAndTypes(driver,request);
 
         Driver savedDriver = driverRepository.save(driver);
         return DriverUtils.toDriverResponse(savedDriver);
@@ -64,9 +70,17 @@ public class DriverService {
         driver.setPhoneNumber(request.phoneNumber());
         driver.setAnnualSalary(request.annualSalary());
         driver.setMonthlyWorkingHours(request.monthlyWorkingHours());
+        applyVehicleAndTypes(driver,request);
 
         Driver updatedDriver = driverRepository.save(driver);
         return DriverUtils.toDriverResponse(updatedDriver);
+    }
+
+    private void applyVehicleAndTypes(Driver driver, DriverRequest request) {
+        driver.setTractor(request.tractorId() == null ? null : tractorService.getEntityById(request.tractorId()));
+        driver.setSemiTrailer(request.semiTrailerId() == null ? null : semiTrailerService.getEntityById(request.semiTrailerId()));
+        driver.setCostType(request.costType());
+        driver.setDriverType(request.driverType());
     }
 
     @Transactional

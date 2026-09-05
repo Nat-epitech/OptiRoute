@@ -9,6 +9,11 @@ export const createEmptyDriverForm = (): DriverFormData => ({
 
     annualSalary: null,
     monthlyWorkingHours: null,
+
+    tractorId: null,
+    semiTrailerId: null,
+    costType: null,
+    driverType: null,
 })
 
 export const getDriverName = (driver: DriverDetails | null): string => {

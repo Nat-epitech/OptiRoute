@@ -54,6 +54,10 @@ const populateForm = () => {
         phoneNumber: props.driver.phoneNumber,
         annualSalary: props.driver.annualSalary,
         monthlyWorkingHours: props.driver.monthlyWorkingHours,
+        tractorId: props.driver.tractorId,
+        semiTrailerId: props.driver.semiTrailerId,
+        costType: props.driver.costType,
+        driverType: props.driver.driverType,
     } satisfies DriverFormData)
 }
 
@@ -72,6 +76,10 @@ const submitDriver = async () => {
             phoneNumber: form.phoneNumber,
             annualSalary: form.annualSalary,
             monthlyWorkingHours: form.monthlyWorkingHours,
+            tractorId: form.tractorId,
+            semiTrailerId: form.semiTrailerId,
+            costType: form.costType,
+            driverType: form.driverType,
         }
 
         await updateDriver(props.driver.id, payload)

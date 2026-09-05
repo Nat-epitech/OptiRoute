@@ -54,6 +54,10 @@ const submitDriver = async () => {
             phoneNumber: form.phoneNumber,
             annualSalary: form.annualSalary,
             monthlyWorkingHours: form.monthlyWorkingHours,
+            tractorId: form.tractorId,
+            semiTrailerId: form.semiTrailerId,
+            costType: form.costType,
+            driverType: form.driverType,
         }
 
         await createDriver(payload)

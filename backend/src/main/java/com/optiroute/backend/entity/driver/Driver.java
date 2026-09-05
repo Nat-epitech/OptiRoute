@@ -7,6 +7,11 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 import com.optiroute.backend.entity.EntityUtils;
+import com.optiroute.backend.entity.vehicle.SemiTrailer;
+import com.optiroute.backend.entity.vehicle.Tractor;
+
+import com.optiroute.backend.type.driver.DriverCostType;
+import com.optiroute.backend.type.driver.DriverType;
 
 @Entity
 @Table(name = "driver")
@@ -37,4 +42,20 @@ public class Driver extends EntityUtils {
 
     @Column(name = "monthly_working_hours", precision = 6, scale = 2)
     private BigDecimal monthlyWorkingHours;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tractor_id")
+    private Tractor tractor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "semi_trailer_id")
+    private SemiTrailer semiTrailer;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cost_type", nullable = false, length = 30)
+    private DriverCostType costType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "driver_type", nullable = false, length = 30)
+    private DriverType driverType;
 }

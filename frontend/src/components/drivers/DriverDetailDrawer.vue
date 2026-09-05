@@ -202,23 +202,37 @@ watch(
                 <DetailRow label="Téléphone" :value="driver.phoneNumber || 'Non renseigné'" />
             </DetailSection>
 
+            <DetailSection title="Véhicules affectés" :icon="Info">
+                <DetailRow label="Tracteur" :value="driver.tractorRegistration || 'Aucun'" />
+
+                <DetailRow label="Semi-remorque" :value="driver.semiTrailerRegistration || 'Aucune'" />
+            </DetailSection>
+
+            <DetailSection title="Profil du chauffeur" :icon="Info">
+                <DetailRow label="Type de chauffeur" :value="driver.driverType === 'LONG_HAUL'
+                    ? 'Grand routier'
+                    : driver.driverType === 'SHORT_DISTANCE'
+                        ? 'Courte distance'
+                        : driver.driverType === 'REGIONAL' ? 'Régional' : 'Non renseigné'" />
+            </DetailSection>
+
             <DetailSection title="Coût du chauffeur" :icon="WalletCards">
                 <DetailRow label="Coût annuel" :value="driver.annualSalary != null
                     ? formatCurrency(driver.annualSalary)
-                    : 'Non renseigné'
-                    " />
+                    : 'Non renseigné'" />
 
                 <DetailRow label="Coût horaire estimé" :value="getHourlyCost(driver) != -1
                     ? `${formatCurrency(getHourlyCost(driver)!)} / h`
-                    : 'Non calculable'
-                    " />
+                    : 'Non calculable'" />
+
+                <DetailRow label="Type de coût"
+                    :value="driver.costType === 'HOURLY' ? 'Horaire' : driver.costType === 'FIXED' ? 'Fixe' : 'Non renseigné'" />
             </DetailSection>
 
             <DetailSection title="Temps de travail" :icon="Clock3">
                 <DetailRow label="Heures mensuelles" :value="driver.monthlyWorkingHours != null
                     ? `${formatNumber(driver.monthlyWorkingHours)} h`
-                    : 'Non renseignées'
-                    " />
+                    : 'Non renseignées'" />
             </DetailSection>
         </div>
 
